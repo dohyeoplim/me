@@ -35,19 +35,19 @@
     }
 
     .font-body02-regular {
-        @apply text-base font-normal leading-6 tracking-tight;
+        @apply text-[17px] font-normal leading-6 tracking-tight;
     }
 
     .font-body02-light {
-        @apply text-base font-light leading-6 tracking-tight;
+        @apply text-[17px] font-light leading-6 tracking-tight;
     }
 
     .font-body03-regular {
-        @apply text-sm font-normal leading-5 tracking-tight;
+        @apply text-[15px] font-normal leading-5 tracking-tight;
     }
 
     .font-body03-light {
-        @apply text-sm font-light leading-5 tracking-tight;
+        @apply text-[15px] font-light leading-5 tracking-tight;
     }
 
     .font-body05-light {
@@ -59,27 +59,22 @@
     }
 
     .font-title02-light {
-        @apply font-light leading-snug tracking-tight;
-        font-size: 40px;
+        @apply text-[40px] font-light leading-snug tracking-tight;
     }
 
     .font-head01-medium {
-        @apply font-medium leading-8 tracking-tight;
-        font-size: 22px;
+        @apply text-[22px] font-medium leading-8 tracking-tight;
     }
 
     .font-caption01-light {
-        @apply text-xs font-light leading-4 uppercase;
-        letter-spacing: 0.15em;
+        @apply text-xs font-light leading-4 uppercase tracking-[0.15em];
     }
 
     .font-caption02-light {
-        @apply font-light leading-3 tracking-widest uppercase;
-        font-size: 9px;
+        @apply text-[9px] font-light leading-3 tracking-widest uppercase;
     }
 
     .font-caption03-regular {
-        @apply font-normal leading-3 tracking-widest;
-        font-size: 8px;
+        @apply text-[8px] font-normal leading-3 tracking-widest;
     }
 }
