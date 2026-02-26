@@ -3,7 +3,7 @@ import SectionTitle from "@/app/components/SectionTitle";
 
 export default function Bio() {
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 select-none">
             <div className="flex flex-col gap-4">
                 <SectionTitle subtitle="Profile" />
                 <p className="font-body02-light text-grey-700">
