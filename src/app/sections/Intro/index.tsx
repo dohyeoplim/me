@@ -5,7 +5,7 @@ import Profile from "./_components/Profile";
 export default function Intro() {
     return (
         <section className="w-full flex items-center justify-between py-16 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.015]">
+            <div className="absolute inset-0 opacity-[0.015] pointer-events-none">
                 <div
                     className="h-full w-full"
                     style={{
