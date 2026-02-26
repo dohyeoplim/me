@@ -4,8 +4,8 @@ import Profile from "./_components/Profile";
 
 export default function Intro() {
     return (
-        <section className="w-full flex items-center justify-between py-16 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.015] pointer-events-none">
+        <section className="w-full flex items-center justify-between pt-16 pb-18 relative">
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 w-screen h-full opacity-[0.015] pointer-events-none">
                 <div
                     className="h-full w-full"
                     style={{
