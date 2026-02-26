@@ -50,6 +50,10 @@
         @apply text-[15px] font-light leading-5 tracking-tight;
     }
 
+    .font-body04-light {
+        @apply text-[14px] font-light leading-5 tracking-tight;
+    }
+
     .font-body05-light {
         @apply text-xs font-light leading-4 tracking-tight;
     }
