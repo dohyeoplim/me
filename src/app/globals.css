@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
+@theme {
+    --color-grey-50: #fafafc;
+    --color-grey-100: #f3f3f6;
+    --color-grey-200: #dcdce3;
+    --color-grey-300: #b4b4bd;
+    --color-grey-400: #7a7a82;
+    --color-grey-500: #5a5a60;
+    --color-grey-600: #3e3e42;
+    --color-grey-700: #2c2c2f;
+    --color-grey-800: #1c1c1e;
+    --color-grey-900: #0f0f10;
 }
 
-@theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+@layer base {
+    body {
+        font-family:
+            var(--font-pretendard),
+            system-ui,
+            -apple-system,
+            sans-serif;
+        background-color: var(--color-grey-50);
+        color: var(--color-grey-900);
     }
 }
 
-body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+    .font-body01-regular {
+        @apply text-xl font-normal leading-7 tracking-tight;
+    }
+
+    .font-body01-light {
+        @apply text-xl font-light leading-7 tracking-tight;
+    }
+
+    .font-body02-regular {
+        @apply text-base font-normal leading-6 tracking-tight;
+    }
+
+    .font-body02-light {
+        @apply text-base font-light leading-6 tracking-tight;
+    }
+
+    .font-body03-regular {
+        @apply text-sm font-normal leading-5 tracking-tight;
+    }
+
+    .font-body03-light {
+        @apply text-sm font-light leading-5 tracking-tight;
+    }
+
+    .font-body05-light {
+        @apply text-xs font-light leading-4 tracking-tight;
+    }
+
+    .font-title01-light {
+        @apply text-5xl font-light leading-snug tracking-tight;
+    }
+
+    .font-title02-light {
+        @apply font-light leading-snug tracking-tight;
+        font-size: 40px;
+    }
+
+    .font-head01-medium {
+        @apply font-medium leading-8 tracking-tight;
+        font-size: 22px;
+    }
+
+    .font-caption01-light {
+        @apply text-xs font-light leading-4 uppercase;
+        letter-spacing: 0.15em;
+    }
+
+    .font-caption02-light {
+        @apply font-light leading-3 tracking-widest uppercase;
+        font-size: 9px;
+    }
+
+    .font-caption03-regular {
+        @apply font-normal leading-3 tracking-widest;
+        font-size: 8px;
+    }
 }
