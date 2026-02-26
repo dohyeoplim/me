@@ -1,0 +1,43 @@
+{
+    "widthClassName": "w-[512px]",
+    "gapClassName": "gap-8",
+    "blocks": [
+        {
+            "type": "text",
+            "text": "Interested in perception, generation,\nand intelligent vision systems."
+        },
+        { "type": "divider" },
+        {
+            "type": "section",
+            "label": "Research Interests",
+            "content": [
+                {
+                    "type": "enumerate",
+                    "items": ["Computer Vision", "Generative AI"]
+                }
+            ]
+        },
+        { "type": "divider" },
+        {
+            "type": "section",
+            "label": "Education",
+            "content": [
+                {
+                    "type": "item",
+                    "subtitle": "Artificial Intelligence, B.S.\nSeoul National University of Science and Technology",
+                    "meta": "2024-Present · GPA 4.33 (Major 4.41)"
+                }
+            ]
+        },
+        { "type": "divider" },
+        {
+            "type": "project",
+            "name": "WONNIT",
+            "year": "2025",
+            "month": "08",
+            "tagline": "Vision-based verification system for space rental platforms.",
+            "description": "Implemented an AI inspection module to detect item presence and space condition prior to return, introducing a trust-driven rental workflow.",
+            "meta": "Top 2% among 247 teams\nLIKELION 13ᵗʰ National Hackathon"
+        }
+    ]
+}
