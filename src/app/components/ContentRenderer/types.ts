@@ -11,6 +11,7 @@ export type ContentDoc = {
 export type Block =
     | { type: "text"; text: string }
     | { type: "divider" }
+    | { type: "spacer"; size?: number | string }
     | {
           type: "section";
           label?: string;
@@ -40,6 +41,7 @@ export type Block =
 
 export type SectionNode =
     | { type: "item"; title: string; subtitle?: string; meta?: string }
-    | { type: "enumerate"; items: string[] };
+    | { type: "enumerate"; items: string[] }
+    | { type: "spacer"; size?: number | string };
 
 export type SectionLabelStyle = "caption" | "head";

@@ -4,13 +4,13 @@
         "subtitle": "Professional"
     },
     "widthClassName": "w-[512px]",
-    "gapClassName": "gap-8",
+    "gapClassName": "gap-12",
     "blocks": [
         {
             "type": "section",
             "label": "Undergraduate Researcher",
             "labelStyle": "head",
-            "gapClassName": "gap-2",
+            "gapClassName": "gap-3",
             "content": [
                 {
                     "type": "item",
@@ -23,7 +23,7 @@
             "type": "section",
             "label": "Technical Leadership",
             "labelStyle": "head",
-            "gapClassName": "gap-2",
+            "gapClassName": "gap-3",
             "content": [
                 {
                     "type": "item",

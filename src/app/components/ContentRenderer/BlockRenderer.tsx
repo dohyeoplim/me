@@ -2,6 +2,7 @@ import type { Block } from "./types";
 import { textWithBreaks } from "./utils";
 import TextOnly from "./_components/TextOnly";
 import Divider from "./_components/Divider";
+import Spacer from "./_components/Spacer";
 import Section from "./_components/Section";
 import Item from "./_components/Item";
 import Enumerate from "./_components/Enumerate";
@@ -19,6 +20,9 @@ export default function BlockRenderer({ block }: Props) {
 
         case "divider":
             return <Divider />;
+
+        case "spacer":
+            return <Spacer size={block.size} />;
 
         case "section":
             return (

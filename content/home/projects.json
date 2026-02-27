@@ -15,6 +15,7 @@
             "description": "Implemented an AI inspection module to detect item presence and space condition prior to return, introducing a trust-driven rental workflow.",
             "meta": "Top 2% among 247 teams\nLIKELION 13ᵗʰ National Hackathon"
         },
+        { "type": "divider" },
         {
             "type": "project",
             "name": "SIG:AI",
