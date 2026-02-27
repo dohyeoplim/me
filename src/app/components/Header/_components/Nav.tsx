@@ -7,7 +7,7 @@ export default function Nav() {
             <Link href="/">
                 <Item label="Dohyeop Lim" className="select-none" />
             </Link>
-            <Item label="About" className="select-none" />
+            {/* <Item label="About" className="select-none" /> */}
         </nav>
     );
 }
