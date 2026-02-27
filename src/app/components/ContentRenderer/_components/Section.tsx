@@ -1,7 +1,9 @@
 import { cn } from "@/app/lib/utils";
+import { SectionLabelStyle } from "../types";
 
 type Props = {
     label?: React.ReactNode;
+    labelStyle?: SectionLabelStyle;
     className?: string;
     children: React.ReactNode;
     gapClassName?: string;
@@ -10,6 +12,7 @@ type Props = {
 
 export default function Section({
     label,
+    labelStyle = "caption",
     className,
     children,
     gapClassName = "gap-4",
@@ -26,7 +29,9 @@ export default function Section({
             {label ? (
                 <div
                     className={cn(
-                        "font-caption01-light text-grey-500",
+                        labelStyle === "caption"
+                            ? "font-caption01-light text-grey-500"
+                            : "font-head01-medium text-grey-900",
                         labelClassName,
                     )}
                 >

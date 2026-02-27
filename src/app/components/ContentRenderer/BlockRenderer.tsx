@@ -22,7 +22,11 @@ export default function BlockRenderer({ block }: Props) {
 
         case "section":
             return (
-                <Section label={block.label}>
+                <Section
+                    label={block.label}
+                    labelStyle={block.labelStyle}
+                    gapClassName={block.gapClassName}
+                >
                     {block.content.map((node, i) => (
                         <SectionNodeRenderer key={i} node={node} />
                     ))}

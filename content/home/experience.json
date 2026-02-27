@@ -7,21 +7,35 @@
     "gapClassName": "gap-8",
     "blocks": [
         {
-            "type": "item",
-            "title": "Undergraduate Researcher",
-            "subtitle": "Visual Intelligence Lab (VILab)\nSeoul National University of Science and Technology",
-            "meta": "Dec 2025-Present"
+            "type": "section",
+            "label": "Undergraduate Researcher",
+            "labelStyle": "head",
+            "gapClassName": "gap-2",
+            "content": [
+                {
+                    "type": "item",
+                    "subtitle": "Visual Intelligence Lab (VILab)\nSeoul National University of Science and Technology",
+                    "meta": "Dec 2025-Present"
+                }
+            ]
         },
         {
-            "type": "item",
-            "title": "Technical Leadership",
-            "subtitle": "LIKELION SeoulTech",
-            "meta": "Member (2025) & Vice Representative (2026)"
-        },
-        {
-            "type": "item",
-            "subtitle": "GDGoC SeoulTech",
-            "meta": "Core Member (2025-2026)"
+            "type": "section",
+            "label": "Technical Leadership",
+            "labelStyle": "head",
+            "gapClassName": "gap-2",
+            "content": [
+                {
+                    "type": "item",
+                    "subtitle": "LIKELION SeoulTech",
+                    "meta": "Member (2025) & Vice Representative (2026)"
+                },
+                {
+                    "type": "item",
+                    "subtitle": "GDGoC SeoulTech",
+                    "meta": "Core Member (2025-2026)"
+                }
+            ]
         }
     ]
 }
