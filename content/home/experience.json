@@ -1,0 +1,27 @@
+{
+    "sectionTitle": {
+        "title": "Experience",
+        "subtitle": "Professional"
+    },
+    "widthClassName": "w-[512px]",
+    "gapClassName": "gap-8",
+    "blocks": [
+        {
+            "type": "item",
+            "title": "Undergraduate Researcher",
+            "subtitle": "Visual Intelligence Lab (VILab)\nSeoul National University of Science and Technology",
+            "meta": "Dec 2025-Present"
+        },
+        {
+            "type": "item",
+            "title": "Technical Leadership",
+            "subtitle": "LIKELION SeoulTech",
+            "meta": "Member (2025) & Vice Representative (2026)"
+        },
+        {
+            "type": "item",
+            "subtitle": "GDGoC SeoulTech",
+            "meta": "Core Member (2025-2026)"
+        }
+    ]
+}

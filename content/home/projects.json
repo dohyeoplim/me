@@ -1,0 +1,28 @@
+{
+    "sectionTitle": {
+        "title": "Projects",
+        "subtitle": "Selected Work"
+    },
+    "widthClassName": "w-[512px]",
+    "gapClassName": "gap-8",
+    "blocks": [
+        {
+            "type": "project",
+            "name": "WONNIT",
+            "year": "2025",
+            "month": "08",
+            "tagline": "Vision-based verification system for space rental platforms.",
+            "description": "Implemented an AI inspection module to detect item presence and space condition prior to return, introducing a trust-driven rental workflow.",
+            "meta": "Top 2% among 247 teams\nLIKELION 13ᵗʰ National Hackathon"
+        },
+        {
+            "type": "project",
+            "name": "SIG:AI",
+            "year": "2025",
+            "month": "11",
+            "tagline": "AI-based early warning system for small businesses",
+            "description": "Built a tabular risk prediction model using financial and operational indicators, and implemented an automated recommendation module to connect predicted risks with appropriate response strategies.",
+            "meta": "2nd Place Award\nSeoulTech CS Department Hackathon"
+        }
+    ]
+}

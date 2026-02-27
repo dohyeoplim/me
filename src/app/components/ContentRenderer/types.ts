@@ -1,4 +1,8 @@
 export type ContentDoc = {
+    sectionTitle?: {
+        title: string;
+        subtitle?: string;
+    };
     widthClassName?: string;
     gapClassName?: string;
     blocks: Block[];
