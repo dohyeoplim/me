@@ -30,7 +30,7 @@ export default function Section({
                 <div
                     className={cn(
                         labelStyle === "caption"
-                            ? "font-caption01-light text-grey-500"
+                            ? "font-caption01-light text-grey-500 select-none"
                             : "font-head01-medium text-grey-900",
                         labelClassName,
                     )}

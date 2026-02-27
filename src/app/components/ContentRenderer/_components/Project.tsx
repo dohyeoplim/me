@@ -30,12 +30,12 @@ export default function Project({
                     right={
                         <>
                             {year ? (
-                                <div className="font-body05-light text-grey-400 mt-px">
+                                <div className="font-body05-light text-grey-400 mt-px select-none">
                                     {year}
                                 </div>
                             ) : null}
                             {month ? (
-                                <div className="font-body01-regular text-grey-500 -mt-1">
+                                <div className="font-body01-regular text-grey-500 -mt-1 select-none">
                                     {month}
                                 </div>
                             ) : null}

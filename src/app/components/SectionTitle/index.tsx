@@ -6,7 +6,7 @@ export default function SectionTitle({
     includeStroke = true,
 }: SectionTitleProps) {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 select-none">
             {subtitle && (
                 <div className="flex items-center gap-3">
                     {includeStroke && (
