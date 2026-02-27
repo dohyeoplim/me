@@ -17,7 +17,10 @@ export default function KVRow({
 }: Props) {
     return (
         <div
-            className={cn("inline-flex justify-between items-start", className)}
+            className={cn(
+                "flex justify-between items-start w-full gap-4",
+                className,
+            )}
         >
             <div
                 className={cn(
@@ -29,7 +32,7 @@ export default function KVRow({
             </div>
             <div
                 className={cn(
-                    "flex justify-start items-start gap-1.5",
+                    "flex justify-end items-start gap-1.5 shrink-0",
                     rightClassName,
                 )}
             >

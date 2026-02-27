@@ -3,7 +3,7 @@
         "title": "About",
         "subtitle": "Background"
     },
-    "widthClassName": "w-[512px]",
+    "widthClassName": "w-full md:w-[512px]",
     "gapClassName": "gap-8",
     "blocks": [
         {

@@ -9,15 +9,15 @@ type ContentBlockProps = {
 
 export default function ContentBlock({
     className,
-    widthClassName = "w-full max-w-[512px]",
+    widthClassName = "w-full md:max-w-[512px]",
     gapClassName = "gap-8",
     children,
 }: ContentBlockProps) {
     return (
         <div
             className={cn(
+                "w-full inline-flex flex-col justify-start items-start",
                 widthClassName,
-                "inline-flex flex-col justify-start items-start",
                 gapClassName,
                 className,
             )}
