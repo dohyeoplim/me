@@ -1,8 +1,14 @@
 import Image from "next/image";
 
-export default function Profile() {
+type Props = {
+    className?: string;
+};
+
+export default function Profile({ className }: Props) {
     return (
-        <figure className="font-caption03-regular text-grey-500 uppercase w-full max-w-43.75 select-none pointer-events-none">
+        <figure
+            className={`${className || ""} font-caption03-regular text-grey-500 uppercase w-full max-w-43.75 select-none pointer-events-none`}
+        >
             <figcaption className="flex justify-between">
                 <span>Portrait</span>
                 <span>2026</span>

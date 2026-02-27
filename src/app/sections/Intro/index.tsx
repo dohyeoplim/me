@@ -4,8 +4,8 @@ import Profile from "./_components/Profile";
 
 export default function Intro() {
     return (
-        <section className="w-full flex flex-col md:flex-row items-start md:items-center justify-between pt-16 pb-18 relative gap-12 md:gap-0">
-            <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 w-screen h-full opacity-[0.015] pointer-events-none">
+        <section className="w-full flex items-center justify-between h-screen md:h-fit md:pt-16 md:pb-18 relative">
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 w-screen h-full opacity-[0.015] pointer-events-none">
                 <div
                     className="h-full w-full"
                     style={{
@@ -16,14 +16,13 @@ export default function Intro() {
                 />
             </div>
 
-            <div className="flex flex-col gap-10 md:gap-15">
+            <div className="flex flex-col gap-8 md:gap-15">
                 <Name />
+                <Profile className="block md:hidden" />
                 <Bio />
             </div>
 
-            <div className="w-full md:w-auto flex justify-end">
-                <Profile />
-            </div>
+            <Profile className="hidden md:block" />
         </section>
     );
 }
