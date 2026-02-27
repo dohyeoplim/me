@@ -27,19 +27,19 @@
 
 @layer utilities {
     .font-body01-regular {
-        @apply text-xl font-normal leading-7 tracking-tight;
+        @apply text-[clamp(1.125rem,1vw+1rem,1.25rem)] font-normal leading-7 tracking-tight;
     }
 
     .font-body01-light {
-        @apply text-xl font-light leading-7 tracking-tight;
+        @apply text-[clamp(1.125rem,1vw+1rem,1.25rem)] font-light leading-7 tracking-tight;
     }
 
     .font-body02-regular {
-        @apply text-[17px] font-normal leading-6 tracking-tight;
+        @apply text-[clamp(1rem,0.5vw+0.9rem,1.0625rem)] font-normal leading-6 tracking-tight;
     }
 
     .font-body02-light {
-        @apply text-[17px] font-light leading-6 tracking-tight;
+        @apply text-[clamp(1rem,0.5vw+0.9rem,1.0625rem)] font-light leading-6 tracking-tight;
     }
 
     .font-body03-regular {
@@ -59,15 +59,15 @@
     }
 
     .font-title01-light {
-        @apply text-5xl font-light leading-snug tracking-tight;
+        @apply text-[clamp(2.5rem,8vw+1rem,3rem)] font-light leading-snug tracking-tight;
     }
 
     .font-title02-light {
-        @apply text-[40px] font-light leading-snug tracking-tight;
+        @apply text-[clamp(2rem,6vw+1rem,2.5rem)] font-light leading-snug tracking-tight;
     }
 
     .font-head01-medium {
-        @apply text-[22px] font-medium leading-8 tracking-tight;
+        @apply text-[clamp(1.25rem,2vw+1rem,1.375rem)] font-medium leading-8 tracking-tight;
     }
 
     .font-caption01-light {
