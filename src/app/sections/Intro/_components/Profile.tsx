@@ -14,7 +14,7 @@ export default function Profile({ className }: Props) {
                 <span>2026</span>
             </figcaption>
 
-            <div className="relative w-full aspect-175/230 mt-1.5">
+            <div className="relative w-full aspect-175/230 mt-1.5 bg-[#F5F5F7]">
                 <Image
                     src="/profile.png"
                     alt="Dohyeop Lim's profile image"
