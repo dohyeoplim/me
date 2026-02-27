@@ -19,6 +19,7 @@ export default function Profile({ className }: Props) {
                     src="/profile.png"
                     alt="Dohyeop Lim's profile image"
                     fill
+                    placeholder="blur"
                     className="object-cover"
                     sizes="(max-width: 768px) 40vw, 175px"
                 />
