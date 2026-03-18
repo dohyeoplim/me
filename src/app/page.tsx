@@ -9,8 +9,8 @@ export default function Home() {
             <main className="flex flex-col items-center gap-30">
                 <Intro />
                 <About />
-                <Projects />
                 <Experience />
+                <Projects />
             </main>
         </div>
     );
