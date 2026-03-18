@@ -8,22 +8,52 @@
     "blocks": [
         {
             "type": "project",
-            "name": "WONNIT",
-            "year": "2025",
-            "month": "08",
-            "tagline": "Vision-based verification system for space rental platforms.",
-            "description": "Implemented an AI inspection module to detect item presence and space condition prior to return, introducing a trust-driven rental workflow.",
-            "meta": "Top 2% among 247 teams\nLIKELION 13ᵗʰ National Hackathon"
+            "name": "DocFusionX",
+            "year": "2026",
+            "month": "02",
+            "tagline": "LLM-based large-scale document reasoning and retrieval system",
+            "description": "Designed a structured GraphRAG-style pipeline integrating retrieval, reranking, and hierarchical traversal to improve long-document reasoning accuracy and reduce hallucination.",
+            "meta": "Best Software Engineering Award\nAICOSS International Program Hackathon"
         },
         { "type": "divider" },
         {
             "type": "project",
             "name": "SIG:AI",
             "year": "2025",
-            "month": "11",
+            "month": "12",
             "tagline": "AI-based early warning system for small businesses",
-            "description": "Built a tabular risk prediction model using financial and operational indicators, and implemented an automated recommendation module to connect predicted risks with appropriate response strategies.",
+            "description": "Built a tabular risk prediction model using financial and operational indicators, and implemented an automated recommendation module to connect predicted risks with actionable strategies.",
             "meta": "2nd Place Award\nSeoulTech CS Department Hackathon"
+        },
+        { "type": "divider" },
+        {
+            "type": "project",
+            "name": "WONNIT",
+            "year": "2025",
+            "month": "08",
+            "tagline": "Vision-based verification system for space rental platforms",
+            "description": "Implemented an AI inspection module to detect item presence and spatial condition before return, enabling a trust-driven rental workflow.",
+            "meta": "Top 2% among 247 teams\nLIKELION 13ᵗʰ National Hackathon"
+        },
+        { "type": "divider" },
+        {
+            "type": "project",
+            "name": "CleavAI",
+            "year": "2025",
+            "month": "",
+            "tagline": "Deep learning-based peptide cleavage prediction model",
+            "description": "Developed a predictive model to estimate peptide cleavage likelihood, leveraging sequence-based representations and deep learning architectures for biological insight extraction.",
+            "meta": "Research Project"
+        },
+        { "type": "divider" },
+        {
+            "type": "project",
+            "name": "AminoCompute",
+            "year": "2025",
+            "month": "",
+            "tagline": "Computational pipeline for amino acid composition optimization",
+            "description": "Built a simulation-based optimization pipeline to design amino acid compositions tailored for specific biological targets, integrating statistical and computational modeling.",
+            "meta": "Research Project"
         }
     ]
 }
