@@ -21,19 +21,6 @@
         },
         {
             "type": "section",
-            "label": "Industry Experience",
-            "labelStyle": "head",
-            "gapClassName": "gap-3",
-            "content": [
-                {
-                    "type": "item",
-                    "subtitle": "JForCell Corp.",
-                    "meta": "Technical Marketing Associate\nDec 2023 - Present"
-                }
-            ]
-        },
-        {
-            "type": "section",
             "label": "Technical Leadership",
             "labelStyle": "head",
             "gapClassName": "gap-3",
