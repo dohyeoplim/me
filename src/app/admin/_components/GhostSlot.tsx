@@ -50,7 +50,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
                 <button
                     type="button"
                     onClick={() => setOpen(true)}
-                    className="group flex h-7 w-full items-center"
+                    className="group flex h-11 w-full items-center"
                 >
                     <span className="flex w-full items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                         <span className="h-px flex-1 bg-grey-200" />
