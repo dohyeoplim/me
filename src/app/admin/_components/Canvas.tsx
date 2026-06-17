@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, Reorder, useDragControls } from "motion/react";
 import type { Block, BlockType, ContentDoc } from "@/app/lib/content/schema";
 import { createBlock } from "./blockFactory";
 import SectionTitleEditor from "./SectionTitleEditor";
@@ -29,21 +29,15 @@ export default function Canvas({ doc, onChange }: Props) {
         setOpenSlot(null);
     };
 
+    const insertAfter = (afterId: string, type: BlockType) =>
+        insertAt(blocks.findIndex((b) => b.id === afterId) + 1, type);
+
     const updateBlock = (b: Block) =>
         setBlocks(blocks.map((x) => (x.id === b.id ? b : x)));
 
     const removeBlock = (id: string) => {
         setBlocks(blocks.filter((x) => x.id !== id));
         if (selected === id) setSelected(null);
-    };
-
-    const moveBlock = (id: string, dir: -1 | 1) => {
-        const i = blocks.findIndex((x) => x.id === id);
-        const j = i + dir;
-        if (j < 0 || j >= blocks.length) return;
-        const next = [...blocks];
-        [next[i], next[j]] = [next[j], next[i]];
-        setBlocks(next);
     };
 
     const setTitle = (v: { title: string; subtitle: string }) => {
@@ -72,45 +66,92 @@ export default function Canvas({ doc, onChange }: Props) {
                     open={openSlot === "start"}
                     onOpenChange={(o) => setOpenSlot(o ? "start" : null)}
                 />
-                <AnimatePresence initial={false}>
-                    {blocks.map((block, i) => (
-                        <motion.div
-                            key={block.id}
-                            initial={{ opacity: 0, height: 0, overflow: "hidden" }}
-                            animate={{
-                                opacity: 1,
-                                height: "auto",
-                                transitionEnd: { overflow: "visible" },
-                            }}
-                            exit={{ opacity: 0, height: 0, overflow: "hidden" }}
-                            transition={{
-                                duration: 0.28,
-                                ease: [0.22, 1, 0.36, 1],
-                            }}
-                            className="flex flex-col"
-                        >
-                            <BlockEditable
+                <Reorder.Group
+                    as="div"
+                    axis="y"
+                    values={blocks}
+                    onReorder={setBlocks}
+                >
+                    <AnimatePresence initial={false}>
+                        {blocks.map((block) => (
+                            <BlockRow
+                                key={block.id}
                                 block={block}
                                 selected={selected === block.id}
-                                isFirst={i === 0}
-                                isLast={i === blocks.length - 1}
+                                pickerOpen={openSlot === block.id}
                                 onSelect={() => setSelected(block.id)}
                                 onDeselect={() => setSelected(null)}
                                 onChange={updateBlock}
                                 onRemove={() => removeBlock(block.id)}
-                                onMove={(dir) => moveBlock(block.id, dir)}
-                            />
-                            <GhostSlot
-                                onAdd={(t) => insertAt(i + 1, t)}
-                                open={openSlot === block.id}
-                                onOpenChange={(o) =>
+                                onAdd={(t) => insertAfter(block.id, t)}
+                                onPickerOpenChange={(o) =>
                                     setOpenSlot(o ? block.id : null)
                                 }
                             />
-                        </motion.div>
-                    ))}
-                </AnimatePresence>
+                        ))}
+                    </AnimatePresence>
+                </Reorder.Group>
             </div>
         </section>
+    );
+}
+
+type BlockRowProps = {
+    block: Block;
+    selected: boolean;
+    pickerOpen: boolean;
+    onSelect: () => void;
+    onDeselect: () => void;
+    onChange: (block: Block) => void;
+    onRemove: () => void;
+    onAdd: (type: BlockType) => void;
+    onPickerOpenChange: (open: boolean) => void;
+};
+
+function BlockRow({
+    block,
+    selected,
+    pickerOpen,
+    onSelect,
+    onDeselect,
+    onChange,
+    onRemove,
+    onAdd,
+    onPickerOpenChange,
+}: BlockRowProps) {
+    const controls = useDragControls();
+
+    return (
+        <Reorder.Item
+            as="div"
+            value={block}
+            dragListener={false}
+            dragControls={controls}
+            layout="position"
+            initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+            animate={{
+                opacity: 1,
+                height: "auto",
+                transitionEnd: { overflow: "visible" },
+            }}
+            exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col"
+        >
+            <BlockEditable
+                block={block}
+                selected={selected}
+                dragControls={controls}
+                onSelect={onSelect}
+                onDeselect={onDeselect}
+                onChange={onChange}
+                onRemove={onRemove}
+            />
+            <GhostSlot
+                onAdd={onAdd}
+                open={pickerOpen}
+                onOpenChange={onPickerOpenChange}
+            />
+        </Reorder.Item>
     );
 }

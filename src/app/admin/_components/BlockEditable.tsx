@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { DragControls } from "motion/react";
 import type { Block, BlockStyle } from "@/app/lib/content/schema";
 import BlockRenderer from "@/app/components/ContentRenderer/BlockRenderer";
 import { BLOCK_LABELS } from "./blockFactory";
@@ -31,17 +32,31 @@ function isEmpty(b: Block): boolean {
 type Props = {
     block: Block;
     selected: boolean;
-    isFirst: boolean;
-    isLast: boolean;
+    dragControls: DragControls;
     onSelect: () => void;
     onDeselect: () => void;
     onChange: (block: Block) => void;
     onRemove: () => void;
-    onMove: (dir: -1 | 1) => void;
 };
 
+function Grip({ dragControls }: { dragControls: DragControls }) {
+    return (
+        <button
+            type="button"
+            aria-label="Drag to reorder"
+            onPointerDown={(e) => {
+                e.stopPropagation();
+                dragControls.start(e);
+            }}
+            className="cursor-grab touch-none select-none text-grey-400 active:cursor-grabbing"
+        >
+            ⠿
+        </button>
+    );
+}
+
 export default function BlockEditable(props: Props) {
-    const { block, selected, isFirst, isLast } = props;
+    const { block, selected, dragControls } = props;
     const [showStyle, setShowStyle] = useState(false);
 
     return (
@@ -63,28 +78,7 @@ export default function BlockEditable(props: Props) {
                         )}
                     </div>
                     <div className="absolute -top-3 right-0 hidden items-center gap-3 rounded-md border border-grey-200 bg-grey-50 px-2 py-1 font-body04-light text-grey-500 group-hover:flex">
-                        <button
-                            type="button"
-                            disabled={isFirst}
-                            className="disabled:opacity-30"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                props.onMove(-1);
-                            }}
-                        >
-                            ↑
-                        </button>
-                        <button
-                            type="button"
-                            disabled={isLast}
-                            className="disabled:opacity-30"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                props.onMove(1);
-                            }}
-                        >
-                            ↓
-                        </button>
+                        <Grip dragControls={dragControls} />
                         <button
                             type="button"
                             onClick={(e) => {
@@ -97,28 +91,13 @@ export default function BlockEditable(props: Props) {
                     </div>
                 </div>
             ) : (
-                <div className="relative flex flex-col gap-3 rounded-lg border border-grey-200 bg-grey-100 px-4 py-4">
+                <div className="relative flex flex-col gap-3 border-l-2 border-grey-300 pl-4">
                     <div className="flex items-center justify-between">
                         <span className="font-caption01-light text-grey-400">
                             {BLOCK_LABELS[block.type]}
                         </span>
                         <div className="flex items-center gap-3 font-body04-light text-grey-500">
-                            <button
-                                type="button"
-                                disabled={isFirst}
-                                className="disabled:opacity-30"
-                                onClick={() => props.onMove(-1)}
-                            >
-                                ↑
-                            </button>
-                            <button
-                                type="button"
-                                disabled={isLast}
-                                className="disabled:opacity-30"
-                                onClick={() => props.onMove(1)}
-                            >
-                                ↓
-                            </button>
+                            <Grip dragControls={dragControls} />
                             {hasStyle(block) && (
                                 <button
                                     type="button"
