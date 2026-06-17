@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, Reorder, useDragControls } from "motion/react";
 import type { Block, BlockType, ContentDoc } from "@/app/lib/content/schema";
 import { createBlock } from "./blockFactory";
@@ -17,6 +17,22 @@ export default function Canvas({ doc, onChange }: Props) {
     const [selected, setSelected] = useState<string | null>(null);
     const [openSlot, setOpenSlot] = useState<string | null>(null);
     const blocks = doc.blocks;
+
+    useEffect(() => {
+        if (!openSlot) return;
+        const onPointerDown = (e: PointerEvent) => {
+            const target = e.target as Element | null;
+            if (target?.closest("[data-add-picker]")) return;
+            setOpenSlot(null);
+        };
+        document.addEventListener("pointerdown", onPointerDown);
+        return () => document.removeEventListener("pointerdown", onPointerDown);
+    }, [openSlot]);
+
+    const selectBlock = (id: string) => {
+        setSelected(id);
+        setOpenSlot(null);
+    };
 
     const setBlocks = (next: Block[]) => onChange({ ...doc, blocks: next });
 
@@ -79,7 +95,7 @@ export default function Canvas({ doc, onChange }: Props) {
                                 block={block}
                                 selected={selected === block.id}
                                 pickerOpen={openSlot === block.id}
-                                onSelect={() => setSelected(block.id)}
+                                onSelect={() => selectBlock(block.id)}
                                 onDeselect={() => setSelected(null)}
                                 onChange={updateBlock}
                                 onRemove={() => removeBlock(block.id)}

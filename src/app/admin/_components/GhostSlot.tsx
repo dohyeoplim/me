@@ -20,7 +20,10 @@ export default function GhostSlot({
     return (
         <AutoHeight>
             {open ? (
-                <div className="my-3 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-grey-300 bg-grey-100 p-3">
+                <div
+                    data-add-picker
+                    className="my-3 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-grey-300 bg-grey-100 p-3"
+                >
                     {BLOCK_ORDER.map((type) => (
                         <button
                             key={type}
