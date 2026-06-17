@@ -25,9 +25,9 @@ export function ContentRenderer({ doc }: { doc: ContentDoc }) {
             widthClassName={doc.widthClassName}
             gapClassName={doc.gapClassName}
         >
-            {doc.blocks.map((block, i) => (
+            {doc.blocks.map((block) => (
                 <motion.div
-                    key={i}
+                    key={block.id}
                     variants={itemVariants}
                     initial="hidden"
                     whileInView="visible"

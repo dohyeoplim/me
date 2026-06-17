@@ -1,6 +1,8 @@
 import type { Block } from "./types";
 import { textWithBreaks } from "./utils";
+import StyledBlock from "./StyledBlock";
 import TextOnly from "./_components/TextOnly";
+import Heading from "./_components/Heading";
 import Divider from "./_components/Divider";
 import Spacer from "./_components/Spacer";
 import Section from "./_components/Section";
@@ -13,10 +15,13 @@ type Props = {
     block: Block;
 };
 
-export default function BlockRenderer({ block }: Props) {
+function inner(block: Block) {
     switch (block.type) {
         case "text":
             return <TextOnly>{textWithBreaks(block.text)}</TextOnly>;
+
+        case "heading":
+            return <Heading>{textWithBreaks(block.text)}</Heading>;
 
         case "divider":
             return <Divider />;
@@ -64,4 +69,8 @@ export default function BlockRenderer({ block }: Props) {
         default:
             return null;
     }
+}
+
+export default function BlockRenderer({ block }: Props) {
+    return <StyledBlock style={block.style}>{inner(block)}</StyledBlock>;
 }
