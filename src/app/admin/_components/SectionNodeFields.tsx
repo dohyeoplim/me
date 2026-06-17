@@ -28,8 +28,10 @@ export default function SectionNodeFields({ nodes, onChange }: Props) {
             {nodes.map((node, i) => (
                 <div key={i} className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-grey-400">{node.type}</span>
-                        <div className="flex gap-1 text-xs text-grey-500">
+                        <span className="font-caption01-light text-grey-400">
+                            {node.type}
+                        </span>
+                        <div className="flex gap-2 font-body04-light text-grey-500">
                             <button type="button" onClick={() => move(i, -1)}>
                                 ↑
                             </button>
@@ -80,12 +82,12 @@ export default function SectionNodeFields({ nodes, onChange }: Props) {
                     )}
                 </div>
             ))}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
                 {NODE_TYPES.map((t) => (
                     <button
                         key={t}
                         type="button"
-                        className="rounded border border-grey-200 px-2 py-1 text-xs text-grey-600"
+                        className="rounded-md border border-grey-200 px-2 py-1 font-body04-light text-grey-600"
                         onClick={() => onChange([...nodes, createNode(t)])}
                     >
                         + {t}

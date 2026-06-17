@@ -9,7 +9,7 @@ import {
 import type { BlockStyle } from "@/app/lib/content/schema";
 
 const selectClass =
-    "rounded border border-grey-200 bg-white px-2 py-1 text-sm text-grey-700";
+    "rounded-md border border-grey-200 bg-grey-50 px-2 py-1 font-body04-light text-grey-700";
 
 type Props = {
     style?: BlockStyle;
