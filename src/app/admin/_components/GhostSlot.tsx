@@ -22,7 +22,7 @@ export default function GhostSlot({
             {open ? (
                 <div
                     data-add-picker
-                    className="my-3 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-grey-300 bg-grey-100 p-3"
+                    className="my-2 flex flex-wrap items-center gap-2 border-l-2 border-grey-300 py-1 pl-4"
                 >
                     {BLOCK_ORDER.map((type) => (
                         <button
