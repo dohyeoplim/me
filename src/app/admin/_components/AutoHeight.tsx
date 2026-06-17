@@ -31,7 +31,9 @@ export default function AutoHeight({ children, className }: Props) {
             onAnimationComplete={() => setAnimating(false)}
             style={{ overflow: animating ? "hidden" : "visible" }}
         >
-            <div ref={inner}>{children}</div>
+            <div ref={inner} className="flow-root">
+                {children}
+            </div>
         </motion.div>
     );
 }

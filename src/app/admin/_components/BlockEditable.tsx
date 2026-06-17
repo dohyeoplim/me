@@ -97,7 +97,7 @@ export default function BlockEditable(props: Props) {
                     </div>
                 </div>
             ) : (
-                <div className="relative my-2 flex flex-col gap-3 rounded-lg border border-grey-200 bg-grey-100 px-4 py-4">
+                <div className="relative flex flex-col gap-3 rounded-lg border border-grey-200 bg-grey-100 px-4 py-4">
                     <div className="flex items-center justify-between">
                         <span className="font-caption01-light text-grey-400">
                             {BLOCK_LABELS[block.type]}
