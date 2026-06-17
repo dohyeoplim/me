@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Block, BlockType, ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry } from "@/app/admin/actions";
+import { HeaderActions } from "@/app/components/Header/HeaderSlot";
+import SignOutButton from "./SignOutButton";
 import { createBlock } from "./blockFactory";
 import { TextInput } from "./Field";
 import BlockList from "./BlockList";
@@ -46,25 +48,27 @@ export default function Editor(props: Props) {
 
     return (
         <div className="grid gap-8 lg:grid-cols-2">
+            <HeaderActions>
+                <button
+                    type="button"
+                    onClick={save}
+                    disabled={pending}
+                    className="rounded-md bg-grey-900 px-4 py-2 text-sm text-grey-50 disabled:opacity-50"
+                >
+                    {pending ? "Saving…" : "Save"}
+                </button>
+                <SignOutButton />
+            </HeaderActions>
+
             <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="font-head01-medium text-grey-900">
-                        {props.type} / {props.slug}
-                    </h1>
-                    <button
-                        type="button"
-                        onClick={save}
-                        disabled={pending}
-                        className="rounded-md bg-grey-900 px-4 py-2 text-sm text-grey-50 disabled:opacity-50"
-                    >
-                        {pending ? "Saving…" : "Save"}
-                    </button>
-                </div>
+                <h1 className="font-head01-medium text-grey-900">
+                    {props.type} / {props.slug}
+                </h1>
                 <TextInput label="title" value={title} onChange={setTitle} />
                 <BlockList blocks={doc.blocks} onChange={setBlocks} />
                 <AddBlockMenu onAdd={addBlock} />
             </div>
-            <div className="lg:sticky lg:top-6 lg:self-start">
+            <div className="lg:sticky lg:top-40 lg:self-start">
                 <Preview doc={doc} />
             </div>
         </div>

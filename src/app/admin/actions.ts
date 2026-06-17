@@ -1,11 +1,14 @@
 "use server";
 
-import fs from "node:fs/promises";
-import path from "node:path";
+import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { ContentDocSchema } from "@/app/lib/content/schema";
-import { upsertEntry } from "@/app/lib/content/repository";
+import {
+    upsertEntry,
+    getEntry,
+    listEntries,
+} from "@/app/lib/content/repository";
 
 async function requireAdmin() {
     const session = await auth();
@@ -35,28 +38,33 @@ export async function saveEntry(input: SaveInput) {
     revalidate(input.type, input.slug);
 }
 
-const HOME_SECTIONS = ["about", "experience", "projects"] as const;
-
-export async function seedFromFiles() {
+export async function createEntry(formData: FormData) {
     await requireAdmin();
-    for (let i = 0; i < HOME_SECTIONS.length; i++) {
-        const slug = HOME_SECTIONS[i];
-        const file = path.join(process.cwd(), "content", "home", `${slug}.json`);
-        const raw = JSON.parse(await fs.readFile(file, "utf-8"));
-        raw.blocks = (raw.blocks ?? []).map((b: Record<string, unknown>) => ({
-            id: crypto.randomUUID(),
-            ...b,
-        }));
-        const doc = ContentDocSchema.parse(raw);
+    const type = "home_section";
+    const slug = String(formData.get("slug") ?? "")
+        .trim()
+        .toLowerCase();
+    const title = String(formData.get("title") ?? "").trim();
+    if (!slug) return;
+
+    const existing = await getEntry(type, slug);
+    if (!existing) {
+        const entries = await listEntries(type);
         await upsertEntry({
             id: crypto.randomUUID(),
-            type: "home_section",
+            type,
             slug,
-            title: doc.sectionTitle?.title ?? slug,
+            title: title || slug,
             status: "published",
-            orderIndex: i,
-            doc,
+            orderIndex: entries.length,
+            doc: { blocks: [] },
         });
-        revalidate("home_section", slug);
+        revalidate(type, slug);
     }
+
+    redirect(`/admin/${type}/${slug}`);
+}
+
+export async function signOutAction() {
+    await signOut({ redirectTo: "/admin/signin" });
 }

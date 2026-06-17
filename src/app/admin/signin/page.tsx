@@ -2,7 +2,7 @@ import { signIn } from "@/auth";
 
 export default function SignIn() {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-6">
+        <div className="flex flex-col items-center gap-6 py-20">
             <h1 className="font-head01-medium text-grey-900">Admin</h1>
             <form
                 action={async () => {
