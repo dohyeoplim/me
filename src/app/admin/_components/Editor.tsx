@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./SignOutButton";
-import HomeLink from "./HomeLink";
 import Canvas from "./Canvas";
 
 type Status = "draft" | "published";
@@ -32,6 +32,16 @@ export default function Editor(props: Props) {
         title !== props.title ||
         status !== props.status ||
         JSON.stringify(doc) !== JSON.stringify(props.doc);
+
+    useEffect(() => {
+        if (!dirty) return;
+        const handler = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = "";
+        };
+        window.addEventListener("beforeunload", handler);
+        return () => window.removeEventListener("beforeunload", handler);
+    }, [dirty]);
 
     const save = () =>
         startTransition(async () => {
@@ -61,7 +71,16 @@ export default function Editor(props: Props) {
     return (
         <div className="flex flex-col gap-10">
             <HeaderActions>
-                <HomeLink />
+                <Link
+                    href="/"
+                    onClick={(e) => {
+                        if (dirty && !confirm("Discard unsaved changes?"))
+                            e.preventDefault();
+                    }}
+                    className="font-body04-light text-grey-500"
+                >
+                    Home
+                </Link>
                 <SignOutButton />
             </HeaderActions>
 
