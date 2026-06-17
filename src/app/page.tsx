@@ -1,18 +1,21 @@
 import Intro from "./sections/Intro";
-import About from "./sections/About";
-import Experience from "./sections/Experience";
-import Projects from "./sections/Projects";
+import SectionWithContent from "@/app/components/SectionWithContent";
+import { loadEntriesByType } from "@/app/lib/contentLoader";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+    const sections = (await loadEntriesByType("home_section")).filter(
+        (entry) => entry.status === "published",
+    );
+
     return (
         <div className="w-full max-w-4xl mx-auto md:pt-40 pb-30 px-6">
             <main className="flex flex-col items-center gap-30">
                 <Intro />
-                <About />
-                <Experience />
-                <Projects />
+                {sections.map((section) => (
+                    <SectionWithContent key={section.id} doc={section.doc} />
+                ))}
             </main>
         </div>
     );

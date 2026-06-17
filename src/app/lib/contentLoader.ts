@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { sql, ensureSchema } from "@/app/lib/db";
-import { ContentDocSchema, EntrySchema } from "@/app/lib/content/schema";
-import type { ContentDoc, Entry } from "@/app/lib/content/schema";
+import { EntrySchema } from "@/app/lib/content/schema";
+import type { Entry } from "@/app/lib/content/schema";
 
 type Row = {
     id: string;
@@ -26,24 +26,6 @@ function toEntry(row: Row): Entry {
         updatedAt: new Date(row.updated_at).toISOString(),
     });
 }
-
-export const loadEntry = (type: string, slug: string): Promise<ContentDoc> =>
-    unstable_cache(
-        async () => {
-            await ensureSchema();
-            const rows = (await sql`
-                select * from content_entries
-                where type = ${type} and slug = ${slug}
-                limit 1
-            `) as Row[];
-            if (rows.length === 0) {
-                return { blocks: [] } satisfies ContentDoc;
-            }
-            return ContentDocSchema.parse(rows[0].doc);
-        },
-        ["content", type, slug],
-        { tags: ["content", `content:${type}`, `content:${type}:${slug}`] },
-    )();
 
 export const loadEntriesByType = (type: string): Promise<Entry[]> =>
     unstable_cache(
