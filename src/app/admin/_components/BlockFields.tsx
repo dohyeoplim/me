@@ -3,6 +3,7 @@
 import type { Block } from "@/app/lib/content/schema";
 import { TextInput, TextArea } from "./Field";
 import SectionNodeFields from "./SectionNodeFields";
+import ImageField from "./ImageField";
 
 type Props = {
     block: Block;
@@ -18,6 +19,14 @@ export default function BlockFields({ block, onChange }: Props) {
                     label="text"
                     value={block.text}
                     onChange={(v) => onChange({ ...block, text: v })}
+                />
+            );
+        case "image":
+            return (
+                <ImageField
+                    url={block.url}
+                    alt={block.alt ?? ""}
+                    onChange={(patch) => onChange({ ...block, ...patch })}
                 />
             );
         case "spacer":

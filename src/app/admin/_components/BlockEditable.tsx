@@ -16,6 +16,8 @@ function isEmpty(b: Block): boolean {
         case "text":
         case "heading":
             return b.text.trim() === "";
+        case "image":
+            return b.url.trim() === "";
         case "item":
             return b.title.trim() === "";
         case "project":

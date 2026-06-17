@@ -52,6 +52,12 @@ export const SectionNodeSchema = z.discriminatedUnion("type", [
 export const BlockSchema = z.discriminatedUnion("type", [
     z.object({ ...withId, type: z.literal("text"), text: z.string() }),
     z.object({ ...withId, type: z.literal("heading"), text: z.string() }),
+    z.object({
+        ...withId,
+        type: z.literal("image"),
+        url: z.string(),
+        alt: z.string().optional(),
+    }),
     z.object({ ...withId, type: z.literal("divider") }),
     z.object({
         ...withId,

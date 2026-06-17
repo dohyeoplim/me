@@ -3,6 +3,7 @@ import type { Block, BlockType, SectionNode } from "@/app/lib/content/schema";
 export const BLOCK_LABELS: Record<BlockType, string> = {
     heading: "Heading",
     text: "Text",
+    image: "Image",
     item: "Item",
     enumerate: "List",
     project: "Project",
@@ -14,6 +15,7 @@ export const BLOCK_LABELS: Record<BlockType, string> = {
 export const BLOCK_ORDER: BlockType[] = [
     "heading",
     "text",
+    "image",
     "item",
     "enumerate",
     "project",
@@ -29,6 +31,8 @@ export function createBlock(type: BlockType): Block {
             return { id, type, text: "" };
         case "text":
             return { id, type, text: "" };
+        case "image":
+            return { id, type, url: "", alt: "" };
         case "divider":
             return { id, type };
         case "spacer":

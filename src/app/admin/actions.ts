@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
+import { put } from "@vercel/blob";
 import { auth, signOut } from "@/auth";
 import { ContentDocSchema } from "@/app/lib/content/schema";
 import {
@@ -72,6 +73,17 @@ export async function reorderEntries(type: string, ids: string[]) {
     await repoReorderEntries(type, ids);
     updateTag("content");
     updateTag(`content:${type}`);
+}
+
+export async function uploadImage(formData: FormData) {
+    await requireAdmin();
+    const file = formData.get("file");
+    if (!(file instanceof File)) throw new Error("No file");
+    const blob = await put(file.name, file, {
+        access: "public",
+        addRandomSuffix: true,
+    });
+    return blob.url;
 }
 
 export async function signOutAction() {

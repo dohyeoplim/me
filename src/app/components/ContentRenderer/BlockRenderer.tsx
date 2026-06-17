@@ -3,6 +3,7 @@ import { textWithBreaks } from "./utils";
 import StyledBlock from "./StyledBlock";
 import TextOnly from "./_components/TextOnly";
 import Heading from "./_components/Heading";
+import Image from "./_components/Image";
 import Divider from "./_components/Divider";
 import Spacer from "./_components/Spacer";
 import Section from "./_components/Section";
@@ -30,6 +31,9 @@ function inner(block: Block) {
                     {textWithBreaks(block.text)}
                 </Heading>
             );
+
+        case "image":
+            return <Image url={block.url} alt={block.alt} />;
 
         case "divider":
             return <Divider />;
