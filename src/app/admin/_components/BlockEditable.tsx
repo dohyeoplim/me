@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import type { Block, BlockStyle } from "@/app/lib/content/schema";
 import BlockRenderer from "@/app/components/ContentRenderer/BlockRenderer";
 import { BLOCK_LABELS } from "./blockFactory";
 import BlockFields from "./BlockFields";
 import StyleControls from "./StyleControls";
+import AutoHeight from "./AutoHeight";
 
 const hasStyle = (b: Block) => b.type !== "divider" && b.type !== "spacer";
 
@@ -45,20 +45,9 @@ export default function BlockEditable(props: Props) {
     const [showStyle, setShowStyle] = useState(false);
 
     return (
-        <AnimatePresence initial={false} mode="wait">
+        <AutoHeight>
             {!selected ? (
-                <motion.div
-                    key="view"
-                    initial={{ opacity: 0, height: 0, overflow: "hidden" }}
-                    animate={{
-                        opacity: 1,
-                        height: "auto",
-                        transitionEnd: { overflow: "visible" },
-                    }}
-                    exit={{ opacity: 0, height: 0, overflow: "hidden" }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    className="group relative -mx-2 rounded-md px-2 py-1.5 hover:bg-grey-100"
-                >
+                <div className="group relative -mx-2 rounded-md px-2 py-1.5 hover:bg-grey-100">
                     <div
                         role="button"
                         tabIndex={0}
@@ -106,20 +95,9 @@ export default function BlockEditable(props: Props) {
                             ✕
                         </button>
                     </div>
-                </motion.div>
+                </div>
             ) : (
-                <motion.div
-                    key="edit"
-                    initial={{ opacity: 0, height: 0, overflow: "hidden" }}
-                    animate={{
-                        opacity: 1,
-                        height: "auto",
-                        transitionEnd: { overflow: "visible" },
-                    }}
-                    exit={{ opacity: 0, height: 0, overflow: "hidden" }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative -mx-2 flex flex-col gap-3 rounded-md border border-grey-300 bg-grey-50 px-3 py-3"
-                >
+                <div className="relative -mx-2 flex flex-col gap-3 rounded-md border border-grey-300 bg-grey-50 px-3 py-3">
                     <div className="flex items-center justify-between">
                         <span className="font-caption01-light text-grey-400">
                             {BLOCK_LABELS[block.type]}
@@ -170,8 +148,8 @@ export default function BlockEditable(props: Props) {
                             }
                         />
                     )}
-                </motion.div>
+                </div>
             )}
-        </AnimatePresence>
+        </AutoHeight>
     );
 }
