@@ -2,7 +2,6 @@
 
 import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
-import { put } from "@vercel/blob";
 import { auth, signOut } from "@/auth";
 import { ContentDocSchema, IntroDocSchema } from "@/app/lib/content/schema";
 import type { IntroDoc } from "@/app/lib/content/schema";
@@ -83,17 +82,6 @@ export async function saveIntro(doc: IntroDoc) {
     await upsertIntro(parsed);
     updateTag("content");
     updateTag("content:intro");
-}
-
-export async function uploadImage(formData: FormData) {
-    await requireAdmin();
-    const file = formData.get("file");
-    if (!(file instanceof File)) throw new Error("No file");
-    const blob = await put(file.name, file, {
-        access: "public",
-        addRandomSuffix: true,
-    });
-    return blob.url;
 }
 
 export async function signOutAction() {

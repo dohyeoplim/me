@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import NextImage from "next/image";
-import { uploadImage } from "@/app/admin/actions";
+import { upload } from "@vercel/blob/client";
 import { TextInput } from "./Field";
 
 type Props = {
@@ -25,10 +25,11 @@ export default function ImageField({
         if (!file) return;
         setUploading(true);
         try {
-            const data = new FormData();
-            data.append("file", file);
-            const uploaded = await uploadImage(data);
-            onChange({ url: uploaded });
+            const blob = await upload(file.name, file, {
+                access: "public",
+                handleUploadUrl: "/api/blob/upload",
+            });
+            onChange({ url: blob.url });
         } finally {
             setUploading(false);
         }
