@@ -9,7 +9,7 @@ type ContentBlockProps = {
 
 export default function ContentBlock({
     className,
-    widthClassName = "w-full md:max-w-[512px]",
+    widthClassName = "w-full md:max-w-lg",
     gapClassName = "gap-8",
     children,
 }: ContentBlockProps) {
