@@ -171,6 +171,7 @@ export default function IntroEditor(props: Props) {
                     url={doc.image.url}
                     alt={doc.image.alt}
                     onChange={(patch) => setImage(patch)}
+                    previewClassName="h-auto w-44"
                 />
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <TextInput

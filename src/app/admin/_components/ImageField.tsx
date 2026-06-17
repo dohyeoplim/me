@@ -9,9 +9,15 @@ type Props = {
     url: string;
     alt: string;
     onChange: (patch: { url?: string; alt?: string }) => void;
+    previewClassName?: string;
 };
 
-export default function ImageField({ url, alt, onChange }: Props) {
+export default function ImageField({
+    url,
+    alt,
+    onChange,
+    previewClassName = "h-auto w-full",
+}: Props) {
     const [uploading, setUploading] = useState(false);
 
     const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +43,7 @@ export default function ImageField({ url, alt, onChange }: Props) {
                     width={0}
                     height={0}
                     sizes="100vw"
-                    className="h-auto w-full rounded-md border border-grey-200"
+                    className={`rounded-md border border-grey-200 ${previewClassName}`}
                 />
             ) : null}
             <label className="flex cursor-pointer items-center justify-center rounded-md border border-dashed border-grey-300 py-3 font-body04-light text-grey-500 hover:border-grey-400">
