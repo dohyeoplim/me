@@ -1,8 +1,8 @@
 import SectionWithContent from "@/app/components/SectionWithContent";
-import { loadContentDoc } from "@/app/lib/contentLoader";
+import { loadEntry } from "@/app/lib/contentLoader";
 
 export default async function Projects() {
-    const doc = await loadContentDoc("home/projects.json");
+    const doc = await loadEntry("home_section", "projects");
 
     return <SectionWithContent doc={doc} />;
 }
