@@ -16,7 +16,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
     return (
         <AutoHeight>
             {open ? (
-                <div className="my-1 flex flex-wrap items-center gap-2 rounded-md border border-dashed border-grey-300 bg-grey-50 p-2">
+                <div className="my-3 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-grey-300 bg-grey-100 p-3">
                     {BLOCK_ORDER.map((type) => (
                         <button
                             key={type}
