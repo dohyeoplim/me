@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { pretendard } from "@/assets/fonts/pretendard";
 import "./globals.css";
 import Header from "./components/Header";
+import { HeaderSlotProvider } from "./components/Header/HeaderSlot";
 import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -23,9 +24,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${pretendard.variable} antialiased`}>
-                <Header />
-                {children}
-                <Footer />
+                <HeaderSlotProvider>
+                    <Header />
+                    {children}
+                    <Footer />
+                </HeaderSlotProvider>
                 <Analytics />
             </body>
         </html>
