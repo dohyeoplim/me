@@ -18,6 +18,11 @@
         background-color: var(--color-grey-50);
     }
 
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+
     body {
         font-family:
             var(--font-pretendard),
