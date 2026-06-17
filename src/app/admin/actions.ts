@@ -8,6 +8,7 @@ import {
     upsertEntry,
     getEntry,
     listEntries,
+    deleteEntry as removeEntry,
 } from "@/app/lib/content/repository";
 
 async function requireAdmin() {
@@ -63,6 +64,13 @@ export async function createEntry(formData: FormData) {
     }
 
     redirect(`/admin/${type}/${slug}`);
+}
+
+export async function deleteEntry(type: string, slug: string) {
+    await requireAdmin();
+    await removeEntry(type, slug);
+    revalidate(type, slug);
+    redirect("/admin");
 }
 
 export async function signOutAction() {

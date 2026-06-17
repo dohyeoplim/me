@@ -77,3 +77,10 @@ export async function upsertEntry(input: UpsertInput) {
             updated_at = now()
     `;
 }
+
+export async function deleteEntry(type: string, slug: string) {
+    await ensureSchema();
+    await sql`
+        delete from content_entries where type = ${type} and slug = ${slug}
+    `;
+}
