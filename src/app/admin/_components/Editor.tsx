@@ -6,14 +6,17 @@ import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./SignOutButton";
+import HomeLink from "./HomeLink";
 import Canvas from "./Canvas";
+
+type Status = "draft" | "published";
 
 type Props = {
     id: string;
     type: string;
     slug: string;
     title: string;
-    status: "draft" | "published";
+    status: Status;
     orderIndex: number;
     doc: ContentDoc;
 };
@@ -21,11 +24,13 @@ type Props = {
 export default function Editor(props: Props) {
     const router = useRouter();
     const [title, setTitle] = useState(props.title);
+    const [status, setStatus] = useState<Status>(props.status);
     const [doc, setDoc] = useState<ContentDoc>(props.doc);
     const [pending, startTransition] = useTransition();
 
     const dirty =
         title !== props.title ||
+        status !== props.status ||
         JSON.stringify(doc) !== JSON.stringify(props.doc);
 
     const save = () =>
@@ -35,7 +40,7 @@ export default function Editor(props: Props) {
                 type: props.type,
                 slug: props.slug,
                 title,
-                status: props.status,
+                status,
                 orderIndex: props.orderIndex,
                 doc,
             });
@@ -44,6 +49,7 @@ export default function Editor(props: Props) {
 
     const revert = () => {
         setTitle(props.title);
+        setStatus(props.status);
         setDoc(props.doc);
     };
 
@@ -55,6 +61,7 @@ export default function Editor(props: Props) {
     return (
         <div className="flex flex-col gap-10">
             <HeaderActions>
+                <HomeLink />
                 <button
                     type="button"
                     onClick={save}
@@ -68,7 +75,7 @@ export default function Editor(props: Props) {
 
             <div className="flex flex-col gap-2">
                 <span className="font-caption01-light text-grey-400">
-                    {props.type} / {props.slug}
+                    {props.type}
                 </span>
                 <div className="flex items-end justify-between gap-4 border-b border-grey-200 focus-within:border-grey-400">
                     <input
@@ -78,6 +85,24 @@ export default function Editor(props: Props) {
                         className="w-full bg-transparent pb-1 font-head01-medium text-grey-900 outline-none placeholder:text-grey-300"
                     />
                     <div className="flex shrink-0 items-center gap-4 pb-1.5 font-body04-light text-grey-500">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setStatus((s) =>
+                                    s === "published" ? "draft" : "published",
+                                )
+                            }
+                            className="flex items-center gap-1.5"
+                        >
+                            <span
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                    status === "published"
+                                        ? "bg-grey-800"
+                                        : "bg-grey-300"
+                                }`}
+                            />
+                            {status === "published" ? "Published" : "Draft"}
+                        </button>
                         <button
                             type="button"
                             onClick={revert}
