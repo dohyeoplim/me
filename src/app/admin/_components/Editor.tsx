@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
@@ -21,17 +20,62 @@ type Props = {
     doc: ContentDoc;
 };
 
+type SaveState = "idle" | "saving" | "saved";
+
 export default function Editor(props: Props) {
-    const router = useRouter();
     const [title, setTitle] = useState(props.title);
     const [status, setStatus] = useState<Status>(props.status);
     const [doc, setDoc] = useState<ContentDoc>(props.doc);
-    const [pending, startTransition] = useTransition();
+    const [baseline, setBaseline] = useState({
+        title: props.title,
+        status: props.status,
+        doc: props.doc,
+    });
+    const [saveState, setSaveState] = useState<SaveState>("idle");
+    const saving = useRef(false);
 
     const dirty =
-        title !== props.title ||
-        status !== props.status ||
-        JSON.stringify(doc) !== JSON.stringify(props.doc);
+        title !== baseline.title ||
+        status !== baseline.status ||
+        JSON.stringify(doc) !== JSON.stringify(baseline.doc);
+
+    const save = useCallback(async () => {
+        if (saving.current || !dirty) return;
+        saving.current = true;
+        setSaveState("saving");
+        try {
+            await saveEntry({
+                id: props.id,
+                type: props.type,
+                slug: props.slug,
+                title,
+                status,
+                orderIndex: props.orderIndex,
+                doc,
+            });
+            setBaseline({ title, status, doc });
+            setSaveState("saved");
+        } finally {
+            saving.current = false;
+        }
+    }, [dirty, title, status, doc, props]);
+
+    useEffect(() => {
+        if (!dirty) return;
+        const t = setTimeout(save, 1200);
+        return () => clearTimeout(t);
+    }, [dirty, save]);
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+                e.preventDefault();
+                save();
+            }
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [save]);
 
     useEffect(() => {
         if (!dirty) return;
@@ -43,30 +87,16 @@ export default function Editor(props: Props) {
         return () => window.removeEventListener("beforeunload", handler);
     }, [dirty]);
 
-    const save = () =>
-        startTransition(async () => {
-            await saveEntry({
-                id: props.id,
-                type: props.type,
-                slug: props.slug,
-                title,
-                status,
-                orderIndex: props.orderIndex,
-                doc,
-            });
-            router.push("/admin");
-        });
-
     const revert = () => {
-        setTitle(props.title);
-        setStatus(props.status);
-        setDoc(props.doc);
+        setTitle(baseline.title);
+        setStatus(baseline.status);
+        setDoc(baseline.doc);
     };
 
-    const remove = () =>
-        startTransition(async () => {
-            await deleteEntry(props.type, props.slug);
-        });
+    const remove = () => deleteEntry(props.type, props.slug);
+
+    const saveLabel =
+        saveState === "saving" ? "Saving…" : dirty ? "Unsaved" : "Saved";
 
     return (
         <div className="flex flex-col gap-10">
@@ -90,6 +120,7 @@ export default function Editor(props: Props) {
                         {props.type}
                     </span>
                     <div className="flex items-center gap-4 font-body04-light text-grey-500">
+                        <span className="text-grey-400">{saveLabel}</span>
                         <button
                             type="button"
                             onClick={() =>
@@ -111,29 +142,19 @@ export default function Editor(props: Props) {
                         <button
                             type="button"
                             onClick={revert}
-                            disabled={!dirty || pending}
+                            disabled={!dirty}
                             className="disabled:opacity-30"
                         >
                             Revert
                         </button>
                         <button
                             type="button"
-                            disabled={pending}
-                            className="disabled:opacity-30"
                             onClick={() => {
                                 if (confirm("Delete this section permanently?"))
                                     remove();
                             }}
                         >
                             Delete
-                        </button>
-                        <button
-                            type="button"
-                            onClick={save}
-                            disabled={pending}
-                            className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50 disabled:opacity-50"
-                        >
-                            {pending ? "Saving…" : "Save"}
                         </button>
                     </div>
                 </div>

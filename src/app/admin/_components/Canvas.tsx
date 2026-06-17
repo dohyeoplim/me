@@ -29,6 +29,17 @@ export default function Canvas({ doc, onChange }: Props) {
         return () => document.removeEventListener("pointerdown", onPointerDown);
     }, [openSlot]);
 
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setSelected(null);
+                setOpenSlot(null);
+            }
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, []);
+
     const selectBlock = (id: string) => {
         setSelected(id);
         setOpenSlot(null);
