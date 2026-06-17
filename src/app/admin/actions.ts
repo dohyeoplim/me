@@ -6,7 +6,6 @@ import { auth, signOut } from "@/auth";
 import { ContentDocSchema } from "@/app/lib/content/schema";
 import {
     upsertEntry,
-    getEntry,
     listEntries,
     deleteEntry as removeEntry,
 } from "@/app/lib/content/repository";
@@ -42,26 +41,20 @@ export async function saveEntry(input: SaveInput) {
 export async function createEntry(formData: FormData) {
     await requireAdmin();
     const type = "home_section";
-    const slug = String(formData.get("slug") ?? "")
-        .trim()
-        .toLowerCase();
+    const slug = crypto.randomUUID();
     const title = String(formData.get("title") ?? "").trim();
-    if (!slug) return;
 
-    const existing = await getEntry(type, slug);
-    if (!existing) {
-        const entries = await listEntries(type);
-        await upsertEntry({
-            id: crypto.randomUUID(),
-            type,
-            slug,
-            title: title || slug,
-            status: "published",
-            orderIndex: entries.length,
-            doc: { blocks: [] },
-        });
-        revalidate(type, slug);
-    }
+    const entries = await listEntries(type);
+    await upsertEntry({
+        id: crypto.randomUUID(),
+        type,
+        slug,
+        title: title || "Untitled",
+        status: "draft",
+        orderIndex: entries.length,
+        doc: { blocks: [] },
+    });
+    revalidate(type, slug);
 
     redirect(`/admin/${type}/${slug}`);
 }
