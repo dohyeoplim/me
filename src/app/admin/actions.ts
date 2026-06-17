@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { auth } from "@/auth";
 import { ContentDocSchema } from "@/app/lib/content/schema";
 import { upsertEntry } from "@/app/lib/content/repository";
@@ -13,9 +13,9 @@ async function requireAdmin() {
 }
 
 function revalidate(type: string, slug: string) {
-    revalidateTag("content");
-    revalidateTag(`content:${type}`);
-    revalidateTag(`content:${type}:${slug}`);
+    updateTag("content");
+    updateTag(`content:${type}`);
+    updateTag(`content:${type}:${slug}`);
 }
 
 export type SaveInput = {
