@@ -3,6 +3,8 @@ import About from "./sections/About";
 import Experience from "./sections/Experience";
 import Projects from "./sections/Projects";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
     return (
         <div className="w-full max-w-4xl mx-auto md:pt-40 pb-30 px-6">
