@@ -63,7 +63,10 @@ export default function Canvas({ doc, onChange }: Props) {
                 />
             </div>
             <div className="flex w-full flex-col md:max-w-[512px]">
-                <GhostSlot onAdd={(t) => insertAt(0, t)} />
+                <GhostSlot
+                    onAdd={(t) => insertAt(0, t)}
+                    prominent={blocks.length === 0}
+                />
                 {blocks.map((block, i) => (
                     <div key={block.id} className="flex flex-col">
                         <BlockEditable

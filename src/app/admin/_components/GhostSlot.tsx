@@ -6,9 +6,10 @@ import { BLOCK_LABELS, BLOCK_ORDER } from "./blockFactory";
 
 type Props = {
     onAdd: (type: BlockType) => void;
+    prominent?: boolean;
 };
 
-export default function GhostSlot({ onAdd }: Props) {
+export default function GhostSlot({ onAdd, prominent = false }: Props) {
     const [open, setOpen] = useState(false);
 
     if (open) {
@@ -38,13 +39,25 @@ export default function GhostSlot({ onAdd }: Props) {
         );
     }
 
+    if (prominent) {
+        return (
+            <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="my-1 flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-grey-300 py-3 font-caption01-light text-grey-400 hover:border-grey-400 hover:text-grey-600"
+            >
+                + Add content
+            </button>
+        );
+    }
+
     return (
         <button
             type="button"
             onClick={() => setOpen(true)}
-            className="group flex h-6 w-full items-center"
+            className="group flex h-7 w-full items-center"
         >
-            <span className="flex w-full items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="flex w-full items-center gap-2 opacity-50 transition-opacity group-hover:opacity-100">
                 <span className="h-px flex-1 bg-grey-200" />
                 <span className="font-caption01-light text-grey-400">+ Add</span>
                 <span className="h-px flex-1 bg-grey-200" />
