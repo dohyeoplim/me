@@ -1,6 +1,6 @@
 import { sql, ensureSchema } from "@/app/lib/db";
-import { ContentDocSchema, EntrySchema } from "./schema";
-import type { ContentDoc, Entry } from "./schema";
+import { ContentDocSchema, EntrySchema, IntroDocSchema } from "./schema";
+import type { ContentDoc, Entry, IntroDoc } from "./schema";
 
 type Row = {
     id: string;
@@ -82,6 +82,30 @@ export async function deleteEntry(type: string, slug: string) {
     await ensureSchema();
     await sql`
         delete from content_entries where type = ${type} and slug = ${slug}
+    `;
+}
+
+export async function getIntro(): Promise<IntroDoc | null> {
+    await ensureSchema();
+    const rows = (await sql`
+        select doc from content_entries
+        where type = 'intro' and slug = 'main' limit 1
+    `) as { doc: unknown }[];
+    return rows.length ? IntroDocSchema.parse(rows[0].doc) : null;
+}
+
+export async function upsertIntro(doc: IntroDoc) {
+    await ensureSchema();
+    const parsed = IntroDocSchema.parse(doc);
+    await sql`
+        insert into content_entries
+            (id, type, slug, title, status, order_index, doc, updated_at)
+        values (
+            ${crypto.randomUUID()}, 'intro', 'main', 'Intro',
+            'published', -1, ${JSON.stringify(parsed)}, now()
+        )
+        on conflict (type, slug) do update set
+            doc = excluded.doc, updated_at = now()
     `;
 }
 

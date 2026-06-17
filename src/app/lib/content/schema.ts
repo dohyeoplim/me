@@ -116,6 +116,54 @@ export const EntrySchema = z.object({
     updatedAt: z.string(),
 });
 
+export const IntroLinkSchema = z.object({
+    label: z.string(),
+    href: z.string(),
+    icon: z.enum(["external"]).optional(),
+});
+
+export const IntroDocSchema = z.object({
+    name: z.string(),
+    tagline: z.string(),
+    profileLabel: z.string(),
+    bio: z.string(),
+    links: z.array(IntroLinkSchema),
+    image: z.object({
+        url: z.string(),
+        alt: z.string(),
+        captionTopLeft: z.string(),
+        captionTopRight: z.string(),
+        captionBottomLeft: z.string(),
+        captionBottomRight: z.string(),
+    }),
+});
+
+export type IntroLink = z.infer<typeof IntroLinkSchema>;
+export type IntroDoc = z.infer<typeof IntroDocSchema>;
+
+export const INTRO_DEFAULT: IntroDoc = {
+    name: "Dohyeop Lim",
+    tagline: "Visual AI Research & Systems",
+    profileLabel: "Profile",
+    bio: "I design and implement vision models,\nfrom core algorithms to working systems.",
+    links: [
+        { label: "Email", href: "mailto:dohyeoplim@seoultech.ac.kr" },
+        {
+            label: "GitHub",
+            href: "https://github.com/dohyeoplim",
+            icon: "external",
+        },
+    ],
+    image: {
+        url: "/profile.png",
+        alt: "Dohyeop Lim's profile image",
+        captionTopLeft: "Portrait",
+        captionTopRight: "2026",
+        captionBottomLeft: "Fig. 01",
+        captionBottomRight: "Seoul, KR",
+    },
+};
+
 export type BlockStyle = z.infer<typeof BlockStyleSchema>;
 export type SectionNode = z.infer<typeof SectionNodeSchema>;
 export type Block = z.infer<typeof BlockSchema>;

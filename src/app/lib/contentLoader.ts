@@ -1,7 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { sql, ensureSchema } from "@/app/lib/db";
-import { EntrySchema } from "@/app/lib/content/schema";
-import type { Entry } from "@/app/lib/content/schema";
+import { getIntro } from "@/app/lib/content/repository";
+import { EntrySchema, INTRO_DEFAULT } from "@/app/lib/content/schema";
+import type { Entry, IntroDoc } from "@/app/lib/content/schema";
 
 type Row = {
     id: string;
@@ -40,4 +41,11 @@ export const loadEntriesByType = (type: string): Promise<Entry[]> =>
         },
         ["content-list", type],
         { tags: ["content", `content:${type}`] },
+    )();
+
+export const loadIntro = (): Promise<IntroDoc> =>
+    unstable_cache(
+        async () => (await getIntro()) ?? INTRO_DEFAULT,
+        ["content-intro"],
+        { tags: ["content", "content:intro"] },
     )();

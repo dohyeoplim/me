@@ -4,12 +4,14 @@ import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
 import { put } from "@vercel/blob";
 import { auth, signOut } from "@/auth";
-import { ContentDocSchema } from "@/app/lib/content/schema";
+import { ContentDocSchema, IntroDocSchema } from "@/app/lib/content/schema";
+import type { IntroDoc } from "@/app/lib/content/schema";
 import {
     upsertEntry,
     listEntries,
     deleteEntry as removeEntry,
     reorderEntries as repoReorderEntries,
+    upsertIntro,
 } from "@/app/lib/content/repository";
 
 async function requireAdmin() {
@@ -73,6 +75,14 @@ export async function reorderEntries(type: string, ids: string[]) {
     await repoReorderEntries(type, ids);
     updateTag("content");
     updateTag(`content:${type}`);
+}
+
+export async function saveIntro(doc: IntroDoc) {
+    await requireAdmin();
+    const parsed = IntroDocSchema.parse(doc);
+    await upsertIntro(parsed);
+    updateTag("content");
+    updateTag("content:intro");
 }
 
 export async function uploadImage(formData: FormData) {

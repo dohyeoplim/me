@@ -2,8 +2,11 @@ import * as motion from "motion/react-client";
 import Bio from "./_components/Bio";
 import Name from "./_components/Name";
 import Profile from "./_components/Profile";
+import { loadIntro } from "@/app/lib/contentLoader";
 
-export default function Intro() {
+export default async function Intro() {
+    const data = await loadIntro();
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 15 }}
@@ -26,12 +29,16 @@ export default function Intro() {
             </div>
 
             <div className="flex flex-col gap-8 md:gap-15">
-                <Name />
-                <Profile className="block md:hidden" />
-                <Bio />
+                <Name name={data.name} tagline={data.tagline} />
+                <Profile image={data.image} className="block md:hidden" />
+                <Bio
+                    profileLabel={data.profileLabel}
+                    bio={data.bio}
+                    links={data.links}
+                />
             </div>
 
-            <Profile className="hidden md:block" />
+            <Profile image={data.image} className="hidden md:block" />
         </motion.section>
     );
 }

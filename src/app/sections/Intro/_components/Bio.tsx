@@ -1,28 +1,32 @@
 import LinkButton from "@/app/components/LinkButton";
 import SectionTitle from "@/app/components/SectionTitle";
+import type { IntroLink } from "@/app/lib/content/schema";
 
-export default function Bio() {
+type Props = {
+    profileLabel: string;
+    bio: string;
+    links: IntroLink[];
+};
+
+export default function Bio({ profileLabel, bio, links }: Props) {
     return (
         <div className="flex flex-col gap-8 select-none">
             <div className="flex flex-col gap-4">
-                <SectionTitle subtitle="Profile" />
-                <p className="font-body02-light text-grey-700">
-                    I design and implement vision models,
-                    <br />
-                    from core algorithms to working systems.
+                <SectionTitle subtitle={profileLabel} />
+                <p className="font-body02-light text-grey-700 whitespace-pre-line">
+                    {bio}
                 </p>
             </div>
 
             <div className="flex items-center gap-3">
-                <LinkButton
-                    label="Email"
-                    href="mailto:dohyeoplim@seoultech.ac.kr"
-                />
-                <LinkButton
-                    label="GitHub"
-                    href="https://github.com/dohyeoplim"
-                    icon="external"
-                />
+                {links.map((link, i) => (
+                    <LinkButton
+                        key={i}
+                        label={link.label}
+                        href={link.href}
+                        icon={link.icon}
+                    />
+                ))}
             </div>
         </div>
     );

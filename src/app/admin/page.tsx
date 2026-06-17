@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listEntries } from "@/app/lib/content/repository";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./_components/SignOutButton";
@@ -16,6 +17,14 @@ export default async function AdminDashboard() {
                 <HomeLink />
                 <SignOutButton />
             </HeaderActions>
+
+            <Link
+                href="/admin/intro"
+                className="flex items-center justify-between border-b border-grey-200 pb-3 font-body02-light text-grey-900"
+            >
+                Intro
+                <span className="font-body05-light text-grey-400">edit</span>
+            </Link>
 
             <h2 className="font-head01-medium text-grey-900">Home</h2>
 
