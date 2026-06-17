@@ -57,7 +57,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
             onClick={() => setOpen(true)}
             className="group flex h-7 w-full items-center"
         >
-            <span className="flex w-full items-center gap-2 opacity-50 transition-opacity group-hover:opacity-100">
+            <span className="flex w-full items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                 <span className="h-px flex-1 bg-grey-200" />
                 <span className="font-caption01-light text-grey-400">+ Add</span>
                 <span className="h-px flex-1 bg-grey-200" />

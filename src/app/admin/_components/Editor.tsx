@@ -57,43 +57,48 @@ export default function Editor(props: Props) {
             <HeaderActions>
                 <button
                     type="button"
-                    onClick={revert}
-                    disabled={!dirty || pending}
-                    className="font-body04-light text-grey-500 disabled:opacity-30"
-                >
-                    Revert
-                </button>
-                <button
-                    type="button"
                     onClick={save}
                     disabled={pending}
                     className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50 disabled:opacity-50"
                 >
                     {pending ? "Saving…" : "Save"}
                 </button>
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (confirm("Delete this section permanently?")) remove();
-                    }}
-                    disabled={pending}
-                    className="font-body04-light text-grey-500 disabled:opacity-30"
-                >
-                    Delete
-                </button>
                 <SignOutButton />
             </HeaderActions>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
                 <span className="font-caption01-light text-grey-400">
                     {props.type} / {props.slug}
                 </span>
-                <input
-                    value={title}
-                    placeholder="Entry title"
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="bg-transparent font-head01-medium text-grey-900 outline-none placeholder:text-grey-300"
-                />
+                <div className="flex items-end justify-between gap-4 border-b border-grey-200 focus-within:border-grey-400">
+                    <input
+                        value={title}
+                        placeholder="Entry title"
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full bg-transparent pb-1 font-head01-medium text-grey-900 outline-none placeholder:text-grey-300"
+                    />
+                    <div className="flex shrink-0 items-center gap-4 pb-1.5 font-body04-light text-grey-500">
+                        <button
+                            type="button"
+                            onClick={revert}
+                            disabled={!dirty || pending}
+                            className="disabled:opacity-30"
+                        >
+                            Revert
+                        </button>
+                        <button
+                            type="button"
+                            disabled={pending}
+                            className="disabled:opacity-30"
+                            onClick={() => {
+                                if (confirm("Delete this section permanently?"))
+                                    remove();
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <Canvas doc={doc} onChange={setDoc} />
