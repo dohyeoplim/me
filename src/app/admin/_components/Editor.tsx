@@ -2,15 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Block, BlockType, ContentDoc } from "@/app/lib/content/schema";
+import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./SignOutButton";
-import { createBlock } from "./blockFactory";
-import { TextInput } from "./Field";
-import BlockList from "./BlockList";
-import AddBlockMenu from "./AddBlockMenu";
-import Preview from "./Preview";
+import Canvas from "./Canvas";
 
 type Props = {
     id: string;
@@ -28,10 +24,6 @@ export default function Editor(props: Props) {
     const [doc, setDoc] = useState<ContentDoc>(props.doc);
     const [pending, startTransition] = useTransition();
 
-    const setBlocks = (blocks: Block[]) => setDoc({ ...doc, blocks });
-    const addBlock = (t: BlockType) =>
-        setDoc({ ...doc, blocks: [...doc.blocks, createBlock(t)] });
-
     const save = () =>
         startTransition(async () => {
             await saveEntry({
@@ -47,30 +39,32 @@ export default function Editor(props: Props) {
         });
 
     return (
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="flex flex-col gap-10">
             <HeaderActions>
                 <button
                     type="button"
                     onClick={save}
                     disabled={pending}
-                    className="rounded-md bg-grey-900 px-4 py-2 text-sm text-grey-50 disabled:opacity-50"
+                    className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50 disabled:opacity-50"
                 >
                     {pending ? "Saving…" : "Save"}
                 </button>
                 <SignOutButton />
             </HeaderActions>
 
-            <div className="flex flex-col gap-4">
-                <h1 className="font-head01-medium text-grey-900">
+            <div className="flex flex-col gap-1">
+                <span className="font-caption01-light text-grey-400">
                     {props.type} / {props.slug}
-                </h1>
-                <TextInput label="title" value={title} onChange={setTitle} />
-                <BlockList blocks={doc.blocks} onChange={setBlocks} />
-                <AddBlockMenu onAdd={addBlock} />
+                </span>
+                <input
+                    value={title}
+                    placeholder="Entry title"
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="bg-transparent font-head01-medium text-grey-900 outline-none placeholder:text-grey-300"
+                />
             </div>
-            <div className="lg:sticky lg:top-40 lg:self-start">
-                <Preview doc={doc} />
-            </div>
+
+            <Canvas doc={doc} onChange={setDoc} />
         </div>
     );
 }
