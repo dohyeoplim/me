@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { listEntries } from "@/app/lib/content/repository";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./_components/SignOutButton";
 import HomeLink from "./_components/HomeLink";
+import EntryList from "./_components/EntryList";
 import { createEntry } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -19,28 +19,7 @@ export default async function AdminDashboard() {
 
             <h2 className="font-head01-medium text-grey-900">Home</h2>
 
-            <ul className="flex flex-col divide-y divide-grey-200">
-                {entries.map((entry) => (
-                    <li key={entry.id}>
-                        <Link
-                            href={`/admin/${entry.type}/${entry.slug}`}
-                            className="flex items-center justify-between py-3"
-                        >
-                            <span className="font-body02-light text-grey-900">
-                                {entry.title}
-                            </span>
-                            <span className="font-body05-light text-grey-400">
-                                {entry.status}
-                            </span>
-                        </Link>
-                    </li>
-                ))}
-                {entries.length === 0 && (
-                    <li className="py-3 font-body04-light text-grey-400">
-                        No entries yet. Create one below.
-                    </li>
-                )}
-            </ul>
+            <EntryList entries={entries} type="home_section" />
 
             <form
                 action={createEntry}

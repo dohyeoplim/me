@@ -8,6 +8,7 @@ import {
     upsertEntry,
     listEntries,
     deleteEntry as removeEntry,
+    reorderEntries as repoReorderEntries,
 } from "@/app/lib/content/repository";
 
 async function requireAdmin() {
@@ -64,6 +65,13 @@ export async function deleteEntry(type: string, slug: string) {
     await removeEntry(type, slug);
     revalidate(type, slug);
     redirect("/admin");
+}
+
+export async function reorderEntries(type: string, ids: string[]) {
+    await requireAdmin();
+    await repoReorderEntries(type, ids);
+    updateTag("content");
+    updateTag(`content:${type}`);
 }
 
 export async function signOutAction() {

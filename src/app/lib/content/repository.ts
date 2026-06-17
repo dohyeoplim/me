@@ -84,3 +84,13 @@ export async function deleteEntry(type: string, slug: string) {
         delete from content_entries where type = ${type} and slug = ${slug}
     `;
 }
+
+export async function reorderEntries(type: string, ids: string[]) {
+    await ensureSchema();
+    for (let i = 0; i < ids.length; i++) {
+        await sql`
+            update content_entries set order_index = ${i}
+            where type = ${type} and id = ${ids[i]}
+        `;
+    }
+}
