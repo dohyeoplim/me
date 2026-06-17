@@ -18,10 +18,18 @@ type Props = {
 function inner(block: Block) {
     switch (block.type) {
         case "text":
-            return <TextOnly>{textWithBreaks(block.text)}</TextOnly>;
+            return (
+                <TextOnly style={block.style}>
+                    {textWithBreaks(block.text)}
+                </TextOnly>
+            );
 
         case "heading":
-            return <Heading>{textWithBreaks(block.text)}</Heading>;
+            return (
+                <Heading style={block.style}>
+                    {textWithBreaks(block.text)}
+                </Heading>
+            );
 
         case "divider":
             return <Divider />;
@@ -72,5 +80,6 @@ function inner(block: Block) {
 }
 
 export default function BlockRenderer({ block }: Props) {
+    if (block.type === "text" || block.type === "heading") return inner(block);
     return <StyledBlock style={block.style}>{inner(block)}</StyledBlock>;
 }

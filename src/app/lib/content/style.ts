@@ -30,6 +30,20 @@ export const WEIGHT_CLASS: Record<string, string> = {
     medium: "font-medium",
 };
 
+export function resolveTypographyClass(
+    style: BlockStyle,
+    defaults: { size?: string; color?: string } = {},
+) {
+    const size = style?.size ?? defaults.size;
+    const color = style?.color ?? defaults.color;
+    return cn(
+        size ? SIZE_CLASS[size] : undefined,
+        color ? COLOR_CLASS[color] : undefined,
+        style?.weight ? WEIGHT_CLASS[style.weight] : undefined,
+        style?.align ? ALIGN_CLASS[style.align] : undefined,
+    );
+}
+
 export function styleClasses(style?: BlockStyle) {
     if (!style) return undefined;
     return cn(
