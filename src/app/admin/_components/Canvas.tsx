@@ -15,6 +15,7 @@ type Props = {
 
 export default function Canvas({ doc, onChange }: Props) {
     const [selected, setSelected] = useState<string | null>(null);
+    const [openSlot, setOpenSlot] = useState<string | null>(null);
     const blocks = doc.blocks;
 
     const setBlocks = (next: Block[]) => onChange({ ...doc, blocks: next });
@@ -25,6 +26,7 @@ export default function Canvas({ doc, onChange }: Props) {
         next.splice(index, 0, block);
         setBlocks(next);
         setSelected(block.id);
+        setOpenSlot(null);
     };
 
     const updateBlock = (b: Block) =>
@@ -63,10 +65,12 @@ export default function Canvas({ doc, onChange }: Props) {
                     onChange={setTitle}
                 />
             </div>
-            <div className="flex w-full flex-col md:max-w-[512px]">
+            <div className="flex w-full flex-col md:max-w-lg">
                 <GhostSlot
                     onAdd={(t) => insertAt(0, t)}
                     prominent={blocks.length === 0}
+                    open={openSlot === "start"}
+                    onOpenChange={(o) => setOpenSlot(o ? "start" : null)}
                 />
                 <AnimatePresence initial={false}>
                     {blocks.map((block, i) => (
@@ -96,7 +100,13 @@ export default function Canvas({ doc, onChange }: Props) {
                                 onRemove={() => removeBlock(block.id)}
                                 onMove={(dir) => moveBlock(block.id, dir)}
                             />
-                            <GhostSlot onAdd={(t) => insertAt(i + 1, t)} />
+                            <GhostSlot
+                                onAdd={(t) => insertAt(i + 1, t)}
+                                open={openSlot === block.id}
+                                onOpenChange={(o) =>
+                                    setOpenSlot(o ? block.id : null)
+                                }
+                            />
                         </motion.div>
                     ))}
                 </AnimatePresence>

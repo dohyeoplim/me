@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import type { BlockType } from "@/app/lib/content/schema";
 import { BLOCK_LABELS, BLOCK_ORDER } from "./blockFactory";
 import AutoHeight from "./AutoHeight";
 
 type Props = {
     onAdd: (type: BlockType) => void;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     prominent?: boolean;
 };
 
-export default function GhostSlot({ onAdd, prominent = false }: Props) {
-    const [open, setOpen] = useState(false);
-
+export default function GhostSlot({
+    onAdd,
+    open,
+    onOpenChange,
+    prominent = false,
+}: Props) {
     return (
         <AutoHeight>
             {open ? (
@@ -22,10 +26,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
                             key={type}
                             type="button"
                             className="rounded-md border border-grey-200 px-2.5 py-1 font-body04-light text-grey-700 hover:border-grey-400"
-                            onClick={() => {
-                                onAdd(type);
-                                setOpen(false);
-                            }}
+                            onClick={() => onAdd(type)}
                         >
                             {BLOCK_LABELS[type]}
                         </button>
@@ -33,7 +34,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
                     <button
                         type="button"
                         className="px-1 font-body04-light text-grey-400"
-                        onClick={() => setOpen(false)}
+                        onClick={() => onOpenChange(false)}
                     >
                         Cancel
                     </button>
@@ -41,7 +42,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
             ) : prominent ? (
                 <button
                     type="button"
-                    onClick={() => setOpen(true)}
+                    onClick={() => onOpenChange(true)}
                     className="my-1 flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-grey-300 py-3 font-caption01-light text-grey-400 hover:border-grey-400 hover:text-grey-600"
                 >
                     + Add content
@@ -49,7 +50,7 @@ export default function GhostSlot({ onAdd, prominent = false }: Props) {
             ) : (
                 <button
                     type="button"
-                    onClick={() => setOpen(true)}
+                    onClick={() => onOpenChange(true)}
                     className="group flex h-11 w-full items-center"
                 >
                     <span className="flex w-full items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
