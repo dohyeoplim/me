@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import type { Block, BlockType, ContentDoc } from "@/app/lib/content/schema";
 import { createBlock } from "./blockFactory";
 import SectionTitleEditor from "./SectionTitleEditor";
@@ -67,22 +68,38 @@ export default function Canvas({ doc, onChange }: Props) {
                     onAdd={(t) => insertAt(0, t)}
                     prominent={blocks.length === 0}
                 />
-                {blocks.map((block, i) => (
-                    <div key={block.id} className="flex flex-col">
-                        <BlockEditable
-                            block={block}
-                            selected={selected === block.id}
-                            isFirst={i === 0}
-                            isLast={i === blocks.length - 1}
-                            onSelect={() => setSelected(block.id)}
-                            onDeselect={() => setSelected(null)}
-                            onChange={updateBlock}
-                            onRemove={() => removeBlock(block.id)}
-                            onMove={(dir) => moveBlock(block.id, dir)}
-                        />
-                        <GhostSlot onAdd={(t) => insertAt(i + 1, t)} />
-                    </div>
-                ))}
+                <AnimatePresence initial={false}>
+                    {blocks.map((block, i) => (
+                        <motion.div
+                            key={block.id}
+                            initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                            animate={{
+                                opacity: 1,
+                                height: "auto",
+                                transitionEnd: { overflow: "visible" },
+                            }}
+                            exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+                            transition={{
+                                duration: 0.28,
+                                ease: [0.22, 1, 0.36, 1],
+                            }}
+                            className="flex flex-col"
+                        >
+                            <BlockEditable
+                                block={block}
+                                selected={selected === block.id}
+                                isFirst={i === 0}
+                                isLast={i === blocks.length - 1}
+                                onSelect={() => setSelected(block.id)}
+                                onDeselect={() => setSelected(null)}
+                                onChange={updateBlock}
+                                onRemove={() => removeBlock(block.id)}
+                                onMove={(dir) => moveBlock(block.id, dir)}
+                            />
+                            <GhostSlot onAdd={(t) => insertAt(i + 1, t)} />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
         </section>
     );
