@@ -244,7 +244,13 @@ export default function PostEditor(props: Props) {
             </div>
 
             <TextArea
-                label="summary"
+                label="description (shown in list)"
+                value={doc.description}
+                onChange={(v) => patch({ description: v })}
+            />
+
+            <TextArea
+                label="summary / abstract (shown in post)"
                 value={doc.summary}
                 onChange={(v) => patch({ summary: v })}
             />

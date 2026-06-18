@@ -175,6 +175,7 @@ export const PostPaperSchema = z.object({
 
 export const PostDocSchema = z.object({
     kind: z.enum(POST_KINDS).default("note"),
+    description: z.string().default(""),
     summary: z.string().default(""),
     body: z.string().default(""),
     tags: z.array(z.string()).default([]),

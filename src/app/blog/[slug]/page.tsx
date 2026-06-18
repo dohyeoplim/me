@@ -49,56 +49,69 @@ export default async function PostPage({ params }: { params: Params }) {
                 ← Writing
             </Link>
 
-            <header className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-3 font-caption01-light text-grey-400">
-                    <span>{KIND_LABEL[doc.kind]}</span>
-                    {doc.date && <span>{formatDate(doc.date)}</span>}
-                    <span>{readingTime(doc.body)} min read</span>
+            <header className="flex flex-col gap-5">
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap items-center gap-3 font-caption01-light text-grey-400">
+                        <span>{KIND_LABEL[doc.kind]}</span>
+                        {doc.date && <span>{formatDate(doc.date)}</span>}
+                        <span>{readingTime(doc.body)} min read</span>
+                    </div>
+
+                    <h1 className="font-title02-light text-grey-900">
+                        {post.title}
+                    </h1>
+
+                    {doc.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {doc.tags.map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light text-grey-500"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                <h1 className="font-title02-light text-grey-900">
-                    {post.title}
-                </h1>
-
-                {doc.summary && (
-                    <p className="font-body01-light text-grey-500">
-                        {doc.summary}
-                    </p>
-                )}
-
-                {hasPaper && (
-                    <div className="flex flex-col gap-1 rounded-lg border border-grey-200 p-4 font-body03-light text-grey-600">
-                        {doc.paper.authors && <span>{doc.paper.authors}</span>}
-                        {(doc.paper.venue || doc.paper.year) && (
-                            <span className="text-grey-500">
-                                {[doc.paper.venue, doc.paper.year]
-                                    .filter(Boolean)
-                                    .join(" · ")}
+                {(hasPaper || doc.summary) && (
+                    <div className="flex flex-col gap-2 border-l-2 border-grey-200 pl-4">
+                        {doc.paper.authors && (
+                            <span className="font-body03-regular text-grey-700">
+                                {doc.paper.authors}
                             </span>
                         )}
-                        {doc.paper.url && (
-                            <a
-                                href={doc.paper.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="break-all text-grey-900 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500"
-                            >
-                                {doc.paper.url}
-                            </a>
+                        {(doc.paper.venue || doc.paper.year || doc.paper.url) && (
+                            <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
+                                {doc.paper.venue && <span>{doc.paper.venue}</span>}
+                                {doc.paper.venue && doc.paper.year && (
+                                    <span className="text-grey-300">·</span>
+                                )}
+                                {doc.paper.year && <span>{doc.paper.year}</span>}
+                                {(doc.paper.venue || doc.paper.year) &&
+                                    doc.paper.url && (
+                                        <span className="text-grey-300">·</span>
+                                    )}
+                                {doc.paper.url && (
+                                    <a
+                                        href={doc.paper.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-grey-700 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500"
+                                    >
+                                        {doc.paper.url.includes("arxiv.org")
+                                            ? "arXiv ↗"
+                                            : "Paper ↗"}
+                                    </a>
+                                )}
+                            </div>
                         )}
-                    </div>
-                )}
-
-                {doc.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                        {doc.tags.map((tag) => (
-                            <span
-                                key={tag}
-                                className="rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light text-grey-500"
-                            >
-                                {tag}
-                            </span>
-                        ))}
+                        {doc.summary && (
+                            <p className="font-body03-light leading-6 text-grey-500">
+                                {doc.summary}
+                            </p>
+                        )}
                     </div>
                 )}
             </header>

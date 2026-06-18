@@ -47,9 +47,9 @@ export default async function BlogIndex() {
                                 <h2 className="font-head01-medium text-grey-900 transition-colors group-hover:text-grey-600">
                                     {post.title}
                                 </h2>
-                                {post.doc.summary && (
+                                {post.doc.description && (
                                     <p className="font-body02-light text-grey-500">
-                                        {post.doc.summary}
+                                        {post.doc.description}
                                     </p>
                                 )}
                                 {post.doc.tags.length > 0 && (
