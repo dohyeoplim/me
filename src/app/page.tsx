@@ -5,9 +5,7 @@ import { loadEntriesByType } from "@/app/lib/contentLoader";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-    const sections = (await loadEntriesByType("home_section")).filter(
-        (entry) => entry.status === "published",
-    );
+    const sections = await loadEntriesByType("home_section", true);
 
     return (
         <div className="w-full max-w-4xl mx-auto md:pt-40 pb-30 px-6">

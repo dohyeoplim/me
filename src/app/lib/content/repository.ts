@@ -1,30 +1,7 @@
 import { sql, ensureSchema } from "@/app/lib/db";
-import { ContentDocSchema, EntrySchema, IntroDocSchema } from "./schema";
+import { toEntry, type Row } from "./row";
+import { ContentDocSchema, IntroDocSchema } from "./schema";
 import type { ContentDoc, Entry, IntroDoc } from "./schema";
-
-type Row = {
-    id: string;
-    type: string;
-    slug: string;
-    title: string;
-    status: string;
-    order_index: number;
-    doc: unknown;
-    updated_at: string;
-};
-
-function toEntry(row: Row): Entry {
-    return EntrySchema.parse({
-        id: row.id,
-        type: row.type,
-        slug: row.slug,
-        title: row.title,
-        status: row.status,
-        orderIndex: row.order_index,
-        doc: row.doc,
-        updatedAt: new Date(row.updated_at).toISOString(),
-    });
-}
 
 export async function listEntries(type: string): Promise<Entry[]> {
     await ensureSchema();
@@ -111,10 +88,11 @@ export async function upsertIntro(doc: IntroDoc) {
 
 export async function reorderEntries(type: string, ids: string[]) {
     await ensureSchema();
-    for (let i = 0; i < ids.length; i++) {
-        await sql`
-            update content_entries set order_index = ${i}
-            where type = ${type} and id = ${ids[i]}
-        `;
-    }
+    const orders = ids.map((_, i) => i);
+    await sql`
+        update content_entries as c
+        set order_index = v.ord
+        from unnest(${ids}::text[], ${orders}::int[]) as v(id, ord)
+        where c.type = ${type} and c.id = v.id
+    `;
 }

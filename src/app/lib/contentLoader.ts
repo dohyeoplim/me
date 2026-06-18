@@ -1,45 +1,31 @@
 import { unstable_cache } from "next/cache";
 import { sql, ensureSchema } from "@/app/lib/db";
 import { getIntro } from "@/app/lib/content/repository";
-import { EntrySchema, INTRO_DEFAULT } from "@/app/lib/content/schema";
+import { toEntry, type Row } from "@/app/lib/content/row";
+import { INTRO_DEFAULT } from "@/app/lib/content/schema";
 import type { Entry, IntroDoc } from "@/app/lib/content/schema";
 
-type Row = {
-    id: string;
-    type: string;
-    slug: string;
-    title: string;
-    status: string;
-    order_index: number;
-    doc: unknown;
-    updated_at: string;
-};
-
-function toEntry(row: Row): Entry {
-    return EntrySchema.parse({
-        id: row.id,
-        type: row.type,
-        slug: row.slug,
-        title: row.title,
-        status: row.status,
-        orderIndex: row.order_index,
-        doc: row.doc,
-        updatedAt: new Date(row.updated_at).toISOString(),
-    });
-}
-
-export const loadEntriesByType = (type: string): Promise<Entry[]> =>
+export const loadEntriesByType = (
+    type: string,
+    publishedOnly = false,
+): Promise<Entry[]> =>
     unstable_cache(
         async () => {
             await ensureSchema();
-            const rows = (await sql`
-                select * from content_entries
-                where type = ${type}
-                order by order_index asc, slug asc
-            `) as Row[];
+            const rows = (await (publishedOnly
+                ? sql`
+                    select * from content_entries
+                    where type = ${type} and status = 'published'
+                    order by order_index asc, slug asc
+                `
+                : sql`
+                    select * from content_entries
+                    where type = ${type}
+                    order by order_index asc, slug asc
+                `)) as Row[];
             return rows.map(toEntry);
         },
-        ["content-list", type],
+        ["content-list", type, publishedOnly ? "published" : "all"],
         { tags: ["content", `content:${type}`] },
     )();
 

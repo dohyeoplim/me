@@ -21,6 +21,7 @@ export default function Profile({ image, className }: Props) {
                     src={image.url}
                     alt={image.alt}
                     fill
+                    priority
                     className="object-cover"
                     sizes="(max-width: 768px) 40vw, 175px"
                 />
