@@ -164,6 +164,40 @@ export const INTRO_DEFAULT: IntroDoc = {
     },
 };
 
+export const POST_KINDS = ["paper-review", "seminar", "note"] as const;
+
+export const PostPaperSchema = z.object({
+    authors: z.string().default(""),
+    venue: z.string().default(""),
+    year: z.string().default(""),
+    url: z.string().default(""),
+});
+
+export const PostDocSchema = z.object({
+    kind: z.enum(POST_KINDS).default("note"),
+    summary: z.string().default(""),
+    body: z.string().default(""),
+    tags: z.array(z.string()).default([]),
+    date: z.string().default(""),
+    paper: PostPaperSchema.default({ authors: "", venue: "", year: "", url: "" }),
+    cover: z.object({ url: z.string(), alt: z.string() }).optional(),
+});
+
+export const PostSchema = z.object({
+    id: z.string(),
+    slug: z.string(),
+    title: z.string(),
+    status: z.enum(["draft", "published"]),
+    doc: PostDocSchema,
+    updatedAt: z.string(),
+});
+
+export type PostKind = (typeof POST_KINDS)[number];
+export type PostDoc = z.infer<typeof PostDocSchema>;
+export type Post = z.infer<typeof PostSchema>;
+
+export const POST_DOC_DEFAULT: PostDoc = PostDocSchema.parse({});
+
 export type BlockStyle = z.infer<typeof BlockStyleSchema>;
 export type SectionNode = z.infer<typeof SectionNodeSchema>;
 export type Block = z.infer<typeof BlockSchema>;

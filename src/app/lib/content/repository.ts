@@ -1,7 +1,7 @@
 import { sql, ensureSchema } from "@/app/lib/db";
 import { toEntry, type Row } from "./row";
-import { ContentDocSchema, IntroDocSchema } from "./schema";
-import type { ContentDoc, Entry, IntroDoc } from "./schema";
+import { ContentDocSchema, IntroDocSchema, PostDocSchema, PostSchema } from "./schema";
+import type { ContentDoc, Entry, IntroDoc, Post, PostDoc } from "./schema";
 
 export async function listEntries(type: string): Promise<Entry[]> {
     await ensureSchema();
@@ -83,6 +83,63 @@ export async function upsertIntro(doc: IntroDoc) {
         )
         on conflict (type, slug) do update set
             doc = excluded.doc, updated_at = now()
+    `;
+}
+
+function toPost(row: Row): Post {
+    return PostSchema.parse({
+        id: row.id,
+        slug: row.slug,
+        title: row.title,
+        status: row.status,
+        doc: row.doc,
+        updatedAt: new Date(row.updated_at).toISOString(),
+    });
+}
+
+export async function listPosts(): Promise<Post[]> {
+    await ensureSchema();
+    const rows = (await sql`
+        select * from content_entries
+        where type = 'post'
+        order by coalesce(doc->>'date', '') desc, updated_at desc
+    `) as Row[];
+    return rows.map(toPost);
+}
+
+export async function getPost(slug: string): Promise<Post | null> {
+    await ensureSchema();
+    const rows = (await sql`
+        select * from content_entries
+        where type = 'post' and slug = ${slug}
+        limit 1
+    `) as Row[];
+    return rows.length ? toPost(rows[0]) : null;
+}
+
+export type UpsertPostInput = {
+    id: string;
+    slug: string;
+    title: string;
+    status: "draft" | "published";
+    doc: PostDoc;
+};
+
+export async function upsertPost(input: UpsertPostInput) {
+    await ensureSchema();
+    const doc = PostDocSchema.parse(input.doc);
+    await sql`
+        insert into content_entries
+            (id, type, slug, title, status, order_index, doc, updated_at)
+        values (
+            ${input.id}, 'post', ${input.slug}, ${input.title},
+            ${input.status}, 0, ${JSON.stringify(doc)}, now()
+        )
+        on conflict (type, slug) do update set
+            title = excluded.title,
+            status = excluded.status,
+            doc = excluded.doc,
+            updated_at = now()
     `;
 }
 

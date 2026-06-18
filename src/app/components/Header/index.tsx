@@ -42,7 +42,17 @@ export default function Header() {
                     <Link href={href}>
                         <Item label={label} className="select-none" />
                     </Link>
-                    <div ref={setNode} className="flex items-center gap-3" />
+                    <div className="flex items-center gap-4">
+                        {!isAdmin && (
+                            <Link
+                                href="/blog"
+                                className="font-body04-light text-grey-500 transition-colors hover:text-grey-900"
+                            >
+                                Writing
+                            </Link>
+                        )}
+                        <div ref={setNode} className="flex items-center gap-3" />
+                    </div>
                 </nav>
             </div>
         </header>

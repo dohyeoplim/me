@@ -3,14 +3,20 @@
 import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
 import { auth, signOut } from "@/auth";
-import { ContentDocSchema, IntroDocSchema } from "@/app/lib/content/schema";
-import type { IntroDoc } from "@/app/lib/content/schema";
+import {
+    ContentDocSchema,
+    IntroDocSchema,
+    PostDocSchema,
+    POST_DOC_DEFAULT,
+} from "@/app/lib/content/schema";
+import type { IntroDoc, PostDoc } from "@/app/lib/content/schema";
 import {
     upsertEntry,
     listEntries,
     deleteEntry as removeEntry,
     reorderEntries as repoReorderEntries,
     upsertIntro,
+    upsertPost,
 } from "@/app/lib/content/repository";
 
 async function requireAdmin() {
@@ -74,6 +80,38 @@ export async function reorderEntries(type: string, ids: string[]) {
     await repoReorderEntries(type, ids);
     updateTag("content");
     updateTag(`content:${type}`);
+}
+
+export type SavePostInput = {
+    id: string;
+    slug: string;
+    title: string;
+    status: "draft" | "published";
+    doc: PostDoc;
+};
+
+export async function savePost(input: SavePostInput) {
+    await requireAdmin();
+    const doc = PostDocSchema.parse(input.doc);
+    await upsertPost({ ...input, doc });
+    revalidate("post", input.slug);
+}
+
+export async function createPost(formData: FormData) {
+    await requireAdmin();
+    const slug = crypto.randomUUID();
+    const title = String(formData.get("title") ?? "").trim();
+
+    await upsertPost({
+        id: crypto.randomUUID(),
+        slug,
+        title: title || "Untitled",
+        status: "draft",
+        doc: POST_DOC_DEFAULT,
+    });
+    revalidate("post", slug);
+
+    redirect(`/admin/post/${slug}`);
 }
 
 export async function saveIntro(doc: IntroDoc) {
