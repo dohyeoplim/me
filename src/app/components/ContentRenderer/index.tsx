@@ -7,10 +7,9 @@ import BlockRenderer from "./BlockRenderer";
 export type { ContentDoc, Block, SectionNode } from "./types";
 
 const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 16 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        y: 0,
         transition: {
             duration: 0.5,
             ease: [0.22, 1, 0.36, 1],

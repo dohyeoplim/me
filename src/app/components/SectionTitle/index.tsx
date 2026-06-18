@@ -3,10 +3,9 @@ import type { Variants } from "motion";
 import { SectionTitleProps } from "./types";
 
 const item: Variants = {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        y: 0,
         transition: {
             duration: 0.5,
             ease: [0.22, 1, 0.36, 1],
