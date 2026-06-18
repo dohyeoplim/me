@@ -161,7 +161,7 @@ export async function fetchArxiv(query: string): Promise<ArxivMeta> {
         title: pick(/<title>([\s\S]*?)<\/title>/),
         summary: pick(/<summary>([\s\S]*?)<\/summary>/),
         authors: authors.join(", "),
-        venue: journalRef || "arXiv",
+        venue: journalRef,
         year: published.slice(0, 4),
         url: `https://arxiv.org/abs/${id.replace(/v\d+$/, "")}`,
     };
