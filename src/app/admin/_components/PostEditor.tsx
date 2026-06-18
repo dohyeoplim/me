@@ -5,7 +5,7 @@ import Link from "next/link";
 import { upload } from "@vercel/blob/client";
 import { POST_KINDS } from "@/app/lib/content/schema";
 import type { PostDoc, PostKind } from "@/app/lib/content/schema";
-import { savePost, deleteEntry } from "@/app/admin/actions";
+import { savePost, deleteEntry, fetchArxiv } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import Markdown from "@/app/components/Markdown";
 import SignOutButton from "./SignOutButton";
@@ -40,6 +40,9 @@ export default function PostEditor(props: Props) {
     });
     const [saveState, setSaveState] = useState<SaveState>("idle");
     const [uploading, setUploading] = useState(false);
+    const [arxiv, setArxiv] = useState("");
+    const [fetching, setFetching] = useState(false);
+    const [arxivError, setArxivError] = useState("");
     const saving = useRef(false);
     const bodyRef = useRef<HTMLTextAreaElement>(null);
 
@@ -91,6 +94,32 @@ export default function PostEditor(props: Props) {
     const patch = (p: Partial<PostDoc>) => setDoc((d) => ({ ...d, ...p }));
     const patchPaper = (p: Partial<PostDoc["paper"]>) =>
         setDoc((d) => ({ ...d, paper: { ...d.paper, ...p } }));
+
+    const importArxiv = async () => {
+        if (!arxiv.trim() || fetching) return;
+        setFetching(true);
+        setArxivError("");
+        try {
+            const meta = await fetchArxiv(arxiv);
+            setDoc((d) => ({
+                ...d,
+                summary: d.summary || meta.summary,
+                paper: {
+                    authors: meta.authors,
+                    venue: meta.venue,
+                    year: meta.year,
+                    url: meta.url,
+                },
+            }));
+            setTitle((t) => (!t || t === "Untitled" ? meta.title : t));
+        } catch (err) {
+            setArxivError(
+                err instanceof Error ? err.message : "Import failed.",
+            );
+        } finally {
+            setFetching(false);
+        }
+    };
 
     const insertImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -237,27 +266,58 @@ export default function PostEditor(props: Props) {
                 <span className="font-caption01-light text-grey-400">
                     paper (optional)
                 </span>
-                <div className="grid grid-cols-1 gap-3 border-l-2 border-grey-200 pl-4 sm:grid-cols-2">
-                    <TextInput
-                        label="authors"
-                        value={doc.paper.authors}
-                        onChange={(v) => patchPaper({ authors: v })}
-                    />
-                    <TextInput
-                        label="venue"
-                        value={doc.paper.venue}
-                        onChange={(v) => patchPaper({ venue: v })}
-                    />
-                    <TextInput
-                        label="year"
-                        value={doc.paper.year}
-                        onChange={(v) => patchPaper({ year: v })}
-                    />
-                    <TextInput
-                        label="url"
-                        value={doc.paper.url}
-                        onChange={(v) => patchPaper({ url: v })}
-                    />
+                <div className="flex flex-col gap-3 border-l-2 border-grey-200 pl-4">
+                    <div className="flex flex-col gap-1.5">
+                        <div className="flex gap-2">
+                            <input
+                                value={arxiv}
+                                placeholder="arXiv URL or id (e.g. 2401.12345)"
+                                onChange={(e) => setArxiv(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        importArxiv();
+                                    }
+                                }}
+                                className="flex-1 rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light text-grey-900 outline-none focus:border-grey-400"
+                            />
+                            <button
+                                type="button"
+                                onClick={importArxiv}
+                                disabled={fetching || !arxiv.trim()}
+                                className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50 disabled:opacity-40"
+                            >
+                                {fetching ? "Fetching…" : "Import"}
+                            </button>
+                        </div>
+                        {arxivError && (
+                            <span className="font-body05-light text-grey-500">
+                                {arxivError}
+                            </span>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <TextInput
+                            label="authors"
+                            value={doc.paper.authors}
+                            onChange={(v) => patchPaper({ authors: v })}
+                        />
+                        <TextInput
+                            label="venue"
+                            value={doc.paper.venue}
+                            onChange={(v) => patchPaper({ venue: v })}
+                        />
+                        <TextInput
+                            label="year"
+                            value={doc.paper.year}
+                            onChange={(v) => patchPaper({ year: v })}
+                        />
+                        <TextInput
+                            label="url"
+                            value={doc.paper.url}
+                            onChange={(v) => patchPaper({ url: v })}
+                        />
+                    </div>
                 </div>
             </div>
 
