@@ -215,7 +215,7 @@ export default function PostEditor(props: Props) {
                     />
                     <input
                         value={doc.paper.venue}
-                        placeholder="Venue (e.g. ECCV 2024)"
+                        placeholder="Venue"
                         onChange={(e) => patchPaper({ venue: e.target.value })}
                         className={`${cardField} font-body04-light text-grey-500`}
                     />
