@@ -39,7 +39,10 @@ export default async function PostPage({ params }: { params: Params }) {
 
     const { doc } = post;
     const hasPaper =
-        doc.paper.authors || doc.paper.venue || doc.paper.year || doc.paper.url;
+        doc.paper.title ||
+        doc.paper.authors ||
+        doc.paper.venue ||
+        doc.paper.url;
 
     return (
         <SlideTransition>
@@ -81,28 +84,24 @@ export default async function PostPage({ params }: { params: Params }) {
 
                 {(hasPaper || doc.summary) && (
                     <div className="flex flex-col gap-2 border-l-2 border-grey-200 pl-4">
+                        {doc.paper.title && (
+                            <span className="font-body02-regular text-grey-900">
+                                {doc.paper.title}
+                            </span>
+                        )}
                         {doc.paper.authors && (
                             <span className="font-body03-regular text-grey-700">
                                 {doc.paper.authors}
                             </span>
                         )}
-                        {(doc.paper.venue ||
-                            doc.paper.year ||
-                            doc.paper.url) && (
+                        {(doc.paper.venue || doc.paper.url) && (
                             <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
                                 {doc.paper.venue && (
                                     <span>{doc.paper.venue}</span>
                                 )}
-                                {doc.paper.venue && doc.paper.year && (
+                                {doc.paper.venue && doc.paper.url && (
                                     <span className="text-grey-300">·</span>
                                 )}
-                                {doc.paper.year && (
-                                    <span>{doc.paper.year}</span>
-                                )}
-                                {(doc.paper.venue || doc.paper.year) &&
-                                    doc.paper.url && (
-                                        <span className="text-grey-300">·</span>
-                                    )}
                                 {doc.paper.url && (
                                     <a
                                         href={doc.paper.url}

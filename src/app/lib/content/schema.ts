@@ -167,9 +167,9 @@ export const INTRO_DEFAULT: IntroDoc = {
 export const POST_KINDS = ["paper-review", "seminar", "note"] as const;
 
 export const PostPaperSchema = z.object({
+    title: z.string().default(""),
     authors: z.string().default(""),
     venue: z.string().default(""),
-    year: z.string().default(""),
     url: z.string().default(""),
 });
 
@@ -180,7 +180,12 @@ export const PostDocSchema = z.object({
     body: z.string().default(""),
     tags: z.array(z.string()).default([]),
     date: z.string().default(""),
-    paper: PostPaperSchema.default({ authors: "", venue: "", year: "", url: "" }),
+    paper: PostPaperSchema.default({
+        title: "",
+        authors: "",
+        venue: "",
+        url: "",
+    }),
     cover: z.object({ url: z.string(), alt: z.string() }).optional(),
 });
 

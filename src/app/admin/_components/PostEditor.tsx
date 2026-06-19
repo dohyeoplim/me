@@ -208,6 +208,12 @@ export default function PostEditor(props: Props) {
 
                 <div className="flex flex-col gap-2 border-l-2 border-grey-200 pl-4">
                     <input
+                        value={doc.paper.title}
+                        placeholder="Paper title"
+                        onChange={(e) => patchPaper({ title: e.target.value })}
+                        className={`${cardField} font-body02-regular text-grey-900`}
+                    />
+                    <input
                         value={doc.paper.authors}
                         placeholder="Authors"
                         onChange={(e) => patchPaper({ authors: e.target.value })}
