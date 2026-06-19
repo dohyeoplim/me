@@ -147,7 +147,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
 
     return (
         <div className="flex flex-col">
-            <div className="sticky top-20 z-10 -mx-2 mb-4 flex items-center justify-between gap-2 rounded-lg border border-grey-200 bg-grey-50/90 px-2 py-1.5 backdrop-blur">
+            <div className="sticky top-16 md:top-28 z-10 -mx-2 mb-4 flex items-center justify-between gap-2 rounded-lg border border-grey-200 bg-grey-50/90 px-2 py-1.5 backdrop-blur">
                 <div className="flex items-center gap-0.5">
                     {tools.map((t) => (
                         <button
