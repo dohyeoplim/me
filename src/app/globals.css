@@ -161,29 +161,29 @@
     --vt-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:root:active-view-transition-type(nav-forward)::view-transition-old(root) {
-    --slide-offset: calc(-1 * var(--vt-offset));
-    animation:
-        260ms ease-in both vt-fade reverse,
-        380ms var(--vt-ease) both vt-slide reverse;
-}
-:root:active-view-transition-type(nav-forward)::view-transition-new(root) {
+::view-transition-new(.slide-from-right) {
     --slide-offset: var(--vt-offset);
     animation:
         300ms ease-out 80ms both vt-fade,
         380ms var(--vt-ease) 80ms both vt-slide;
 }
-:root:active-view-transition-type(nav-back)::view-transition-old(root) {
-    --slide-offset: var(--vt-offset);
+::view-transition-old(.slide-to-left) {
+    --slide-offset: calc(-1 * var(--vt-offset));
     animation:
         260ms ease-in both vt-fade reverse,
         380ms var(--vt-ease) both vt-slide reverse;
 }
-:root:active-view-transition-type(nav-back)::view-transition-new(root) {
+::view-transition-new(.slide-from-left) {
     --slide-offset: calc(-1 * var(--vt-offset));
     animation:
         300ms ease-out 80ms both vt-fade,
         380ms var(--vt-ease) 80ms both vt-slide;
+}
+::view-transition-old(.slide-to-right) {
+    --slide-offset: var(--vt-offset);
+    animation:
+        260ms ease-in both vt-fade reverse,
+        380ms var(--vt-ease) both vt-slide reverse;
 }
 
 @keyframes vt-fade {
