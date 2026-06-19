@@ -39,7 +39,7 @@ export default function ZoomableImage({ src, alt }: Props) {
                 className="m-0 h-auto max-w-full cursor-zoom-in rounded-md"
             />
             {alt && (
-                <span className="text-center font-caption01-light text-grey-400">
+                <span className="text-center font-body04-light text-grey-400">
                     {alt}
                 </span>
             )}

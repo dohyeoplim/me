@@ -28,7 +28,7 @@ export default function PaperAbstract({ text }: { text: string }) {
                         className="absolute bottom-0 right-0 flex items-center bg-[linear-gradient(to_right,transparent,var(--color-grey-50)_1.5rem)] pl-8 font-body03-light leading-6"
                     >
                         <span className="text-grey-400">…&nbsp;</span>
-                        <span className="text-grey-600 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500">
+                        <span className="text-grey-600 hover:underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500">
                             Read more
                         </span>
                     </button>
@@ -38,7 +38,7 @@ export default function PaperAbstract({ text }: { text: string }) {
                 <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="w-fit font-body05-light text-grey-400 transition-colors hover:text-grey-600"
+                    className="w-fit font-body04-light text-grey-400 transition-colors hover:underline hover:text-grey-600"
                 >
                     Show less
                 </button>
