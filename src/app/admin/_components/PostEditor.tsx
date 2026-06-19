@@ -2,14 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { upload } from "@vercel/blob/client";
 import { POST_KINDS } from "@/app/lib/content/schema";
 import type { PostDoc, PostKind } from "@/app/lib/content/schema";
-import { savePost, deleteEntry, fetchArxiv } from "@/app/admin/actions";
+import { savePost, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
-import Markdown from "@/app/components/Markdown";
 import SignOutButton from "./SignOutButton";
-import { TextInput, TextArea } from "./Field";
+import MarkdownEditor from "./MarkdownEditor";
+import { TextArea } from "./Field";
 
 type Status = "draft" | "published";
 
@@ -29,6 +28,9 @@ const KIND_LABEL: Record<PostKind, string> = {
     note: "Note",
 };
 
+const cardField =
+    "-mx-2 rounded-md bg-transparent px-2 py-1 outline-none transition-colors hover:bg-grey-100 focus:bg-grey-100 placeholder:text-grey-300";
+
 export default function PostEditor(props: Props) {
     const [title, setTitle] = useState(props.title);
     const [status, setStatus] = useState<Status>(props.status);
@@ -39,12 +41,7 @@ export default function PostEditor(props: Props) {
         doc: props.doc,
     });
     const [saveState, setSaveState] = useState<SaveState>("idle");
-    const [uploading, setUploading] = useState(false);
-    const [arxiv, setArxiv] = useState("");
-    const [fetching, setFetching] = useState(false);
-    const [arxivError, setArxivError] = useState("");
     const saving = useRef(false);
-    const bodyRef = useRef<HTMLTextAreaElement>(null);
 
     const dirty =
         title !== baseline.title ||
@@ -95,53 +92,6 @@ export default function PostEditor(props: Props) {
     const patchPaper = (p: Partial<PostDoc["paper"]>) =>
         setDoc((d) => ({ ...d, paper: { ...d.paper, ...p } }));
 
-    const importArxiv = async () => {
-        if (!arxiv.trim() || fetching) return;
-        setFetching(true);
-        setArxivError("");
-        try {
-            const meta = await fetchArxiv(arxiv);
-            setDoc((d) => ({
-                ...d,
-                summary: d.summary || meta.summary,
-                paper: {
-                    authors: meta.authors,
-                    venue: meta.venue,
-                    year: meta.year,
-                    url: meta.url,
-                },
-            }));
-            setTitle((t) => (!t || t === "Untitled" ? meta.title : t));
-        } catch (err) {
-            setArxivError(
-                err instanceof Error ? err.message : "Import failed.",
-            );
-        } finally {
-            setFetching(false);
-        }
-    };
-
-    const insertImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        setUploading(true);
-        try {
-            const blob = await upload(file.name, file, {
-                access: "public",
-                handleUploadUrl: "/api/blob/upload",
-            });
-            const el = bodyRef.current;
-            const snippet = `![${file.name}](${blob.url})`;
-            const at = el ? el.selectionStart : doc.body.length;
-            const next =
-                doc.body.slice(0, at) + snippet + doc.body.slice(at);
-            patch({ body: next });
-        } finally {
-            setUploading(false);
-            e.target.value = "";
-        }
-    };
-
     const revert = () => {
         setTitle(baseline.title);
         setStatus(baseline.status);
@@ -167,67 +117,56 @@ export default function PostEditor(props: Props) {
                 <SignOutButton />
             </HeaderActions>
 
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-4">
-                    <span className="font-caption01-light text-grey-400">
-                        post
-                    </span>
-                    <div className="flex items-center gap-4 font-body04-light text-grey-500">
-                        <span className="text-grey-400">{saveLabel}</span>
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setStatus((s) =>
-                                    s === "published" ? "draft" : "published",
-                                )
-                            }
-                            className="flex items-center gap-1.5"
-                        >
-                            <span
-                                className={`h-1.5 w-1.5 rounded-full ${
-                                    status === "published"
-                                        ? "bg-grey-800"
-                                        : "bg-grey-300"
-                                }`}
-                            />
-                            {status === "published" ? "Published" : "Draft"}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={revert}
-                            disabled={!dirty}
-                            className="disabled:opacity-30"
-                        >
-                            Revert
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                if (confirm("Delete this post permanently?"))
-                                    deleteEntry("post", props.slug);
-                            }}
-                        >
-                            Delete
-                        </button>
-                    </div>
+            <div className="flex items-center justify-between gap-4">
+                <span className="font-caption01-light text-grey-400">post</span>
+                <div className="flex items-center gap-4 font-body04-light text-grey-500">
+                    <span className="text-grey-400">{saveLabel}</span>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setStatus((s) =>
+                                s === "published" ? "draft" : "published",
+                            )
+                        }
+                        className="flex items-center gap-1.5"
+                    >
+                        <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                                status === "published"
+                                    ? "bg-grey-800"
+                                    : "bg-grey-300"
+                            }`}
+                        />
+                        {status === "published" ? "Published" : "Draft"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={revert}
+                        disabled={!dirty}
+                        className="disabled:opacity-30"
+                    >
+                        Revert
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (confirm("Delete this post permanently?"))
+                                deleteEntry("post", props.slug);
+                        }}
+                    >
+                        Delete
+                    </button>
                 </div>
-                <input
-                    value={title}
-                    placeholder="Post title"
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full border-b border-grey-200 bg-transparent pb-1 font-head01-medium text-grey-900 outline-none placeholder:text-grey-300 focus:border-grey-400"
-                />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="flex flex-col gap-1.5 font-caption01-light text-grey-400">
-                    kind
+            <header className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center gap-3 font-caption01-light text-grey-400">
                     <select
                         value={doc.kind}
                         onChange={(e) =>
                             patch({ kind: e.target.value as PostKind })
                         }
-                        className="w-full rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light text-grey-900 outline-none focus:border-grey-400"
+                        className="-mx-1 rounded bg-transparent px-1 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100"
                     >
                         {POST_KINDS.map((k) => (
                             <option key={k} value={k}>
@@ -235,13 +174,75 @@ export default function PostEditor(props: Props) {
                             </option>
                         ))}
                     </select>
-                </label>
-                <TextInput
-                    label="date (YYYY-MM-DD)"
-                    value={doc.date}
-                    onChange={(v) => patch({ date: v })}
+                    <input
+                        value={doc.date}
+                        placeholder="YYYY-MM-DD"
+                        onChange={(e) => patch({ date: e.target.value })}
+                        className="-mx-1 w-32 rounded bg-transparent px-1 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100 placeholder:text-grey-300"
+                    />
+                </div>
+
+                <input
+                    value={title}
+                    placeholder="Untitled"
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="-mx-2 rounded-md bg-transparent px-2 py-1 font-title02-light text-grey-900 outline-none transition-colors hover:bg-grey-100 focus:bg-grey-100 placeholder:text-grey-300"
                 />
-            </div>
+
+                <input
+                    value={doc.tags.join(", ")}
+                    placeholder="tags, comma separated"
+                    onChange={(e) =>
+                        patch({
+                            tags: e.target.value
+                                .split(",")
+                                .map((t) => t.trim())
+                                .filter(Boolean),
+                        })
+                    }
+                    className={`${cardField} font-body04-light text-grey-500`}
+                />
+
+                <div className="flex flex-col gap-2 border-l-2 border-grey-200 pl-4">
+                    <input
+                        value={doc.paper.authors}
+                        placeholder="Authors"
+                        onChange={(e) => patchPaper({ authors: e.target.value })}
+                        className={`${cardField} font-body03-regular text-grey-700`}
+                    />
+                    <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
+                        <input
+                            value={doc.paper.venue}
+                            placeholder="Venue"
+                            onChange={(e) =>
+                                patchPaper({ venue: e.target.value })
+                            }
+                            className={`${cardField} flex-1 min-w-32`}
+                        />
+                        <input
+                            value={doc.paper.year}
+                            placeholder="Year"
+                            onChange={(e) =>
+                                patchPaper({ year: e.target.value })
+                            }
+                            className={`${cardField} w-20`}
+                        />
+                    </div>
+                    <input
+                        value={doc.paper.url}
+                        placeholder="Paper URL"
+                        onChange={(e) => patchPaper({ url: e.target.value })}
+                        className={`${cardField} font-body04-light text-grey-500`}
+                    />
+                    <textarea
+                        value={doc.summary}
+                        placeholder="Abstract"
+                        rows={3}
+                        onChange={(e) => patch({ summary: e.target.value })}
+                        className={`${cardField} resize-none font-body03-light leading-6 text-grey-500`}
+                    />
+                </div>
+            </header>
 
             <TextArea
                 label="description (shown in list)"
@@ -249,109 +250,11 @@ export default function PostEditor(props: Props) {
                 onChange={(v) => patch({ description: v })}
             />
 
-            <TextArea
-                label="summary / abstract (shown in post)"
-                value={doc.summary}
-                onChange={(v) => patch({ summary: v })}
-            />
-
-            <TextInput
-                label="tags (comma separated)"
-                value={doc.tags.join(", ")}
-                onChange={(v) =>
-                    patch({
-                        tags: v
-                            .split(",")
-                            .map((t) => t.trim())
-                            .filter(Boolean),
-                    })
-                }
-            />
-
-            <div className="flex flex-col gap-3">
-                <span className="font-caption01-light text-grey-400">
-                    paper (optional)
-                </span>
-                <div className="flex flex-col gap-3 border-l-2 border-grey-200 pl-4">
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex gap-2">
-                            <input
-                                value={arxiv}
-                                placeholder="arXiv URL or id (e.g. 2401.12345)"
-                                onChange={(e) => setArxiv(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.preventDefault();
-                                        importArxiv();
-                                    }
-                                }}
-                                className="flex-1 rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light text-grey-900 outline-none focus:border-grey-400"
-                            />
-                            <button
-                                type="button"
-                                onClick={importArxiv}
-                                disabled={fetching || !arxiv.trim()}
-                                className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50 disabled:opacity-40"
-                            >
-                                {fetching ? "Fetching…" : "Import"}
-                            </button>
-                        </div>
-                        {arxivError && (
-                            <span className="font-body05-light text-grey-500">
-                                {arxivError}
-                            </span>
-                        )}
-                    </div>
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <TextInput
-                            label="authors"
-                            value={doc.paper.authors}
-                            onChange={(v) => patchPaper({ authors: v })}
-                        />
-                        <TextInput
-                            label="venue"
-                            value={doc.paper.venue}
-                            onChange={(v) => patchPaper({ venue: v })}
-                        />
-                        <TextInput
-                            label="year"
-                            value={doc.paper.year}
-                            onChange={(v) => patchPaper({ year: v })}
-                        />
-                        <TextInput
-                            label="url"
-                            value={doc.paper.url}
-                            onChange={(v) => patchPaper({ url: v })}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between font-caption01-light text-grey-400">
-                    body (markdown)
-                    <label className="cursor-pointer font-body04-light text-grey-500 hover:text-grey-700">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={insertImage}
-                            className="hidden"
-                        />
-                        {uploading ? "Uploading…" : "+ Image"}
-                    </label>
-                </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <textarea
-                        ref={bodyRef}
-                        value={doc.body}
-                        placeholder="# Write in markdown…"
-                        onChange={(e) => patch({ body: e.target.value })}
-                        className="min-h-[60vh] w-full resize-none rounded-md border border-grey-200 bg-grey-50 p-4 font-mono font-body04-light text-grey-900 outline-none focus:border-grey-400"
-                    />
-                    <div className="min-h-[60vh] overflow-auto rounded-md border border-grey-200 p-4">
-                        <Markdown>{doc.body || "_Nothing yet._"}</Markdown>
-                    </div>
-                </div>
+            <div className="border-t border-grey-200 pt-6">
+                <MarkdownEditor
+                    value={doc.body}
+                    onChange={(v) => patch({ body: v })}
+                />
             </div>
         </div>
     );
