@@ -44,7 +44,8 @@ export default async function PostPage({ params }: { params: Params }) {
         <article className="flex flex-col gap-10">
             <Link
                 href="/blog"
-                className="font-body04-light text-grey-400 transition-colors hover:text-grey-600"
+                transitionTypes={["nav-back"]}
+                className="w-fit font-body04-light text-grey-400 transition-colors hover:text-grey-600"
             >
                 ← Writing
             </Link>
@@ -82,13 +83,19 @@ export default async function PostPage({ params }: { params: Params }) {
                                 {doc.paper.authors}
                             </span>
                         )}
-                        {(doc.paper.venue || doc.paper.year || doc.paper.url) && (
+                        {(doc.paper.venue ||
+                            doc.paper.year ||
+                            doc.paper.url) && (
                             <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
-                                {doc.paper.venue && <span>{doc.paper.venue}</span>}
+                                {doc.paper.venue && (
+                                    <span>{doc.paper.venue}</span>
+                                )}
                                 {doc.paper.venue && doc.paper.year && (
                                     <span className="text-grey-300">·</span>
                                 )}
-                                {doc.paper.year && <span>{doc.paper.year}</span>}
+                                {doc.paper.year && (
+                                    <span>{doc.paper.year}</span>
+                                )}
                                 {(doc.paper.venue || doc.paper.year) &&
                                     doc.paper.url && (
                                         <span className="text-grey-300">·</span>

@@ -21,7 +21,10 @@ export default function Header() {
     const href = isAdmin ? "/admin" : "/";
 
     return (
-        <header className="fixed top-0 left-0 w-full z-50 pointer-events-none">
+        <header
+            style={{ viewTransitionName: "site-header" }}
+            className="fixed top-0 left-0 w-full z-50 pointer-events-none"
+        >
             <div className="absolute inset-0">
                 {blurLayers.map((layer, i) => (
                     <div
@@ -39,13 +42,14 @@ export default function Header() {
             </div>
             <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-16 pb-2 md:pb-4">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
-                    <Link href={href}>
+                    <Link href={href} transitionTypes={["nav-back"]}>
                         <Item label={label} className="select-none" />
                     </Link>
                     <div className="flex items-center gap-4">
                         {!isAdmin && (
                             <Link
                                 href="/blog"
+                                transitionTypes={["nav-forward"]}
                                 className="font-body04-light text-grey-500 transition-colors hover:text-grey-900"
                             >
                                 Writing

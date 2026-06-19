@@ -1,5 +1,4 @@
 import Image from "next/image";
-import * as motion from "motion/react-client";
 import type { IntroDoc } from "@/app/lib/content/schema";
 
 type Props = {
@@ -7,14 +6,9 @@ type Props = {
     className?: string;
 };
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
 export default function Profile({ image, className }: Props) {
     return (
-        <motion.figure
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease, delay: 0.12 }}
+        <figure
             className={`${className || ""} font-caption03-regular text-grey-500 uppercase w-full max-w-43.75 select-none pointer-events-none`}
         >
             <figcaption className="flex justify-between">
@@ -37,6 +31,6 @@ export default function Profile({ image, className }: Props) {
                 <span>{image.captionBottomLeft}</span>
                 <span>{image.captionBottomRight}</span>
             </figcaption>
-        </motion.figure>
+        </figure>
     );
 }
