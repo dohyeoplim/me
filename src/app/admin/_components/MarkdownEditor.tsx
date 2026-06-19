@@ -31,8 +31,10 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     const resize = useCallback(() => {
         const el = ref.current;
         if (!el) return;
+        const scrollY = window.scrollY;
         el.style.height = "auto";
         el.style.height = `${el.scrollHeight}px`;
+        window.scrollTo(0, scrollY);
     }, []);
 
     useEffect(() => {
@@ -40,14 +42,16 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     }, [value, mode, resize]);
 
     const replaceRange = (start: number, end: number, text: string, caret: number) => {
+        const scrollY = window.scrollY;
         const next = value.slice(0, start) + text + value.slice(end);
         onChange(next);
         requestAnimationFrame(() => {
             const el = ref.current;
             if (!el) return;
-            el.focus();
+            el.focus({ preventScroll: true });
             el.selectionStart = caret;
             el.selectionEnd = caret;
+            window.scrollTo(0, scrollY);
         });
     };
 
@@ -163,6 +167,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.nativeEvent.isComposing) return;
         if (
             e.key === "Enter" &&
             !e.shiftKey &&
