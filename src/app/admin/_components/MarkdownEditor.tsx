@@ -147,8 +147,13 @@ export default function MarkdownEditor({ value, onChange }: Props) {
 
     return (
         <div className="flex flex-col">
-            <div className="sticky top-16 md:top-28 z-10 -mx-2 mb-4 flex items-center justify-between gap-2 rounded-lg border border-grey-200 bg-grey-50 px-2 py-1.5 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-6 before:bg-grey-50">
-                <div className="flex items-center gap-0.5">
+            <div className="sticky top-16 md:top-28 z-10 mb-4 flex justify-end">
+                <div className="flex items-center gap-0.5 rounded-lg border border-grey-200 bg-grey-50 px-1 py-1">
+                    {uploading && (
+                        <span className="px-1.5 font-body05-light text-grey-400">
+                            Uploading…
+                        </span>
+                    )}
                     {tools.map((t) => (
                         <button
                             key={t.label}
@@ -156,15 +161,14 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                             title={t.label}
                             onClick={t.run}
                             disabled={mode === "preview"}
-                            className="rounded-md p-2 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900 disabled:opacity-30"
+                            className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900 disabled:opacity-30"
                         >
                             <t.icon size={16} strokeWidth={1.75} />
                         </button>
                     ))}
-                    <span className="mx-1 h-4 w-px bg-grey-200" />
                     <label
                         title="Image"
-                        className="rounded-md p-2 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                        className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                     >
                         <input
                             type="file"
@@ -174,30 +178,19 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                         />
                         <ImageIcon size={16} strokeWidth={1.75} />
                     </label>
-                </div>
-                <div className="flex items-center gap-3 pr-1">
-                    {uploading && (
-                        <span className="font-body05-light text-grey-400">
-                            Uploading…
-                        </span>
-                    )}
+                    <span className="mx-1 h-4 w-px bg-grey-200" />
                     <button
                         type="button"
+                        title={mode === "write" ? "Preview" : "Write"}
                         onClick={() =>
                             setMode((m) => (m === "write" ? "preview" : "write"))
                         }
-                        className="flex items-center gap-1.5 font-body04-light text-grey-500 transition-colors hover:text-grey-900"
+                        className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                     >
                         {mode === "write" ? (
-                            <>
-                                <Eye size={15} strokeWidth={1.75} />
-                                Preview
-                            </>
+                            <Eye size={16} strokeWidth={1.75} />
                         ) : (
-                            <>
-                                <PenLine size={15} strokeWidth={1.75} />
-                                Write
-                            </>
+                            <PenLine size={16} strokeWidth={1.75} />
                         )}
                     </button>
                 </div>
