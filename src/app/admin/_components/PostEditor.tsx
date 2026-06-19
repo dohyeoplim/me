@@ -213,24 +213,12 @@ export default function PostEditor(props: Props) {
                         onChange={(e) => patchPaper({ authors: e.target.value })}
                         className={`${cardField} font-body03-regular text-grey-700`}
                     />
-                    <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
-                        <input
-                            value={doc.paper.venue}
-                            placeholder="Venue"
-                            onChange={(e) =>
-                                patchPaper({ venue: e.target.value })
-                            }
-                            className={`${cardField} flex-1 min-w-32`}
-                        />
-                        <input
-                            value={doc.paper.year}
-                            placeholder="Year"
-                            onChange={(e) =>
-                                patchPaper({ year: e.target.value })
-                            }
-                            className={`${cardField} w-20`}
-                        />
-                    </div>
+                    <input
+                        value={doc.paper.venue}
+                        placeholder="Venue (e.g. ECCV 2024)"
+                        onChange={(e) => patchPaper({ venue: e.target.value })}
+                        className={`${cardField} font-body04-light text-grey-500`}
+                    />
                     <input
                         value={doc.paper.url}
                         placeholder="Paper URL"
