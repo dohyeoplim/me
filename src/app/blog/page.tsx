@@ -1,5 +1,4 @@
 import Link from "next/link";
-import SlideTransition from "@/app/components/SlideTransition";
 import { loadPosts } from "@/app/lib/contentLoader";
 import { formatDate } from "@/app/lib/format";
 import type { PostKind } from "@/app/lib/content/schema";
@@ -21,14 +20,13 @@ export default async function BlogIndex() {
     const posts = await loadPosts(true);
 
     return (
-        <SlideTransition>
-            <div className="flex flex-col gap-12">
-                <header className="flex flex-col gap-2">
-                    <h1 className="font-title01-light text-grey-900">Writing</h1>
-                    <p className="font-body01-light text-grey-500">
-                        Paper reviews and seminar notes.
-                    </p>
-                </header>
+        <div className="flex flex-col gap-12">
+            <header className="flex flex-col gap-2">
+                <h1 className="font-title01-light text-grey-900">Writing</h1>
+                <p className="font-body01-light text-grey-500">
+                    Paper reviews and seminar notes.
+                </p>
+            </header>
 
                 {posts.length === 0 ? (
                     <p className="font-body02-light text-grey-400">
@@ -77,6 +75,5 @@ export default async function BlogIndex() {
                     </ul>
                 )}
             </div>
-        </SlideTransition>
     );
 }
