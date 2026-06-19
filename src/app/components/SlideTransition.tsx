@@ -1,18 +1,12 @@
-"use client";
-
 import { ViewTransition } from "react";
-import { usePathname } from "next/navigation";
 
-export default function PageTransition({
+export default function SlideTransition({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const pathname = usePathname();
-
     return (
         <ViewTransition
-            key={pathname}
             enter={{
                 "nav-forward": "slide-from-right",
                 "nav-back": "slide-from-left",

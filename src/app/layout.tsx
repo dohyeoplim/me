@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "./components/Header";
 import { HeaderSlotProvider } from "./components/Header/HeaderSlot";
 import Footer from "./components/Footer";
-import PageTransition from "./components/PageTransition";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export default function RootLayout({
             <body className={`${pretendard.variable} antialiased`}>
                 <HeaderSlotProvider>
                     <Header />
-                    <PageTransition>{children}</PageTransition>
+                    {children}
                     <Footer />
                 </HeaderSlotProvider>
                 <Analytics />

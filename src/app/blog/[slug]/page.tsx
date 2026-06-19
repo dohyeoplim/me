@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { loadPost } from "@/app/lib/contentLoader";
 import Markdown from "@/app/components/Markdown";
+import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
 import type { PostKind } from "@/app/lib/content/schema";
 
@@ -41,14 +42,16 @@ export default async function PostPage({ params }: { params: Params }) {
         doc.paper.authors || doc.paper.venue || doc.paper.year || doc.paper.url;
 
     return (
-        <article className="flex flex-col gap-10">
-            <Link
-                href="/blog"
-                transitionTypes={["nav-back"]}
-                className="w-fit font-body04-light text-grey-400 transition-colors hover:text-grey-600"
-            >
-                ← Writing
-            </Link>
+        <SlideTransition>
+            <div className="w-full max-w-4xl mx-auto px-6 pt-28 md:pt-40 pb-30">
+                <article className="flex flex-col gap-10">
+                <Link
+                    href="/blog"
+                    transitionTypes={["nav-back"]}
+                    className="w-fit font-body04-light text-grey-400 transition-colors hover:text-grey-600"
+                >
+                    ← Writing
+                </Link>
 
             <header className="flex flex-col gap-5">
                 <div className="flex flex-col gap-4">
@@ -135,6 +138,8 @@ export default async function PostPage({ params }: { params: Params }) {
             )}
 
             <Markdown>{doc.body}</Markdown>
-        </article>
+                </article>
+            </div>
+        </SlideTransition>
     );
 }
