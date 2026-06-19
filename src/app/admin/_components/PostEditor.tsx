@@ -250,12 +250,10 @@ export default function PostEditor(props: Props) {
                 onChange={(v) => patch({ description: v })}
             />
 
-            <div className="border-t border-grey-200 pt-6">
-                <MarkdownEditor
-                    value={doc.body}
-                    onChange={(v) => patch({ body: v })}
-                />
-            </div>
+            <MarkdownEditor
+                value={doc.body}
+                onChange={(v) => patch({ body: v })}
+            />
         </div>
     );
 }
