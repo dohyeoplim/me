@@ -77,21 +77,21 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         replaceRange(s, e, text, s + text.length - 1);
     };
 
-    const insertImage = (alt: string, url: string) => {
+    const insertImage = (alt: string, url: string, at?: number) => {
         const el = ref.current;
-        const at = el ? el.selectionStart : value.length;
+        const pos = at ?? (el ? el.selectionStart : value.length);
         const snippet = `![${alt}](${url})`;
-        replaceRange(at, at, snippet, at + snippet.length);
+        replaceRange(pos, pos, snippet, pos + snippet.length);
     };
 
-    const uploadFile = async (file: File) => {
+    const uploadFile = async (file: File, at?: number) => {
         setUploading(true);
         try {
             const blob = await upload(file.name, file, {
                 access: "public",
                 handleUploadUrl: "/api/blob/upload",
             });
-            insertImage(file.name, blob.url);
+            insertImage(file.name, blob.url, at);
         } finally {
             setUploading(false);
         }
@@ -113,25 +113,75 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         }
     };
 
+    const caretIndexAt = (x: number, y: number): number | null => {
+        const d = document as unknown as {
+            caretPositionFromPoint?: (
+                x: number,
+                y: number,
+            ) => { offset: number } | null;
+            caretRangeFromPoint?: (x: number, y: number) => Range | null;
+        };
+        const pos = d.caretPositionFromPoint?.(x, y);
+        if (pos) return pos.offset;
+        const range = d.caretRangeFromPoint?.(x, y);
+        if (range) return range.startOffset;
+        return null;
+    };
+
     const onDrop = async (e: React.DragEvent<HTMLTextAreaElement>) => {
         const file = Array.from(e.dataTransfer.files).find((f) =>
             f.type.startsWith("image/"),
         );
-        if (file) {
-            e.preventDefault();
-            await uploadFile(file);
+        if (!file) return;
+        e.preventDefault();
+        const idx = caretIndexAt(e.clientX, e.clientY);
+        const at = idx ?? ref.current?.selectionStart;
+        await uploadFile(file, at ?? undefined);
+    };
+
+    const handleListEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        const el = ref.current;
+        if (!el || el.selectionStart !== el.selectionEnd) return;
+        const s = el.selectionStart;
+        const lineStart = value.lastIndexOf("\n", s - 1) + 1;
+        const line = value.slice(lineStart, s);
+        const unordered = line.match(/^(\s*)([-*+]) (.*)$/);
+        const ordered = line.match(/^(\s*)(\d+)\. (.*)$/);
+        if (!unordered && !ordered) return;
+        e.preventDefault();
+        const indent = (unordered ?? ordered)![1];
+        const content = (unordered ?? ordered)![3];
+        if (content.trim() === "") {
+            replaceRange(lineStart, s, "", lineStart);
+            return;
         }
+        const marker = unordered
+            ? `${unordered[2]} `
+            : `${parseInt(ordered![2], 10) + 1}. `;
+        const insert = `\n${indent}${marker}`;
+        replaceRange(s, s, insert, s + insert.length);
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (!(e.metaKey || e.ctrlKey)) return;
-        const key = e.key.toLowerCase();
-        if (key === "b") {
-            e.preventDefault();
-            surround("**");
-        } else if (key === "i") {
-            e.preventDefault();
-            surround("_");
+        if (
+            e.key === "Enter" &&
+            !e.shiftKey &&
+            !e.metaKey &&
+            !e.ctrlKey &&
+            !e.altKey
+        ) {
+            handleListEnter(e);
+            return;
+        }
+        if (e.metaKey || e.ctrlKey) {
+            const key = e.key.toLowerCase();
+            if (key === "b") {
+                e.preventDefault();
+                surround("**");
+            } else if (key === "i") {
+                e.preventDefault();
+                surround("_");
+            }
         }
     };
 
@@ -204,6 +254,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                     onChange={(e) => onChange(e.target.value)}
                     onKeyDown={onKeyDown}
                     onPaste={onPaste}
+                    onDragOver={(e) => e.preventDefault()}
                     onDrop={onDrop}
                     spellCheck={false}
                     className="-mx-2 min-h-[60vh] w-full resize-none overflow-hidden bg-transparent px-2 font-body02-light leading-7 text-grey-800 outline-none placeholder:text-grey-300"

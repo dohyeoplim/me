@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { loadPost } from "@/app/lib/contentLoader";
 import Markdown from "@/app/components/Markdown";
+import PaperAbstract from "@/app/components/PaperAbstract";
 import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
 import type { PostKind } from "@/app/lib/content/schema";
@@ -84,11 +85,21 @@ export default async function PostPage({ params }: { params: Params }) {
 
                 {(hasPaper || doc.summary) && (
                     <div className="flex flex-col gap-2 border-l-2 border-grey-200 pl-4">
-                        {doc.paper.title && (
-                            <span className="font-body02-regular text-grey-900">
-                                {doc.paper.title}
-                            </span>
-                        )}
+                        {doc.paper.title &&
+                            (doc.paper.url ? (
+                                <a
+                                    href={doc.paper.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-fit font-body02-regular text-grey-900 decoration-grey-300 underline-offset-2 hover:underline"
+                                >
+                                    {doc.paper.title}
+                                </a>
+                            ) : (
+                                <span className="font-body02-regular text-grey-900">
+                                    {doc.paper.title}
+                                </span>
+                            ))}
                         {doc.paper.authors && (
                             <span className="font-body03-regular text-grey-700">
                                 {doc.paper.authors}
@@ -116,11 +127,7 @@ export default async function PostPage({ params }: { params: Params }) {
                                 )}
                             </div>
                         )}
-                        {doc.summary && (
-                            <p className="font-body03-light leading-6 text-grey-500">
-                                {doc.summary}
-                            </p>
-                        )}
+                        {doc.summary && <PaperAbstract text={doc.summary} />}
                     </div>
                 )}
             </header>

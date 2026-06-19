@@ -81,7 +81,7 @@
         @apply bg-transparent p-0 font-mono font-body04-light;
     }
     .prose img {
-        @apply my-6 rounded-md;
+        @apply rounded-md;
     }
     .prose hr {
         @apply my-8 border-grey-200;
