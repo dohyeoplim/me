@@ -1,0 +1,65 @@
+@layer components {
+    .prose {
+        @apply font-body02-light text-grey-700;
+    }
+    .prose > :first-child {
+        @apply mt-0;
+    }
+    .prose h1 {
+        @apply font-title02-light text-grey-900 mt-12 mb-4;
+    }
+    .prose h2 {
+        @apply font-head01-medium text-grey-900 mt-10 mb-3;
+    }
+    .prose h3 {
+        @apply font-body01-regular text-grey-900 mt-8 mb-2;
+    }
+    .prose p {
+        @apply my-4 leading-7;
+    }
+    .prose a {
+        @apply text-grey-900 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500;
+    }
+    .prose strong {
+        @apply font-body02-regular text-grey-900;
+    }
+    .prose ul {
+        @apply my-4 list-disc pl-6;
+    }
+    .prose ol {
+        @apply my-4 list-decimal pl-6;
+    }
+    .prose li {
+        @apply my-1.5;
+    }
+    .prose blockquote {
+        @apply my-5 border-l-2 border-grey-200 pl-4 text-grey-500;
+    }
+    .prose :not(pre) > code {
+        @apply rounded bg-grey-100 px-1 py-0.5 font-mono font-body04-light;
+    }
+    .prose pre {
+        @apply my-5 overflow-x-auto rounded-lg bg-grey-100 p-4;
+    }
+    .prose pre code {
+        @apply bg-transparent p-0 font-mono font-body04-light;
+    }
+    .prose img {
+        @apply rounded-md;
+    }
+    .prose hr {
+        @apply my-8 border-grey-200;
+    }
+    .prose table {
+        @apply my-5 w-full text-left;
+    }
+    .prose th {
+        @apply border-b border-grey-300 pb-2 font-body03-regular text-grey-900;
+    }
+    .prose td {
+        @apply border-b border-grey-100 py-2 font-body03-light text-grey-700;
+    }
+    .prose .katex-display {
+        @apply my-6 overflow-x-auto overflow-y-hidden py-1;
+    }
+}

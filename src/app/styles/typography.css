@@ -1,0 +1,55 @@
+@utility font-body01-regular {
+    @apply text-[clamp(1.125rem,1vw+1rem,1.25rem)] font-normal leading-7 tracking-tight;
+}
+
+@utility font-body01-light {
+    @apply text-[clamp(1.125rem,1vw+1rem,1.25rem)] font-light leading-7 tracking-tight;
+}
+
+@utility font-body02-regular {
+    @apply text-[clamp(1rem,0.5vw+0.9rem,1.0625rem)] font-normal leading-6 tracking-tight;
+}
+
+@utility font-body02-light {
+    @apply text-[clamp(1rem,0.5vw+0.9rem,1.0625rem)] font-light leading-6 tracking-tight;
+}
+
+@utility font-body03-regular {
+    @apply text-[15px] font-normal leading-5 tracking-tight;
+}
+
+@utility font-body03-light {
+    @apply text-[15px] font-light leading-5 tracking-tight;
+}
+
+@utility font-body04-light {
+    @apply text-[14px] font-light leading-5 tracking-tight;
+}
+
+@utility font-body05-light {
+    @apply text-xs font-light leading-4 tracking-tight;
+}
+
+@utility font-title01-light {
+    @apply text-[clamp(2.5rem,8vw+1rem,3rem)] font-light leading-snug tracking-tight;
+}
+
+@utility font-title02-light {
+    @apply text-[clamp(2rem,6vw+1rem,2.5rem)] font-light leading-snug tracking-tight;
+}
+
+@utility font-head01-medium {
+    @apply text-[clamp(1.25rem,2vw+1rem,1.375rem)] font-medium leading-8 tracking-tight;
+}
+
+@utility font-caption01-light {
+    @apply text-xs font-light leading-4 uppercase tracking-[0.15em];
+}
+
+@utility font-caption02-light {
+    @apply text-[9px] font-light leading-3 tracking-widest uppercase;
+}
+
+@utility font-caption03-regular {
+    @apply text-[8px] font-normal leading-3 tracking-widest;
+}
