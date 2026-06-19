@@ -168,7 +168,7 @@ export default function PostEditor(props: Props) {
                         onChange={(e) =>
                             patch({ kind: e.target.value as PostKind })
                         }
-                        className="-mx-1 rounded bg-transparent px-1 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100"
+                        className="-mx-2 appearance-none rounded bg-transparent px-2 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100"
                     >
                         {POST_KINDS.map((k) => (
                             <option key={k} value={k}>
@@ -180,7 +180,7 @@ export default function PostEditor(props: Props) {
                         value={doc.date}
                         placeholder="YYYY-MM-DD"
                         onChange={(e) => patch({ date: e.target.value })}
-                        className="-mx-1 w-32 rounded bg-transparent px-1 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100 placeholder:text-grey-300"
+                        className="-mx-2 w-32 rounded bg-transparent px-2 py-0.5 font-caption01-light text-grey-500 outline-none hover:bg-grey-100 placeholder:text-grey-300"
                     />
                 </div>
 
