@@ -206,7 +206,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                     onPaste={onPaste}
                     onDrop={onDrop}
                     spellCheck={false}
-                    className="min-h-[60vh] w-full resize-none overflow-hidden bg-transparent font-body02-light leading-7 text-grey-800 outline-none placeholder:text-grey-300"
+                    className="-mx-2 min-h-[60vh] w-full resize-none overflow-hidden bg-transparent px-2 font-body02-light leading-7 text-grey-800 outline-none placeholder:text-grey-300"
                 />
             ) : (
                 <div className="min-h-[60vh]">
