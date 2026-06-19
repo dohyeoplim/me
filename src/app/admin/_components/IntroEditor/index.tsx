@@ -5,9 +5,9 @@ import Link from "next/link";
 import type { IntroDoc } from "@/app/lib/content/schema";
 import { saveIntro } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
-import SignOutButton from "./SignOutButton";
-import ImageField from "./ImageField";
-import { TextInput, TextArea } from "./Field";
+import SignOutButton from "../shared/SignOutButton";
+import ImageField from "../shared/ImageField";
+import { TextInput, TextArea } from "../shared/Field";
 
 type Props = {
     doc: IntroDoc;

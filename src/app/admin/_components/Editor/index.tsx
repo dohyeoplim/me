@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
-import SignOutButton from "./SignOutButton";
+import SignOutButton from "../shared/SignOutButton";
 import Canvas from "./Canvas";
 
 type Status = "draft" | "published";

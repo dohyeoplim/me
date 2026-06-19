@@ -6,9 +6,9 @@ import { POST_KINDS } from "@/app/lib/content/schema";
 import type { PostDoc, PostKind } from "@/app/lib/content/schema";
 import { savePost, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
-import SignOutButton from "./SignOutButton";
+import SignOutButton from "../shared/SignOutButton";
 import MarkdownEditor from "./MarkdownEditor";
-import { TextArea } from "./Field";
+import { TextArea } from "../shared/Field";
 
 type Status = "draft" | "published";
 

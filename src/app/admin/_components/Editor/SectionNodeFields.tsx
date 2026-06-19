@@ -2,7 +2,7 @@
 
 import type { SectionNode } from "@/app/lib/content/schema";
 import { createNode, type NodeType } from "./blockFactory";
-import { TextInput, TextArea } from "./Field";
+import { TextInput, TextArea } from "../shared/Field";
 
 const NODE_TYPES: NodeType[] = ["item", "enumerate", "spacer"];
 

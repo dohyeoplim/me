@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Reorder, useDragControls } from "motion/react";
 import type { Entry } from "@/app/lib/content/schema";
-import { reorderEntries } from "../actions";
+import { reorderEntries } from "../../actions";
 
 type Props = {
     entries: Entry[];

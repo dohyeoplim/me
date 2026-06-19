@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { listEntries, listPosts } from "@/app/lib/content/repository";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
-import SignOutButton from "./_components/SignOutButton";
-import HomeLink from "./_components/HomeLink";
-import EntryList from "./_components/EntryList";
+import SignOutButton from "./_components/shared/SignOutButton";
+import HomeLink from "./_components/shared/HomeLink";
+import EntryList from "./_components/shared/EntryList";
 import { createEntry, createPost } from "./actions";
 
 export const dynamic = "force-dynamic";

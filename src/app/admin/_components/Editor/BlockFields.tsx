@@ -1,9 +1,9 @@
 "use client";
 
 import type { Block } from "@/app/lib/content/schema";
-import { TextInput, TextArea } from "./Field";
+import { TextInput, TextArea } from "../shared/Field";
 import SectionNodeFields from "./SectionNodeFields";
-import ImageField from "./ImageField";
+import ImageField from "../shared/ImageField";
 
 type Props = {
     block: Block;
