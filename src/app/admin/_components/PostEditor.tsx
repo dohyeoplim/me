@@ -35,6 +35,7 @@ export default function PostEditor(props: Props) {
     const [title, setTitle] = useState(props.title);
     const [status, setStatus] = useState<Status>(props.status);
     const [doc, setDoc] = useState<PostDoc>(props.doc);
+    const [tagsText, setTagsText] = useState(props.doc.tags.join(", "));
     const [baseline, setBaseline] = useState({
         title: props.title,
         status: props.status,
@@ -96,6 +97,7 @@ export default function PostEditor(props: Props) {
         setTitle(baseline.title);
         setStatus(baseline.status);
         setDoc(baseline.doc);
+        setTagsText(baseline.doc.tags.join(", "));
     };
 
     const saveLabel =
@@ -190,16 +192,17 @@ export default function PostEditor(props: Props) {
                 />
 
                 <input
-                    value={doc.tags.join(", ")}
+                    value={tagsText}
                     placeholder="tags, comma separated"
-                    onChange={(e) =>
+                    onChange={(e) => {
+                        setTagsText(e.target.value);
                         patch({
                             tags: e.target.value
                                 .split(",")
                                 .map((t) => t.trim())
                                 .filter(Boolean),
-                        })
-                    }
+                        });
+                    }}
                     className={`${cardField} font-body04-light text-grey-500`}
                 />
 
@@ -245,7 +248,7 @@ export default function PostEditor(props: Props) {
             </header>
 
             <TextArea
-                label="description (shown in list)"
+                label="description"
                 value={doc.description}
                 onChange={(v) => patch({ description: v })}
             />
