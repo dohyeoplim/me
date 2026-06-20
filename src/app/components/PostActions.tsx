@@ -58,38 +58,17 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         transition={{ duration: 0.2 }}
                         className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-6"
                     >
-                        <motion.div
-                            layout
-                            transition={{
-                                type: "spring",
-                                stiffness: 380,
-                                damping: 34,
-                            }}
-                            className={
-                                open
-                                    ? "w-full max-w-xl overflow-hidden rounded-2xl border border-grey-200 bg-grey-50/90 shadow-lg backdrop-blur"
-                                    : "overflow-hidden rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur"
-                            }
-                        >
+                        <AnimatePresence mode="wait" initial={false}>
                             {open ? (
                                 <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.2, delay: 0.05 }}
-                                    className="flex flex-col"
+                                    key="panel"
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 8 }}
+                                    transition={{ duration: 0.18 }}
+                                    className="w-full max-w-xl overflow-hidden rounded-2xl border border-grey-200 bg-grey-50/90 shadow-lg backdrop-blur"
                                 >
-                                    <div className="flex items-center justify-between p-1">
-                                        <Link
-                                            href="/blog"
-                                            transitionTypes={["nav-back"]}
-                                            className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
-                                        >
-                                            <ArrowLeft
-                                                size={15}
-                                                strokeWidth={1.75}
-                                            />
-                                            Go back
-                                        </Link>
+                                    <div className="flex justify-end p-1">
                                         <button
                                             type="button"
                                             onClick={() => setOpen(false)}
@@ -99,7 +78,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                             Close
                                         </button>
                                     </div>
-                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto border-t border-grey-200 px-4 pb-4 pt-1">
+                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-4 pb-4">
                                         {related.map((post) => (
                                             <li key={post.slug}>
                                                 <Link
@@ -126,16 +105,20 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                     </ul>
                                 </motion.div>
                             ) : (
-                                <motion.div className="flex items-center gap-1">
+                                <motion.div
+                                    key="bar"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur"
+                                >
                                     <Link
                                         href="/blog"
                                         transitionTypes={["nav-back"]}
                                         className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                                     >
-                                        <ArrowLeft
-                                            size={15}
-                                            strokeWidth={1.75}
-                                        />
+                                        <ArrowLeft size={15} strokeWidth={1.75} />
                                         Go back
                                     </Link>
                                     {related.length > 0 && (
@@ -156,7 +139,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                     )}
                                 </motion.div>
                             )}
-                        </motion.div>
+                        </AnimatePresence>
                     </motion.div>
                 )}
             </AnimatePresence>
