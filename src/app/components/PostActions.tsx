@@ -78,19 +78,28 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                     transition={{ duration: 0.2, delay: 0.05 }}
                                     className="flex flex-col"
                                 >
-                                    <div className="flex items-center justify-between px-5 pb-2 pt-4">
-                                        <span className="font-caption01-light text-grey-400">
-                                            Related
-                                        </span>
+                                    <div className="flex items-center justify-between p-1">
+                                        <Link
+                                            href="/blog"
+                                            transitionTypes={["nav-back"]}
+                                            className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                                        >
+                                            <ArrowLeft
+                                                size={15}
+                                                strokeWidth={1.75}
+                                            />
+                                            Go back
+                                        </Link>
                                         <button
                                             type="button"
                                             onClick={() => setOpen(false)}
-                                            className="rounded-md p-1 text-grey-400 transition-colors hover:bg-grey-100 hover:text-grey-700"
+                                            className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                                         >
-                                            <X size={16} strokeWidth={1.75} />
+                                            <X size={15} strokeWidth={1.75} />
+                                            Close
                                         </button>
                                     </div>
-                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-5 pb-5">
+                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto border-t border-grey-200 px-4 pb-4 pt-1">
                                         {related.map((post) => (
                                             <li key={post.slug}>
                                                 <Link
