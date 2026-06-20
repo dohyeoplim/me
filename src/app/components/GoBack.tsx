@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePreviousPath } from "./PreviousPath";
+import { useBackNav } from "./PreviousPath";
 
 export default function GoBack({
     className,
@@ -10,10 +10,11 @@ export default function GoBack({
     className?: string;
     children: React.ReactNode;
 }) {
-    const prev = usePreviousPath();
+    const { previous, markBack } = useBackNav();
     return (
         <Link
-            href={prev ?? "/blog"}
+            href={previous ?? "/blog"}
+            onClick={markBack}
             transitionTypes={["nav-back"]}
             className={className}
         >

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Layers } from "lucide-react";
-import { usePreviousPath } from "./PreviousPath";
+import { useBackNav } from "./PreviousPath";
 import { useOverlay } from "./useOverlay";
 
 export type RelatedPost = {
@@ -16,7 +16,7 @@ export type RelatedPost = {
 export default function PostActions({ related }: { related: RelatedPost[] }) {
     const [show, setShow] = useState(false);
     const [open, setOpen] = useState(false);
-    const prev = usePreviousPath();
+    const { previous, markBack } = useBackNav();
 
     useEffect(() => {
         const onScroll = () => setShow(window.scrollY > 320);
@@ -101,7 +101,8 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
 
                         <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur">
                             <Link
-                                href={prev ?? "/blog"}
+                                href={previous ?? "/blog"}
+                                onClick={markBack}
                                 transitionTypes={["nav-back"]}
                                 className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                             >
