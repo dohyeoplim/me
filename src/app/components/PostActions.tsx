@@ -71,6 +71,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                         damping: 34,
                                     }}
                                     style={{ transformOrigin: "bottom center" }}
+                                    onClick={() => setOpen(false)}
                                     className="w-full max-w-md overflow-hidden rounded-2xl border border-grey-200 bg-grey-50/90 shadow-lg backdrop-blur"
                                 >
                                     <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-4 py-2">
