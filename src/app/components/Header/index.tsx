@@ -22,7 +22,7 @@ export default function Header() {
             className="fixed top-0 left-0 w-full z-50 pointer-events-none"
         >
             <div className="absolute inset-0" style={{ background: tint }} />
-            <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-3 md:pb-7">
+            <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-5 md:pb-7">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
                     <Link href={href} transitionTypes={["nav-back"]}>
                         <Item label={label} className="select-none" />
