@@ -6,10 +6,22 @@ import Item from "./_components/Item";
 import { useHeaderSlotRef } from "./HeaderSlot";
 
 const blurLayers = [
-    { blur: "10px", mask: "rgb(0 0 0) 0%, rgb(0 0 0) 15%, transparent 35%" },
-    { blur: "5px", mask: "rgb(0 0 0) 0%, rgb(0 0 0) 30%, transparent 55%" },
-    { blur: "2.5px", mask: "rgb(0 0 0) 0%, rgb(0 0 0) 50%, transparent 75%" },
-    { blur: "1px", mask: "rgb(0 0 0) 0%, rgb(0 0 0) 70%, transparent 100%" },
+    {
+        blur: "12px",
+        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 12%, rgb(0 0 0 / 0) 38%",
+    },
+    {
+        blur: "6px",
+        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 30%, rgb(0 0 0 / 0) 60%",
+    },
+    {
+        blur: "2.5px",
+        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 52%, rgb(0 0 0 / 0) 82%",
+    },
+    {
+        blur: "1px",
+        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 74%, rgb(0 0 0 / 0) 100%",
+    },
 ];
 
 export default function Header() {
@@ -38,7 +50,7 @@ export default function Header() {
                         }}
                     />
                 ))}
-                <div className="absolute inset-0 bg-linear-to-b from-grey-50/80 via-grey-50/45 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-b from-grey-50/80 via-grey-50/40 to-grey-50/0" />
             </div>
             <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-16 pb-2 md:pb-4">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
