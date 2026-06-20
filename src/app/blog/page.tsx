@@ -7,7 +7,7 @@ import { KIND_LABEL } from "@/app/lib/content/schema";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-    title: "Writing — Dohyeop Lim",
+    title: "Writing :: Dohyeop Lim",
     description: "Paper reviews and seminar notes.",
 };
 

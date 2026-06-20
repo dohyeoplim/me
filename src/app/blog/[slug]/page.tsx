@@ -23,7 +23,7 @@ export async function generateMetadata({
     const post = await loadPost(slug);
     if (!post || post.status !== "published") return {};
     return {
-        title: `${post.title} — Dohyeop Lim`,
+        title: `${post.title} :: Dohyeop Lim`,
         description: post.doc.summary || undefined,
     };
 }
