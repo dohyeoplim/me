@@ -19,7 +19,8 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
     const { previous, markBack } = useBackNav();
 
     useEffect(() => {
-        const onScroll = () => setShow(window.scrollY > 320);
+        const onScroll = () =>
+            setShow(window.scrollY > (window.innerWidth < 768 ? 160 : 320));
         const id = requestAnimationFrame(onScroll);
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => {
@@ -52,7 +53,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-6 z-50 flex flex-col items-center gap-2 px-6"
+                        className="fixed inset-x-0 bottom-3 md:bottom-6 z-50 flex flex-col items-center gap-2 px-6"
                     >
                         <AnimatePresence>
                             {open && related.length > 0 && (
