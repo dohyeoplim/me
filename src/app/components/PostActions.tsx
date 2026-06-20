@@ -53,7 +53,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),1.25rem)] md:bottom-6 z-50 flex flex-col items-center gap-2 px-6"
+                        className="fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),0.75rem)] md:bottom-6 z-50 flex flex-col items-center gap-2 px-6"
                     >
                         <AnimatePresence>
                             {open && related.length > 0 && (
