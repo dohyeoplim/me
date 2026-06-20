@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { POST_KINDS } from "@/app/lib/content/schema";
+import { POST_KINDS, KIND_LABEL } from "@/app/lib/content/schema";
 import type { PostDoc, PostKind } from "@/app/lib/content/schema";
 import { savePost, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
@@ -21,12 +21,6 @@ type Props = {
 };
 
 type SaveState = "idle" | "saving" | "saved";
-
-const KIND_LABEL: Record<PostKind, string> = {
-    "paper-review": "Paper Review",
-    seminar: "Seminar",
-    note: "Note",
-};
 
 const cardField =
     "-mx-2 rounded-md bg-transparent px-2 py-1 outline-none transition-colors hover:bg-grey-100 focus:bg-grey-100 placeholder:text-grey-300";

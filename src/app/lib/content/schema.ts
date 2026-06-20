@@ -202,6 +202,12 @@ export type PostKind = (typeof POST_KINDS)[number];
 export type PostDoc = z.infer<typeof PostDocSchema>;
 export type Post = z.infer<typeof PostSchema>;
 
+export const KIND_LABEL: Record<PostKind, string> = {
+    "paper-review": "Paper Review",
+    seminar: "Seminar",
+    note: "Note",
+};
+
 export const POST_DOC_DEFAULT: PostDoc = PostDocSchema.parse({});
 
 export type BlockStyle = z.infer<typeof BlockStyleSchema>;

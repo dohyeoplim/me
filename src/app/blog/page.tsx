@@ -2,19 +2,13 @@ import Link from "next/link";
 import SlideTransition from "@/app/components/SlideTransition";
 import { loadPosts } from "@/app/lib/contentLoader";
 import { formatDate } from "@/app/lib/format";
-import type { PostKind } from "@/app/lib/content/schema";
+import { KIND_LABEL } from "@/app/lib/content/schema";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
     title: "Writing — Dohyeop Lim",
     description: "Paper reviews and seminar notes.",
-};
-
-const KIND_LABEL: Record<PostKind, string> = {
-    "paper-review": "Paper Review",
-    seminar: "Seminar",
-    note: "Note",
 };
 
 export default async function BlogIndex() {

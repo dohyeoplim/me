@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Layers } from "lucide-react";
 import { usePreviousPath } from "./PreviousPath";
+import { useOverlay } from "./useOverlay";
 
 export type RelatedPost = {
     slug: string;
@@ -27,14 +28,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
         };
     }, []);
 
-    useEffect(() => {
-        if (!open) return;
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setOpen(false);
-        };
-        document.addEventListener("keydown", onKey);
-        return () => document.removeEventListener("keydown", onKey);
-    }, [open]);
+    useOverlay(open, () => setOpen(false));
 
     return (
         <>

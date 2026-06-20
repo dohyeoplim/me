@@ -8,17 +8,11 @@ import PostActions from "@/app/components/PostActions";
 import GoBack from "@/app/components/GoBack";
 import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
-import type { PostKind } from "@/app/lib/content/schema";
+import { KIND_LABEL } from "@/app/lib/content/schema";
 
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ slug: string }>;
-
-const KIND_LABEL: Record<PostKind, string> = {
-    "paper-review": "Paper Review",
-    seminar: "Seminar",
-    note: "Note",
-};
 
 export async function generateMetadata({
     params,

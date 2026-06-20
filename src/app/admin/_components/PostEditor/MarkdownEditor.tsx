@@ -42,8 +42,9 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     }, [value, mode, resize]);
 
     const replaceRange = (start: number, end: number, text: string, caret: number) => {
+        const base = ref.current ? ref.current.value : value;
         const scrollY = window.scrollY;
-        const next = value.slice(0, start) + text + value.slice(end);
+        const next = base.slice(0, start) + text + base.slice(end);
         onChange(next);
         requestAnimationFrame(() => {
             const el = ref.current;
@@ -61,7 +62,9 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         const { selectionStart: s, selectionEnd: e } = el;
         const selected = value.slice(s, e);
         const text = before + selected + after;
-        replaceRange(s, e, text, e + before.length + after.length);
+        const caret =
+            s === e ? s + before.length : e + before.length + after.length;
+        replaceRange(s, e, text, caret);
     };
 
     const prefixLine = (prefix: string) => {

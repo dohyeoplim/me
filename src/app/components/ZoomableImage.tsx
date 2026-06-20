@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
+import { useOverlay } from "./useOverlay";
 
 type Props = {
     src?: string;
@@ -12,18 +13,7 @@ type Props = {
 export default function ZoomableImage({ src, alt }: Props) {
     const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        if (!open) return;
-        const onKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setOpen(false);
-        };
-        document.addEventListener("keydown", onKey);
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.removeEventListener("keydown", onKey);
-            document.body.style.overflow = "";
-        };
-    }, [open]);
+    useOverlay(open, () => setOpen(false), true);
 
     if (!src) return null;
 
