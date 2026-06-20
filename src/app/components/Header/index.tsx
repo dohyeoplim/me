@@ -33,7 +33,7 @@ export default function Header() {
                 />
                 <div className="absolute inset-0 bg-linear-to-b from-grey-50 via-grey-50/70 to-grey-50/0" />
             </div>
-            <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-2 md:pb-4">
+            <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-3 md:pb-7">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
                     <Link href={href} transitionTypes={["nav-back"]}>
                         <Item label={label} className="select-none" />
