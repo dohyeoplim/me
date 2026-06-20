@@ -5,24 +5,8 @@ import { usePathname } from "next/navigation";
 import Item from "./_components/Item";
 import { useHeaderSlotRef } from "./HeaderSlot";
 
-const blurLayers = [
-    {
-        blur: "12px",
-        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 12%, rgb(0 0 0 / 0) 38%",
-    },
-    {
-        blur: "6px",
-        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 30%, rgb(0 0 0 / 0) 60%",
-    },
-    {
-        blur: "2.5px",
-        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 52%, rgb(0 0 0 / 0) 82%",
-    },
-    {
-        blur: "1px",
-        mask: "rgb(0 0 0) 0%, rgb(0 0 0) 74%, rgb(0 0 0 / 0) 100%",
-    },
-];
+const blurMask =
+    "linear-gradient(to bottom, rgb(0 0 0) 0%, rgb(0 0 0) 40%, rgb(0 0 0 / 0) 100%)";
 
 export default function Header() {
     const pathname = usePathname();
@@ -38,19 +22,16 @@ export default function Header() {
             className="fixed top-0 left-0 w-full z-50 pointer-events-none"
         >
             <div className="absolute inset-0">
-                {blurLayers.map((layer, i) => (
-                    <div
-                        key={i}
-                        className="absolute inset-0"
-                        style={{
-                            backdropFilter: `blur(${layer.blur})`,
-                            WebkitBackdropFilter: `blur(${layer.blur})`,
-                            WebkitMaskImage: `linear-gradient(to bottom, ${layer.mask})`,
-                            maskImage: `linear-gradient(to bottom, ${layer.mask})`,
-                        }}
-                    />
-                ))}
-                <div className="absolute inset-0 bg-linear-to-b from-grey-50/80 via-grey-50/40 to-grey-50/0" />
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backdropFilter: "blur(8px)",
+                        WebkitBackdropFilter: "blur(8px)",
+                        WebkitMaskImage: blurMask,
+                        maskImage: blurMask,
+                    }}
+                />
+                <div className="absolute inset-0 bg-linear-to-b from-grey-50/75 to-grey-50/0" />
             </div>
             <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-16 pb-2 md:pb-4">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
