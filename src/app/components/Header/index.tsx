@@ -5,6 +5,16 @@ import { usePathname } from "next/navigation";
 import Item from "./_components/Item";
 import { useHeaderSlotRef } from "./HeaderSlot";
 
+const blurLayers = [
+    { blur: "12px", mask: "rgb(0 0 0 / 1) 0%, rgb(0 0 0 / 1) 15%, rgb(0 0 0 / 0) 40%" },
+    { blur: "6px", mask: "rgb(0 0 0 / 1) 0%, rgb(0 0 0 / 1) 35%, rgb(0 0 0 / 0) 65%" },
+    { blur: "3px", mask: "rgb(0 0 0 / 1) 0%, rgb(0 0 0 / 1) 55%, rgb(0 0 0 / 0) 85%" },
+    { blur: "1.5px", mask: "rgb(0 0 0 / 1) 0%, rgb(0 0 0 / 1) 75%, rgb(0 0 0 / 0) 100%" },
+];
+
+const tint =
+    "linear-gradient(to bottom, rgb(250 250 252 / 0.75) 0%, rgb(250 250 252 / 0.45) 45%, rgb(250 250 252 / 0) 100%)";
+
 export default function Header() {
     const pathname = usePathname();
     const setNode = useHeaderSlotRef();
@@ -18,7 +28,24 @@ export default function Header() {
             style={{ viewTransitionName: "site-header" }}
             className="fixed top-0 left-0 w-full z-50 pointer-events-none"
         >
-            <div className="absolute inset-0 bg-linear-to-b from-grey-50 via-grey-50/70 to-grey-50/0" />
+            <div className="absolute inset-0">
+                {blurLayers.map((layer, i) => (
+                    <div
+                        key={i}
+                        className="absolute inset-0"
+                        style={{
+                            backdropFilter: `blur(${layer.blur})`,
+                            WebkitBackdropFilter: `blur(${layer.blur})`,
+                            WebkitMaskImage: `linear-gradient(to bottom, ${layer.mask})`,
+                            maskImage: `linear-gradient(to bottom, ${layer.mask})`,
+                        }}
+                    />
+                ))}
+                <div
+                    className="absolute inset-0"
+                    style={{ background: tint }}
+                />
+            </div>
             <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-3 md:pb-7">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
                     <Link href={href} transitionTypes={["nav-back"]}>
