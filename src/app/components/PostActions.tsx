@@ -54,7 +54,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         transition={{ duration: 0.2 }}
                         className="fixed inset-x-0 bottom-6 z-40 flex justify-center"
                     >
-                        <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/80 p-1 shadow-sm backdrop-blur">
+                        <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/50 p-1 shadow-sm backdrop-blur">
                             <Link
                                 href="/blog"
                                 transitionTypes={["nav-back"]}
@@ -121,7 +121,9 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                         <li key={post.slug}>
                                             <Link
                                                 href={`/blog/${post.slug}`}
-                                                transitionTypes={["nav-forward"]}
+                                                transitionTypes={[
+                                                    "nav-forward",
+                                                ]}
                                                 onClick={() => setOpen(false)}
                                                 className="group flex flex-col gap-1 py-3"
                                             >
