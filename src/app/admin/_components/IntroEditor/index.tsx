@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import type { IntroDoc } from "@/app/lib/content/schema";
 import { saveIntro } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "../shared/SignOutButton";
 import ImageField from "../shared/ImageField";
 import { TextInput, TextArea } from "../shared/Field";
+import ExitLink from "../shared/ExitLink";
+import { useRegisterDirty } from "../shared/dirty";
 
 type Props = {
     doc: IntroDoc;
@@ -22,6 +23,8 @@ export default function IntroEditor(props: Props) {
     const saving = useRef(false);
 
     const dirty = JSON.stringify(doc) !== JSON.stringify(baseline);
+
+    useRegisterDirty(dirty);
 
     const save = useCallback(async () => {
         if (saving.current || JSON.stringify(doc) === JSON.stringify(baseline))
@@ -59,7 +62,9 @@ export default function IntroEditor(props: Props) {
     const updateLink = (i: number, patch: Partial<IntroDoc["links"][number]>) =>
         setDoc((d) => ({
             ...d,
-            links: d.links.map((l, idx) => (idx === i ? { ...l, ...patch } : l)),
+            links: d.links.map((l, idx) =>
+                idx === i ? { ...l, ...patch } : l,
+            ),
         }));
 
     const saveLabel =
@@ -68,9 +73,7 @@ export default function IntroEditor(props: Props) {
     return (
         <div className="flex flex-col gap-8">
             <HeaderActions>
-                <Link href="/" className="font-body04-light text-grey-500">
-                    Home
-                </Link>
+                <ExitLink />
                 <SignOutButton />
             </HeaderActions>
 
@@ -105,7 +108,9 @@ export default function IntroEditor(props: Props) {
             </div>
 
             <div className="flex flex-col gap-3">
-                <span className="font-caption01-light text-grey-400">links</span>
+                <span className="font-caption01-light text-grey-400">
+                    links
+                </span>
                 {doc.links.map((link, i) => (
                     <div
                         key={i}
@@ -141,7 +146,9 @@ export default function IntroEditor(props: Props) {
                             onClick={() =>
                                 setDoc((d) => ({
                                     ...d,
-                                    links: d.links.filter((_, idx) => idx !== i),
+                                    links: d.links.filter(
+                                        (_, idx) => idx !== i,
+                                    ),
                                 }))
                             }
                         >

@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import type { ContentDoc } from "@/app/lib/content/schema";
 import { saveEntry, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "../shared/SignOutButton";
+import ExitLink from "../shared/ExitLink";
+import { useRegisterDirty } from "../shared/dirty";
 import Canvas from "./Canvas";
 
 type Status = "draft" | "published";
@@ -38,6 +39,8 @@ export default function Editor(props: Props) {
         title !== baseline.title ||
         status !== baseline.status ||
         JSON.stringify(doc) !== JSON.stringify(baseline.doc);
+
+    useRegisterDirty(dirty);
 
     const save = useCallback(async () => {
         if (saving.current || !dirty) return;
@@ -101,16 +104,7 @@ export default function Editor(props: Props) {
     return (
         <div className="flex flex-col gap-10">
             <HeaderActions>
-                <Link
-                    href="/"
-                    onClick={(e) => {
-                        if (dirty && !confirm("Discard unsaved changes?"))
-                            e.preventDefault();
-                    }}
-                    className="font-body04-light text-grey-500"
-                >
-                    Home
-                </Link>
+                <ExitLink />
                 <SignOutButton />
             </HeaderActions>
 

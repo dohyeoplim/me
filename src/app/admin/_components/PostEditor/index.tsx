@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { POST_KINDS, KIND_LABEL } from "@/app/lib/content/schema";
 import type { PostDoc, PostKind } from "@/app/lib/content/schema";
 import { savePost, deleteEntry } from "@/app/admin/actions";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "../shared/SignOutButton";
+import ExitLink from "../shared/ExitLink";
+import { useRegisterDirty } from "../shared/dirty";
 import MarkdownEditor from "./MarkdownEditor";
 import { TextArea } from "../shared/Field";
 
@@ -42,6 +43,8 @@ export default function PostEditor(props: Props) {
         title !== baseline.title ||
         status !== baseline.status ||
         JSON.stringify(doc) !== JSON.stringify(baseline.doc);
+
+    useRegisterDirty(dirty);
 
     const save = useCallback(async () => {
         if (saving.current || !dirty) return;
@@ -100,16 +103,7 @@ export default function PostEditor(props: Props) {
     return (
         <div className="flex flex-col gap-8">
             <HeaderActions>
-                <Link
-                    href="/blog"
-                    onClick={(e) => {
-                        if (dirty && !confirm("Discard unsaved changes?"))
-                            e.preventDefault();
-                    }}
-                    className="font-body04-light text-grey-500"
-                >
-                    Blog
-                </Link>
+                <ExitLink />
                 <SignOutButton />
             </HeaderActions>
 

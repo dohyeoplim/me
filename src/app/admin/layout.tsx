@@ -1,3 +1,5 @@
+import { DirtyProvider } from "./_components/shared/dirty";
+
 export default function AdminLayout({
     children,
 }: {
@@ -5,7 +7,7 @@ export default function AdminLayout({
 }) {
     return (
         <div className="w-full max-w-4xl mx-auto px-6 pt-28 md:pt-40 pb-30">
-            {children}
+            <DirtyProvider>{children}</DirtyProvider>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { listEntries, listPosts } from "@/app/lib/content/repository";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./_components/shared/SignOutButton";
-import HomeLink from "./_components/shared/HomeLink";
+import ExitLink from "./_components/shared/ExitLink";
 import EntryList from "./_components/shared/EntryList";
 import { createEntry, createPost } from "./actions";
 
@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
     return (
         <div className="flex flex-col gap-8">
             <HeaderActions>
-                <HomeLink />
+                <ExitLink />
                 <SignOutButton />
             </HeaderActions>
 
