@@ -90,7 +90,7 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                             onClick={() => setOpen(false)}
-                            className="fixed inset-0 z-40 bg-grey-900/20"
+                            className="fixed inset-0 z-40 bg-grey-900/10"
                         />
                         <motion.div
                             initial={{ y: "100%" }}
