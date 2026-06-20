@@ -5,9 +5,6 @@ import { usePathname } from "next/navigation";
 import Item from "./_components/Item";
 import { useHeaderSlotRef } from "./HeaderSlot";
 
-const blurMask =
-    "linear-gradient(to bottom, rgb(0 0 0) 0%, rgb(0 0 0) 40%, rgb(0 0 0 / 0) 100%)";
-
 export default function Header() {
     const pathname = usePathname();
     const setNode = useHeaderSlotRef();
@@ -21,18 +18,7 @@ export default function Header() {
             style={{ viewTransitionName: "site-header" }}
             className="fixed top-0 left-0 w-full z-50 pointer-events-none"
         >
-            <div className="absolute inset-0">
-                <div
-                    className="absolute inset-0"
-                    style={{
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                        WebkitMaskImage: blurMask,
-                        maskImage: blurMask,
-                    }}
-                />
-                <div className="absolute inset-0 bg-linear-to-b from-grey-50 via-grey-50/70 to-grey-50/0" />
-            </div>
+            <div className="absolute inset-0 bg-linear-to-b from-grey-50 via-grey-50/70 to-grey-50/0" />
             <div className="relative max-w-4xl mx-auto px-6 pt-4 md:pt-10 pb-3 md:pb-7">
                 <nav className="pointer-events-auto w-full flex items-center justify-between">
                     <Link href={href} transitionTypes={["nav-back"]}>
@@ -48,7 +34,10 @@ export default function Header() {
                                 Writing
                             </Link>
                         )}
-                        <div ref={setNode} className="flex items-center gap-3" />
+                        <div
+                            ref={setNode}
+                            className="flex items-center gap-3"
+                        />
                     </div>
                 </nav>
             </div>
