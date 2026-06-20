@@ -8,9 +8,8 @@ import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-    title: "Dohyeop Lim",
-    description:
-        "Undergraduate researcher in computer vision and generative AI.",
+    title: "Dohyeop",
+    description: "Interested in computer vision and generative AI.",
 };
 
 export const viewport: Viewport = {

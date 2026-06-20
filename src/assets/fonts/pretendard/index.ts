@@ -5,6 +5,16 @@ export const pretendard = localFont({
     display: "swap",
     src: [
         {
+            path: "./woff2/Pretendard-SemiBold.woff2",
+            weight: "600 700",
+            style: "normal",
+        },
+        {
+            path: "./woff/Pretendard-SemiBold.woff",
+            weight: "600 700",
+            style: "normal",
+        },
+        {
             path: "./woff2/Pretendard-Medium.woff2",
             weight: "500",
             style: "normal",

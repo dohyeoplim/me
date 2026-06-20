@@ -6,13 +6,13 @@
         @apply mt-0;
     }
     .prose h1 {
-        @apply font-title02-light text-grey-900 mt-12 mb-4;
+        @apply font-head01-medium text-grey-900 mt-8 mb-3;
     }
     .prose h2 {
-        @apply font-head01-medium text-grey-900 mt-10 mb-3;
+        @apply font-body01-regular text-grey-900 mt-6 mb-2;
     }
     .prose h3 {
-        @apply font-body01-regular text-grey-900 mt-8 mb-2;
+        @apply font-body02-regular text-grey-900 mt-5 mb-1.5;
     }
     .prose p {
         @apply my-4 leading-7;
@@ -21,16 +21,21 @@
         @apply text-grey-900 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500;
     }
     .prose strong {
-        @apply font-body02-regular text-grey-900;
+        @apply text-grey-900;
+        font-weight: 600;
     }
     .prose ul {
-        @apply my-4 list-disc pl-6;
+        @apply my-4 list-disc pl-5;
     }
     .prose ol {
-        @apply my-4 list-decimal pl-6;
+        @apply my-4 list-decimal pl-5;
     }
     .prose li {
         @apply my-1.5;
+    }
+    .prose li::marker {
+        @apply text-grey-400;
+        font-size: 0.85em;
     }
     .prose blockquote {
         @apply my-5 border-l-2 border-grey-200 pl-4 text-grey-500;
