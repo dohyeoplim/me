@@ -73,7 +73,7 @@ export default function BlockEditable(props: Props) {
                     >
                         {isEmpty(block) ? (
                             <span className="font-body03-light text-grey-300">
-                                Empty {BLOCK_LABELS[block.type]} — click to edit
+                                Empty {BLOCK_LABELS[block.type]}, click to edit
                             </span>
                         ) : (
                             <BlockRenderer block={block} />
