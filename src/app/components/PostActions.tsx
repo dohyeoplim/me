@@ -4,20 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Layers, X } from "lucide-react";
-import { formatDate } from "@/app/lib/format";
-import type { PostKind } from "@/app/lib/content/schema";
 
 export type RelatedPost = {
     slug: string;
     title: string;
-    kind: PostKind;
-    date: string;
-};
-
-const KIND_LABEL: Record<PostKind, string> = {
-    "paper-review": "Paper Review",
-    seminar: "Seminar",
-    note: "Note",
+    description: string;
 };
 
 export default function PostActions({ related }: { related: RelatedPost[] }) {
@@ -46,109 +37,118 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
     return (
         <>
             <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        onClick={() => setOpen(false)}
+                        className="fixed inset-0 z-40 bg-grey-900/10"
+                    />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
                 {show && (
                     <motion.div
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-6 z-40 flex justify-center"
+                        className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-6"
                     >
-                        <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/50 p-1 shadow-sm backdrop-blur">
-                            <Link
-                                href="/blog"
-                                transitionTypes={["nav-back"]}
-                                className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
-                            >
-                                <ArrowLeft size={15} strokeWidth={1.75} />
-                                Go back
-                            </Link>
-                            {related.length > 0 && (
-                                <>
-                                    <span className="h-4 w-px bg-grey-200" />
-                                    <button
-                                        type="button"
-                                        onClick={() => setOpen(true)}
-                                        className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
-                                    >
-                                        <Layers size={15} strokeWidth={1.75} />
-                                        Related
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-                {open && (
-                    <>
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            onClick={() => setOpen(false)}
-                            className="fixed inset-0 z-40 bg-grey-900/10"
-                        />
-                        <motion.div
-                            initial={{ y: "100%" }}
-                            animate={{ y: 0 }}
-                            exit={{ y: "100%" }}
+                            layout
                             transition={{
                                 type: "spring",
-                                stiffness: 360,
+                                stiffness: 380,
                                 damping: 34,
                             }}
-                            className="fixed inset-x-0 bottom-0 z-50 flex justify-center"
+                            className={
+                                open
+                                    ? "w-full max-w-xl overflow-hidden rounded-2xl border border-grey-200 bg-grey-50/90 shadow-lg backdrop-blur"
+                                    : "overflow-hidden rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur"
+                            }
                         >
-                            <div className="w-full max-w-2xl rounded-t-2xl border border-grey-200 bg-grey-50 px-6 pb-8 pt-5 shadow-lg">
-                                <div className="mb-3 flex items-center justify-between">
-                                    <span className="font-caption01-light text-grey-400">
-                                        Related
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => setOpen(false)}
-                                        className="rounded-md p-1 text-grey-400 transition-colors hover:bg-grey-100 hover:text-grey-700"
-                                    >
-                                        <X size={16} strokeWidth={1.75} />
-                                    </button>
-                                </div>
-                                <ul className="flex flex-col divide-y divide-grey-200">
-                                    {related.map((post) => (
-                                        <li key={post.slug}>
-                                            <Link
-                                                href={`/blog/${post.slug}`}
-                                                transitionTypes={[
-                                                    "nav-forward",
-                                                ]}
-                                                onClick={() => setOpen(false)}
-                                                className="group flex flex-col gap-1 py-3"
-                                            >
-                                                <div className="flex items-center gap-2 font-caption01-light text-grey-400">
-                                                    <span>
-                                                        {KIND_LABEL[post.kind]}
+                            {open ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.2, delay: 0.05 }}
+                                    className="flex flex-col"
+                                >
+                                    <div className="flex items-center justify-between px-5 pb-2 pt-4">
+                                        <span className="font-caption01-light text-grey-400">
+                                            Related
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setOpen(false)}
+                                            className="rounded-md p-1 text-grey-400 transition-colors hover:bg-grey-100 hover:text-grey-700"
+                                        >
+                                            <X size={16} strokeWidth={1.75} />
+                                        </button>
+                                    </div>
+                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-5 pb-5">
+                                        {related.map((post) => (
+                                            <li key={post.slug}>
+                                                <Link
+                                                    href={`/blog/${post.slug}`}
+                                                    transitionTypes={[
+                                                        "nav-forward",
+                                                    ]}
+                                                    onClick={() =>
+                                                        setOpen(false)
+                                                    }
+                                                    className="group flex flex-col gap-1 py-3"
+                                                >
+                                                    <span className="font-body02-light text-grey-900 transition-colors group-hover:text-grey-600">
+                                                        {post.title}
                                                     </span>
-                                                    {post.date && (
-                                                        <span>
-                                                            {formatDate(
-                                                                post.date,
-                                                            )}
+                                                    {post.description && (
+                                                        <span className="line-clamp-2 font-body04-light text-grey-500">
+                                                            {post.description}
                                                         </span>
                                                     )}
-                                                </div>
-                                                <span className="font-body02-light text-grey-900 transition-colors group-hover:text-grey-600">
-                                                    {post.title}
-                                                </span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </motion.div>
+                            ) : (
+                                <motion.div className="flex items-center gap-1">
+                                    <Link
+                                        href="/blog"
+                                        transitionTypes={["nav-back"]}
+                                        className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                                    >
+                                        <ArrowLeft
+                                            size={15}
+                                            strokeWidth={1.75}
+                                        />
+                                        Go back
+                                    </Link>
+                                    {related.length > 0 && (
+                                        <>
+                                            <span className="h-4 w-px bg-grey-200" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setOpen(true)}
+                                                className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                                            >
+                                                <Layers
+                                                    size={15}
+                                                    strokeWidth={1.75}
+                                                />
+                                                Related
+                                            </button>
+                                        </>
+                                    )}
+                                </motion.div>
+                            )}
                         </motion.div>
-                    </>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </>

@@ -47,7 +47,7 @@ export default async function PostPage({ params }: { params: Params }) {
         .map((p) => ({
             slug: p.slug,
             title: p.title,
-            kind: p.doc.kind,
+            description: p.doc.description,
             date: p.doc.date,
             score:
                 p.doc.tags.filter((t) => tags.has(t)).length * 2 +
