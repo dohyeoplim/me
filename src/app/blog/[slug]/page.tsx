@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { loadPost } from "@/app/lib/contentLoader";
 import Markdown from "@/app/components/Markdown";
 import PaperAbstract from "@/app/components/PaperAbstract";
+import BackToList from "@/app/components/BackToList";
 import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
 import type { PostKind } from "@/app/lib/content/schema";
@@ -146,6 +147,7 @@ export default async function PostPage({ params }: { params: Params }) {
             <Markdown>{doc.body}</Markdown>
                 </article>
             </div>
+            <BackToList />
         </SlideTransition>
     );
 }
