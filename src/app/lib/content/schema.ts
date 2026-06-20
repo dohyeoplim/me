@@ -145,9 +145,9 @@ export const INTRO_DEFAULT: IntroDoc = {
     name: "Dohyeop Lim",
     tagline: "Visual AI Research & Systems",
     profileLabel: "Profile",
-    bio: "I design and implement vision models,\nfrom core algorithms to working systems.",
+    bio: "I design and build vision models,\nfrom core algorithms to working systems.",
     links: [
-        { label: "Email", href: "mailto:dohyeoplim@seoultech.ac.kr" },
+        { label: "Email", href: "mailto:dhlim0817@gmail.com" },
         {
             label: "GitHub",
             href: "https://github.com/dohyeoplim",
