@@ -9,10 +9,10 @@
         @apply font-head01-medium text-grey-900 mt-8 mb-3;
     }
     .prose h2 {
-        @apply font-body01-regular text-grey-900 mt-6 mb-2;
+        @apply font-body01-regular text-grey-900 mt-4 mb-2;
     }
     .prose h3 {
-        @apply font-body02-regular text-grey-900 mt-5 mb-1.5;
+        @apply font-body02-regular text-grey-900 mt-3 mb-1.5;
     }
     .prose p {
         @apply my-4 leading-7;
