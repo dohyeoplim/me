@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Layers } from "lucide-react";
+import { useGoBack } from "./GoBack";
 
 export type RelatedPost = {
     slug: string;
@@ -14,6 +15,7 @@ export type RelatedPost = {
 export default function PostActions({ related }: { related: RelatedPost[] }) {
     const [show, setShow] = useState(false);
     const [open, setOpen] = useState(false);
+    const goBack = useGoBack();
 
     useEffect(() => {
         const onScroll = () => setShow(window.scrollY > 320);
@@ -104,14 +106,14 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         </AnimatePresence>
 
                         <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur">
-                            <Link
-                                href="/blog"
-                                transitionTypes={["nav-back"]}
+                            <button
+                                type="button"
+                                onClick={goBack}
                                 className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                             >
                                 <ArrowLeft size={15} strokeWidth={1.75} />
                                 Go back
-                            </Link>
+                            </button>
                             {related.length > 0 && (
                                 <>
                                     <span className="h-4 w-px bg-grey-200" />
