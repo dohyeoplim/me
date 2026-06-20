@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { auth, signOut } from "@/auth";
 import {
     ContentDocSchema,
@@ -24,10 +24,14 @@ async function requireAdmin() {
     if (!session?.user) throw new Error("Unauthorized");
 }
 
+function purge(tag: string) {
+    revalidateTag(tag, "max");
+}
+
 function revalidate(type: string, slug: string) {
-    updateTag("content");
-    updateTag(`content:${type}`);
-    updateTag(`content:${type}:${slug}`);
+    purge("content");
+    purge(`content:${type}`);
+    purge(`content:${type}:${slug}`);
 }
 
 export type SaveInput = {
@@ -78,8 +82,8 @@ export async function deleteEntry(type: string, slug: string) {
 export async function reorderEntries(type: string, ids: string[]) {
     await requireAdmin();
     await repoReorderEntries(type, ids);
-    updateTag("content");
-    updateTag(`content:${type}`);
+    purge("content");
+    purge(`content:${type}`);
 }
 
 export type SavePostInput = {
@@ -118,8 +122,8 @@ export async function saveIntro(doc: IntroDoc) {
     await requireAdmin();
     const parsed = IntroDocSchema.parse(doc);
     await upsertIntro(parsed);
-    updateTag("content");
-    updateTag("content:intro");
+    purge("content");
+    purge("content:intro");
 }
 
 export async function signOutAction() {

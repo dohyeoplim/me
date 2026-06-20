@@ -5,6 +5,8 @@ import { toEntry, type Row } from "@/app/lib/content/row";
 import { INTRO_DEFAULT } from "@/app/lib/content/schema";
 import type { Entry, IntroDoc, Post } from "@/app/lib/content/schema";
 
+const REVALIDATE = 300;
+
 export const loadEntriesByType = (
     type: string,
     publishedOnly = false,
@@ -26,14 +28,14 @@ export const loadEntriesByType = (
             return rows.map(toEntry);
         },
         ["content-list", type, publishedOnly ? "published" : "all"],
-        { tags: ["content", `content:${type}`] },
+        { tags: ["content", `content:${type}`], revalidate: REVALIDATE },
     )();
 
 export const loadIntro = (): Promise<IntroDoc> =>
     unstable_cache(
         async () => (await getIntro()) ?? INTRO_DEFAULT,
         ["content-intro"],
-        { tags: ["content", "content:intro"] },
+        { tags: ["content", "content:intro"], revalidate: REVALIDATE },
     )();
 
 export const loadPosts = (publishedOnly = false): Promise<Post[]> =>
@@ -45,10 +47,11 @@ export const loadPosts = (publishedOnly = false): Promise<Post[]> =>
                 : posts;
         },
         ["content-posts", publishedOnly ? "published" : "all"],
-        { tags: ["content", "content:post"] },
+        { tags: ["content", "content:post"], revalidate: REVALIDATE },
     )();
 
 export const loadPost = (slug: string): Promise<Post | null> =>
     unstable_cache(async () => getPost(slug), ["content-post", slug], {
         tags: ["content", "content:post"],
+        revalidate: REVALIDATE,
     })();
