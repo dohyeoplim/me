@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { loadPost } from "@/app/lib/contentLoader";
+import { loadPost, loadPosts } from "@/app/lib/contentLoader";
 import Markdown from "@/app/components/Markdown";
 import PaperAbstract from "@/app/components/PaperAbstract";
-import BackToList from "@/app/components/BackToList";
+import PostActions from "@/app/components/PostActions";
 import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
 import type { PostKind } from "@/app/lib/content/schema";
@@ -40,6 +40,21 @@ export default async function PostPage({ params }: { params: Params }) {
     if (!post || post.status !== "published") notFound();
 
     const { doc } = post;
+
+    const tags = new Set(doc.tags);
+    const related = (await loadPosts(true))
+        .filter((p) => p.slug !== post.slug)
+        .map((p) => ({
+            slug: p.slug,
+            title: p.title,
+            kind: p.doc.kind,
+            date: p.doc.date,
+            score:
+                p.doc.tags.filter((t) => tags.has(t)).length * 2 +
+                (p.doc.kind === doc.kind ? 1 : 0),
+        }))
+        .sort((a, b) => b.score - a.score || b.date.localeCompare(a.date))
+        .slice(0, 4);
     const hasPaper =
         doc.paper.title ||
         doc.paper.authors ||
@@ -147,7 +162,7 @@ export default async function PostPage({ params }: { params: Params }) {
             <Markdown>{doc.body}</Markdown>
                 </article>
             </div>
-            <BackToList />
+            <PostActions related={related} />
         </SlideTransition>
     );
 }
