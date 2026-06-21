@@ -13,6 +13,14 @@ export async function listEntries(type: string): Promise<Entry[]> {
     return rows.map(toEntry);
 }
 
+export async function listAllRows(): Promise<Row[]> {
+    await ensureSchema();
+    return (await sql`
+        select * from content_entries
+        order by type asc, order_index asc, slug asc
+    `) as Row[];
+}
+
 export async function getEntry(
     type: string,
     slug: string,

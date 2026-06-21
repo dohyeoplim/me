@@ -97,6 +97,14 @@ export default async function AdminDashboard() {
                     Create
                 </button>
             </form>
+
+            <a
+                href="/admin/export"
+                download
+                className="mt-4 w-fit border-t border-grey-200 pt-4 font-body05-light text-grey-400 transition-colors hover:text-grey-700"
+            >
+                Export all entries (CSV)
+            </a>
         </div>
     );
 }
