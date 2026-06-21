@@ -3,12 +3,29 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
+import katex from "katex";
 import { useOverlay } from "./useOverlay";
 
 type Props = {
     src?: string;
     alt?: string;
 };
+
+function renderCaption(text: string) {
+    const parts = text.split(/(\$[^$]+\$)/g);
+    return parts.map((part, index) => {
+        if (part.startsWith("$") && part.endsWith("$") && part.length > 2) {
+            const html = katex.renderToString(part.slice(1, -1), {
+                throwOnError: false,
+                displayMode: false,
+            });
+            return (
+                <span key={index} dangerouslySetInnerHTML={{ __html: html }} />
+            );
+        }
+        return <span key={index}>{part}</span>;
+    });
+}
 
 export default function ZoomableImage({ src, alt }: Props) {
     const [open, setOpen] = useState(false);
@@ -30,7 +47,7 @@ export default function ZoomableImage({ src, alt }: Props) {
             />
             {alt && (
                 <span className="text-center font-body04-light text-grey-400">
-                    {alt}
+                    {renderCaption(alt)}
                 </span>
             )}
 

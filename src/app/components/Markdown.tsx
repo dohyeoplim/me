@@ -7,6 +7,14 @@ import "katex/dist/katex.min.css";
 import "highlight.js/styles/github.css";
 import ZoomableImage from "./ZoomableImage";
 
+function escapeMathInImageAlt(markdown: string) {
+    return markdown.replace(
+        /!\[([^\]]*)\]/g,
+        (_match, alt: string) =>
+            `![${alt.replace(/\$/g, () => "\\$")}]`,
+    );
+}
+
 export default function Markdown({ children }: { children: string }) {
     return (
         <div className="prose">
@@ -22,7 +30,7 @@ export default function Markdown({ children }: { children: string }) {
                     ),
                 }}
             >
-                {children}
+                {escapeMathInImageAlt(children)}
             </ReactMarkdown>
         </div>
     );
