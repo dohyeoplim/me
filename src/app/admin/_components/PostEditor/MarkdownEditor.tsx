@@ -84,39 +84,42 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         replaceRange(s, e, text, s + text.length - 1);
     };
 
-    const insertImage = (alt: string, url: string, at?: number) => {
-        const el = ref.current;
-        const pos = at ?? (el ? el.selectionStart : value.length);
-        const snippet = `![${alt}](${url})`;
-        replaceRange(pos, pos, snippet, pos + snippet.length);
-    };
-
-    const uploadFile = async (file: File, at?: number) => {
+    const uploadFiles = async (files: File[], at?: number) => {
+        const images = files.filter((f) => f.type.startsWith("image/"));
+        if (images.length === 0) return;
         setUploading(true);
         try {
-            const blob = await upload(file.name, file, {
-                access: "public",
-                handleUploadUrl: "/api/blob/upload",
-            });
-            insertImage(file.name, blob.url, at);
+            const uploaded = await Promise.all(
+                images.map(async (file) => {
+                    const blob = await upload(file.name, file, {
+                        access: "public",
+                        handleUploadUrl: "/api/blob/upload",
+                    });
+                    return `![${file.name}](${blob.url})`;
+                }),
+            );
+            const snippet = uploaded.join("\n\n");
+            const el = ref.current;
+            const pos = at ?? (el ? el.selectionStart : value.length);
+            replaceRange(pos, pos, snippet, pos + snippet.length);
         } finally {
             setUploading(false);
         }
     };
 
     const onPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) await uploadFile(file);
+        const files = Array.from(e.target.files ?? []);
         e.target.value = "";
+        await uploadFiles(files);
     };
 
     const onPaste = async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-        const file = Array.from(e.clipboardData.files).find((f) =>
+        const images = Array.from(e.clipboardData.files).filter((f) =>
             f.type.startsWith("image/"),
         );
-        if (file) {
+        if (images.length > 0) {
             e.preventDefault();
-            await uploadFile(file);
+            await uploadFiles(images);
         }
     };
 
@@ -136,14 +139,14 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     };
 
     const onDrop = async (e: React.DragEvent<HTMLTextAreaElement>) => {
-        const file = Array.from(e.dataTransfer.files).find((f) =>
+        const images = Array.from(e.dataTransfer.files).filter((f) =>
             f.type.startsWith("image/"),
         );
-        if (!file) return;
+        if (images.length === 0) return;
         e.preventDefault();
         const idx = caretIndexAt(e.clientX, e.clientY);
         const at = idx ?? ref.current?.selectionStart;
-        await uploadFile(file, at ?? undefined);
+        await uploadFiles(images, at ?? undefined);
     };
 
     const handleListEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -231,6 +234,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                         <input
                             type="file"
                             accept="image/*"
+                            multiple
                             onChange={onPick}
                             className="hidden"
                         />
