@@ -10,7 +10,9 @@ const preview: Preview = {
         controls: { expanded: true },
         a11y: { test: "error" },
         options: {
-            storySort: { order: ["DDS", ["Button", "IconButton", "Badge", "Surface", "Metric", "SectionHeading"]] },
+            storySort: {
+                order: ["DDS", ["Button", "IconButton", "TextField", "Badge", "Surface", "Metric", "SectionHeading"]],
+            },
         },
     },
     tags: ["autodocs"],

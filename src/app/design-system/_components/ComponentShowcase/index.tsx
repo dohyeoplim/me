@@ -4,6 +4,7 @@ import { ButtonLink } from "@/app/components/DDS/Button";
 import Metric from "@/app/components/DDS/Metric";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Surface from "@/app/components/DDS/Surface";
+import TextField from "@/app/components/DDS/TextField";
 import Disclosure from "@/app/components/DDS/Disclosure";
 import LinkButton from "@/app/components/LinkButton";
 import { surfaceVariants } from "../../data";
@@ -45,6 +46,28 @@ export default function ComponentShowcase() {
                                 GitHub <ArrowUpRight size={16} aria-hidden="true" />
                             </ButtonLink>
                         </div>
+                    </Surface>
+                </div>
+            </div>
+            <div className="dds-guide-group">
+                <SectionHeading
+                    title="Fields"
+                    variant="subsection"
+                    description="Labels and guidance stay close to the input."
+                />
+                <div className="dds-specimen-grid">
+                    <Surface padding="compact" className="dds-specimen-stack">
+                        <TextField
+                            label="Email"
+                            type="email"
+                            placeholder="name@example.com"
+                            hint="Used only for a reply."
+                        />
+                        <TextField label="Password" type="password" placeholder="Enter password" />
+                    </Surface>
+                    <Surface padding="compact" className="dds-specimen-stack">
+                        <TextField label="Search" placeholder="Find a project" variant="line" />
+                        <TextField label="Project name" defaultValue="Collog" error="Check this value." />
                     </Surface>
                 </div>
             </div>

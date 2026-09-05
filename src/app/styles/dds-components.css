@@ -1,3 +1,5 @@
+@reference "../globals.css";
+
 .dds-section-heading {
     display: grid;
     gap: var(--spacing-dds-sm);
@@ -300,4 +302,84 @@
 .dds-guide-page .ds-section {
     padding-block: var(--spacing-dds-3xl);
     scroll-margin-top: calc(var(--site-header-row-height) + var(--spacing-dds-lg) - var(--spacing-dds-3xl));
+}
+
+.dds-text-field {
+    display: grid;
+    width: 100%;
+    gap: var(--spacing-dds-xs);
+}
+
+.dds-text-field-label {
+    @apply font-support;
+    color: var(--text-primary);
+}
+
+.dds-text-field-input {
+    @apply font-support;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border-control);
+    border-radius: var(--control-radius);
+    background: var(--surface-panel);
+    color: var(--text-primary);
+    transition:
+        background-color var(--duration-feedback) var(--ease-feedback),
+        border-color var(--duration-feedback) var(--ease-feedback),
+        color var(--duration-feedback) var(--ease-feedback);
+}
+
+.dds-text-field-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.dds-text-field-input:not(:disabled):hover {
+    border-color: var(--text-secondary);
+}
+
+.dds-text-field[data-size="medium"] .dds-text-field-input {
+    min-height: var(--button-height-medium);
+    padding: var(--spacing-dds-2xs) var(--spacing-dds-sm);
+}
+
+.dds-text-field[data-size="large"] .dds-text-field-input {
+    @apply font-body;
+    min-height: var(--button-height-large);
+    padding: var(--spacing-dds-xs) var(--spacing-dds-md);
+}
+
+.dds-text-field[data-variant="line"] .dds-text-field-input {
+    padding-inline: 0;
+    border-width: 0 0 1px;
+    border-radius: 0;
+    background: transparent;
+}
+
+.dds-text-field-input:focus-visible {
+    border-color: var(--accent);
+}
+
+.dds-text-field[data-invalid="true"] .dds-text-field-input {
+    border-color: var(--text-primary);
+}
+
+.dds-text-field-input:disabled {
+    cursor: not-allowed;
+    background: var(--surface-muted);
+    color: var(--text-secondary);
+    opacity: 0.55;
+}
+
+.dds-text-field[data-variant="line"] .dds-text-field-input:disabled {
+    background: transparent;
+}
+
+.dds-text-field-hint {
+    @apply font-support;
+    color: var(--text-secondary);
+}
+
+.dds-text-field-error {
+    @apply font-support;
+    color: var(--text-primary);
 }
