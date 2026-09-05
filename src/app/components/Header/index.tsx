@@ -28,19 +28,22 @@ export default function Header() {
                         <Item label={label} className="select-none" />
                     </Link>
                     <div className="flex items-center gap-4">
-                        {!isAdmin && (
-                            <Link
-                                href="/blog"
-                                transitionTypes={["nav-forward"]}
-                                className="font-body04-light text-grey-500 transition-colors hover:text-grey-900"
-                            >
-                                Writing
-                            </Link>
-                        )}
-                        <div
-                            ref={setNode}
-                            className="flex items-center gap-3"
-                        />
+                        {!isAdmin &&
+                            [
+                                { href: "/portfolio", label: "Portfolio" },
+                                { href: "/blog", label: "Writing" },
+                            ].map(({ href, label }) => (
+                                <Link
+                                    key={href}
+                                    href={href}
+                                    aria-current={pathname.startsWith(href) ? "page" : undefined}
+                                    transitionTypes={["nav-forward"]}
+                                    className="font-body04-light text-grey-500 transition-colors hover:text-grey-900"
+                                >
+                                    {label}
+                                </Link>
+                            ))}
+                        <div ref={setNode} className="flex items-center gap-3" />
                     </div>
                 </nav>
             </div>
