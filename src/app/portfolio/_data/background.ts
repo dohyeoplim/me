@@ -12,12 +12,19 @@ export const experience = [
 export const beyondTheLab = {
     title: "Experience",
     infrastructure: {
-        title: "Research infrastructure",
-        description: "Participating researcher in national AI infrastructure R&D, supporting LLM data processing.",
+        title: "National AI R&D tasks",
+        description: "Participating researcher supporting shared compute and industrial AI data preparation.",
         responsibilities: [
-            { title: "GPU resources", detail: "NVIDIA MIG partitioning and allocation" },
-            { title: "Research environments", detail: "Docker preparation and distribution" },
-            { title: "Shared infrastructure", detail: "Bastion access, servers, and InfiniBand" },
+            {
+                title: "컴퓨팅자원집중형 인공지능 응용 기술개발",
+                detail:
+                    "Support LLM data processing and shared GPU environments through NVIDIA MIG, Docker, " +
+                    "bastion access, servers, and InfiniBand.",
+            },
+            {
+                title: "산업 AI용 데이터 전처리 자동화 기술개발",
+                detail: "Lead SeoulTech OCR work with KETI across data collection, synthesis, and evaluation.",
+            },
         ],
     },
     communities: [

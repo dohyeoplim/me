@@ -8,7 +8,7 @@ import "./portfolio.css";
 
 export const metadata: Metadata = {
     title: "Portfolio, Dohyeop Lim",
-    description: "Research in document understanding and structured identifier recognition, and applied AI projects.",
+    description: "Research and projects in computer vision, speech recognition, multimodal models, and evaluation.",
 };
 
 export default function PortfolioPage() {
@@ -17,7 +17,9 @@ export default function PortfolioPage() {
             <main id="main-content" className="portfolio-page">
                 <div className="dds-container portfolio-page-heading">
                     <h1 className="font-page-title">Dohyeop Lim</h1>
-                    <p className="font-body">Research, projects, and experience.</p>
+                    <p className="font-body">
+                        Research and projects in computer vision, speech recognition, multimodal models, and evaluation.
+                    </p>
                 </div>
                 <ChapterNav />
                 <div className="dds-container">

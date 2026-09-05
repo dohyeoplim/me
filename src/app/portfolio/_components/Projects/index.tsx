@@ -38,7 +38,11 @@ export default function Projects() {
                                 <p>{project.contribution}</p>
                                 {project.recognition && <p className="portfolio-recognition">{project.recognition}</p>}
                                 {project.outcome && (
-                                    <Disclosure label={projectSection.detailsLabel} variant="plain">
+                                    <Disclosure
+                                        label={projectSection.detailsLabel}
+                                        variant="plain"
+                                        contentTone="subtle"
+                                    >
                                         <p>{project.outcome}</p>
                                     </Disclosure>
                                 )}

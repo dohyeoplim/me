@@ -15,7 +15,10 @@ export default function Background() {
                         <p>{infrastructure.description}</p>
                         <ul className="portfolio-responsibilities">
                             {infrastructure.responsibilities.map(({ title, detail }) => (
-                                <li key={title}>{detail}</li>
+                                <li key={title}>
+                                    <h4 className="font-body" lang="ko">{title}</h4>
+                                    <p className="font-support text-muted">{detail}</p>
+                                </li>
                             ))}
                         </ul>
                     </article>

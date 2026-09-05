@@ -3,6 +3,7 @@ export const hero = {
     name: "Dohyeop Lim",
     bio:
         "At SeoulTech's Visual Intelligence Lab, advised by Prof. Jongyoul Park. " +
-        "I study document understanding and structured identifier recognition.",
+        "I work on computer vision and multimodal models. My current research covers document understanding " +
+        "and structured identifier recognition.",
     image: { src: "/profile.png", alt: "Dohyeop Lim" },
 };

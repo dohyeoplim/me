@@ -10,7 +10,10 @@ export default function Research() {
     return (
         <section id="research" className="portfolio-section">
             <SectionHeading title={research.title} />
-            <p className="portfolio-research-affiliation font-support text-muted">{research.affiliation}</p>
+            <div className="portfolio-research-overview">
+                <p className="font-support text-muted">{research.affiliation}</p>
+                <p>{research.interests}</p>
+            </div>
             <article className="portfolio-feature">
                 <header className="portfolio-work-heading">
                     <h3 className="font-work-title">{eact.name}</h3>
@@ -23,7 +26,7 @@ export default function Research() {
                 <div className="portfolio-findings">
                     <p className="font-body">{eact.result}</p>
                 </div>
-                <Disclosure label={eact.detailsLabel}>
+                <Disclosure label={eact.detailsLabel} contentTone="subtle">
                     <div className="portfolio-paper">
                         <p>{eact.contributions}</p>
                         <p>{eact.errorResult}</p>

@@ -2,8 +2,8 @@ export const research = {
     title: "Research",
     affiliation: "Undergraduate researcher at the Visual Intelligence Lab, SeoulTech, since December 2025.",
     interests:
-        "Interested in how training data composition affects domain-specific model capabilities, " +
-        "how evaluation can identify weaknesses, and how those findings can guide foundation model training.",
+        "Current work examines how training data and evaluation affect models in unfamiliar domains. " +
+        "Other interests include computer vision, speech recognition, and multimodal models.",
     additionalPublications: [
         {
             title:

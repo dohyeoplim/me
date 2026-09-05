@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import { useHeaderSecondaryNode } from "@/app/components/Header/HeaderSlot";
 import { chapters } from "../../_data/navigation";
 
@@ -15,6 +17,8 @@ export default function ChapterNav() {
     const [active, setActive] = useState<string>(chapters[0].id);
     const [stuck, setStuck] = useState(false);
     const [height, setHeight] = useState(64);
+    const reducedMotion = useReducedMotion();
+    const indicatorTransition = getDdsMotionTransition(reducedMotion);
 
     useLayoutEffect(() => {
         const list = nav.current?.querySelector("ul");
@@ -27,6 +31,20 @@ export default function ChapterNav() {
             previousFocus.current = null;
         }
     }, [stuck]);
+
+    useEffect(() => {
+        const list = nav.current?.querySelector("ul");
+        const link = nav.current?.querySelector<HTMLAnchorElement>(`a[href="#${active}"]`);
+        if (!list || !link) return;
+        const listBounds = list.getBoundingClientRect();
+        const linkBounds = link.getBoundingClientRect();
+        const centered =
+            list.scrollLeft + linkBounds.left - listBounds.left - (list.clientWidth - linkBounds.width) / 2;
+        list.scrollTo({
+            left: Math.max(0, centered),
+            behavior: reducedMotion ? "auto" : "smooth",
+        });
+    }, [active, reducedMotion, stuck]);
 
     useEffect(() => {
         const element = nav.current;
@@ -88,15 +106,26 @@ export default function ChapterNav() {
     const navigation = (
         <nav ref={nav} aria-label="Portfolio sections" className="portfolio-section-nav">
             <div className="dds-container">
-                <ul>
-                    {chapters.map(({ id, label }) => (
-                        <li key={id}>
-                            <a href={`#${id}`} aria-current={active === id ? "location" : undefined}>
-                                {label}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <LayoutGroup id="portfolio-section-navigation">
+                    <motion.ul layoutScroll>
+                        {chapters.map(({ id, label }) => (
+                            <li key={id}>
+                                <a href={`#${id}`} aria-current={active === id ? "location" : undefined}>
+                                    {active === id && (
+                                        <motion.span
+                                            layoutId="portfolio-section-indicator"
+                                            className="portfolio-section-indicator"
+                                            initial={false}
+                                            transition={indicatorTransition}
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                    <span className="portfolio-section-label">{label}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </motion.ul>
+                </LayoutGroup>
             </div>
         </nav>
     );
