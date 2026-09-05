@@ -3,6 +3,7 @@ import { ArrowDown } from "lucide-react";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Reveal from "@/app/components/DDS/Reveal";
 import LinkButton from "@/app/components/LinkButton";
+import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import ProjectVisual from "../ProjectVisual";
 import { projects, projectSection } from "../../_data/projects";
 
@@ -23,7 +24,9 @@ export default function Projects() {
                                     className="object-cover"
                                 />
                             ) : (
-                                <ProjectVisual kind={project.visual} />
+                                <LottieGraphic src={`/animations/${project.visual}.json`}>
+                                    <ProjectVisual kind={project.visual} />
+                                </LottieGraphic>
                             )}
                         </figure>
                         <article>

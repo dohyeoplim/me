@@ -16,6 +16,7 @@
         "@vercel/blob": "^2.4.0",
         "highlight.js": "^11.11.1",
         "katex": "^0.17.0",
+        "lottie-web": "5.13.0",
         "lucide-react": "^0.575.0",
         "motion": "^12.34.3",
         "next": "16.2.9",

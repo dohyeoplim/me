@@ -18,6 +18,15 @@ DohyeopLim Design System lives in `src/app/components/DDS`.
 Shared colors, surfaces, spacing, and motion are defined in `src/app/styles/dds.css`.
 Typography utilities live in `src/app/styles/typography.css`.
 The `/design-system` page renders these components with size and state comparisons.
+Use DDS typography utilities, semantic colors such as `text-muted`, and spacing such as `gap-dds-lg`.
+ESLint enforces these tokens on the portfolio, DDS, and shared navigation components.
+Text carries status information. Section headings have no decorative numbering or indicator dots.
+Color in project diagrams communicates a changed object, extracted field, or document relationship.
+
+Project animations are local Lottie JSON files in `public/animations`.
+Their source is `scripts/project-animations.mjs`. Each plays once when visible and pauses off screen.
+Reduced motion shows the final frame. Static diagrams remain available while the player loads.
+Motion timing follows the [LottieFiles motion-design skill](https://github.com/LottieFiles/motion-design-skill).
 
 Run `pnpm storybook` to explore components at `http://localhost:6006`.
 Run `pnpm build-storybook` to generate `storybook-static`.
