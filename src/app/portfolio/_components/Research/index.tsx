@@ -10,6 +10,7 @@ export default function Research() {
     return (
         <section id="research" className="portfolio-section">
             <SectionHeading title={research.title} />
+            <p className="portfolio-research-affiliation font-support text-muted">{research.affiliation}</p>
             <article className="portfolio-feature">
                 <header className="portfolio-work-heading">
                     <h3 className="font-work-title">{eact.name}</h3>
@@ -31,6 +32,13 @@ export default function Research() {
                     </div>
                 </Disclosure>
             </article>
+            {research.additionalPublications.map((publication) => (
+                <article key={publication.title} className="portfolio-publication">
+                    <h3 className="font-body">{publication.title}</h3>
+                    <p className="font-support text-muted">{publication.authors}</p>
+                    <p className="font-support">{publication.role}, {publication.status}</p>
+                </article>
+            ))}
             <Reveal className="portfolio-research-list">
                 <article>
                     <h3 className="font-work-title">{industrial.name}</h3>

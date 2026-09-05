@@ -1,4 +1,5 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
+import LinkButton from "@/app/components/LinkButton";
 import { background, beyondTheLab, experience } from "../../_data/background";
 
 const { infrastructure, communities } = beyondTheLab;
@@ -19,11 +20,20 @@ export default function Background() {
                         </ul>
                     </article>
                     <div className="portfolio-community">
+                        <SectionHeading title={beyondTheLab.additionalTitle} variant="subsection" />
                         {communities.map(({ name, role, description }) => (
                             <article key={name}>
-                                <h3 className="font-work-title">{name}</h3>
+                                <h4 className="font-work-title">{name}</h4>
                                 <p>{role}</p>
                                 <p>{description}</p>
+                            </article>
+                        ))}
+                        {beyondTheLab.visits.map((visit) => (
+                            <article key={visit.name}>
+                                <h4 className="font-work-title">{visit.name}</h4>
+                                <p>{visit.role}, {visit.period}</p>
+                                <p>{visit.description}</p>
+                                <LinkButton href={visit.href} label={visit.project} icon="external" />
                             </article>
                         ))}
                     </div>

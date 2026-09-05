@@ -8,6 +8,7 @@ export type Project = {
     href: string;
     visual: "speech" | "calls" | "vision" | "graph";
     image?: { src: string; alt: string };
+    placement?: "selected" | "additional";
 };
 
 export const projects: Project[] = [
@@ -45,6 +46,7 @@ export const projects: Project[] = [
     },
     {
         name: "DocFusionX",
+        placement: "additional",
         period: "January to February 2026, Ulm, Germany",
         title: "GraphRAG for long documents",
         contribution:

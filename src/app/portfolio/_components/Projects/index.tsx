@@ -12,7 +12,7 @@ export default function Projects() {
         <section id="projects" className="portfolio-section">
             <SectionHeading title={projectSection.title} />
             <div className="portfolio-projects">
-                {projects.map((project) => (
+                {projects.filter((project) => project.placement !== "additional").map((project) => (
                     <Reveal key={project.name}>
                         <article className="portfolio-project">
                             <header className="portfolio-project-heading">

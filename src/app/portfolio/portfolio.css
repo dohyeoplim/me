@@ -312,3 +312,37 @@
     }
 }
 @reference "../globals.css";
+.portfolio-page-heading {
+    display: grid;
+    gap: var(--spacing-dds-md);
+    padding-block: calc(var(--site-header-row-height) + var(--spacing-dds-2xl)) var(--spacing-dds-xl);
+    text-align: center;
+}
+.portfolio-research-affiliation {
+    max-width: var(--layout-copy-width);
+    margin: 0 auto var(--spacing-dds-xl);
+    text-align: center;
+}
+
+.portfolio-publication {
+    display: grid;
+    gap: var(--spacing-dds-xs);
+    max-width: var(--layout-reading-width);
+    margin: var(--spacing-dds-xl) auto 0;
+}
+
+.portfolio-community > .dds-section-heading {
+    margin-bottom: 0;
+}
+
+.portfolio-community article .dds-link {
+    margin-top: var(--spacing-dds-sm);
+}
+
+@media (min-width: 768px) {
+    .portfolio-projects > div:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        width: calc((100% - var(--spacing-dds-2xl)) / 2);
+        justify-self: center;
+    }
+}

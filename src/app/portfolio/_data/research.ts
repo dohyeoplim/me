@@ -1,5 +1,18 @@
 export const research = {
     title: "Research",
+    affiliation: "Undergraduate researcher at the Visual Intelligence Lab, SeoulTech, since December 2025.",
+    interests:
+        "Interested in how training data composition affects domain-specific model capabilities, " +
+        "how evaluation can identify weaknesses, and how those findings can guide foundation model training.",
+    additionalPublications: [
+        {
+            title: "Imagine the Structure Before You Speak: Structural Imagination in Latent Space for Table Recognition",
+            authors: "MinKi Jeong, Dohyeop Lim, Jongyoul Park",
+            status: "WACV 2027, under review",
+            role: "Co-author",
+            url: "https://cv.dohyeoplim.me/Dohyeop_Lim.pdf",
+        },
+    ],
     eact: {
         name: "E-ACT",
         role: "First author",
