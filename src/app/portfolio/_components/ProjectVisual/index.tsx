@@ -1,5 +1,6 @@
 import { ArrowRight, AudioLines, FileText, ScanLine } from "lucide-react";
 import type { Project } from "../../_data/projects";
+import { cn } from "@/app/lib/utils";
 
 const wave = [12, 20, 14, 32, 44, 25, 51, 64, 38, 22, 48, 58, 30, 44, 21, 12, 26, 42, 18, 10];
 
@@ -47,13 +48,19 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                     {["Before", "After"].map((label, index) => (
                         <div key={label} className="flex-1">
                             <div
-                                className="relative flex h-24 items-center justify-center rounded-lg border border-grey-200"
+                                className={cn(
+                                    "relative flex h-24 items-center justify-center",
+                                    "rounded-lg border border-grey-200",
+                                )}
                             >
                                 <ScanLine size={48} strokeWidth={0.6} className="text-grey-300" />
                                 <span className="absolute bottom-4 left-4 h-5 w-7 rounded-sm border border-grey-400" />
                                 {index === 1 && (
                                     <span
-                                        className="absolute right-4 top-4 h-6 w-8 rounded-sm border border-[var(--accent)]"
+                                        className={cn(
+                                            "absolute right-4 top-4 h-6 w-8 rounded-sm",
+                                            "border border-[var(--accent)]",
+                                        )}
                                     />
                                 )}
                             </div>

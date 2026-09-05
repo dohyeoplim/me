@@ -6,7 +6,9 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint"
+        "lint": "eslint",
+        "storybook": "storybook dev -p 6006 --no-open --disable-telemetry",
+        "build-storybook": "storybook build --disable-telemetry"
     },
     "dependencies": {
         "@neondatabase/serverless": "^1.1.0",
@@ -28,6 +30,9 @@
         "zod": "^4.4.3"
     },
     "devDependencies": {
+        "@storybook/addon-a11y": "10.6.0",
+        "@storybook/addon-docs": "10.6.0",
+        "@storybook/nextjs-vite": "10.6.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
@@ -35,7 +40,9 @@
         "babel-plugin-react-compiler": "1.0.0",
         "eslint": "^9",
         "eslint-config-next": "16.2.9",
+        "storybook": "10.6.0",
         "tailwindcss": "^4",
-        "typescript": "^5"
+        "typescript": "^5",
+        "vite": "^7.3.6"
     }
 }
