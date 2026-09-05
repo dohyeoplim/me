@@ -1,0 +1,64 @@
+.signIn {
+    width: 100%;
+    max-width: var(--layout-copy-width);
+    margin-inline: auto;
+}
+
+.panel,
+.header,
+.form,
+.field {
+    display: grid;
+}
+
+.panel {
+    gap: var(--spacing-dds-xl);
+}
+
+.header {
+    gap: var(--spacing-dds-xs);
+}
+
+.header p,
+.help {
+    color: var(--text-secondary);
+}
+
+.form {
+    gap: var(--spacing-dds-lg);
+}
+
+.field {
+    gap: var(--spacing-dds-xs);
+}
+
+.input {
+    width: 100%;
+    min-height: var(--button-height-large);
+    padding-inline: var(--spacing-dds-sm);
+    border: 1px solid var(--border-control);
+    border-radius: var(--control-radius);
+    background: var(--surface-panel);
+    color: var(--text-primary);
+    transition: border-color var(--duration-feedback) var(--ease-feedback);
+}
+
+.input:hover {
+    border-color: var(--text-secondary);
+}
+
+.input:focus-visible {
+    border-color: var(--text-primary);
+}
+
+.input[aria-invalid="true"] {
+    border-color: var(--text-secondary);
+}
+
+.status {
+    color: var(--text-primary);
+}
+
+.submit {
+    width: 100%;
+}

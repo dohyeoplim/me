@@ -14,7 +14,7 @@ type Props = { searchParams: Promise<{ source?: string }> };
 
 export default async function KnowledgePage({ searchParams }: Props) {
     const session = await auth();
-    if (!session?.user || !process.env.ADMIN_GITHUB_LOGIN) redirect("/admin/signin");
+    if (session?.user?.admin !== true) redirect("/admin/signin");
     const { source } = await searchParams;
     await ensureKnowledgeSeeded();
     const sources = await listKnowledgeSources();

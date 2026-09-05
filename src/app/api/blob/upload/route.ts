@@ -10,7 +10,7 @@ export async function POST(request: Request): Promise<Response> {
             request,
             onBeforeGenerateToken: async () => {
                 const session = await auth();
-                if (!session?.user) throw new Error("Unauthorized");
+                if (session?.user?.admin !== true) throw new Error("Unauthorized");
                 return {
                     allowedContentTypes: [
                         "image/png",

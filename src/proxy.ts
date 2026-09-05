@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
 
 export default auth((req) => {
-    if (!req.auth && !req.nextUrl.pathname.startsWith("/admin/signin")) {
+    const signInPage = ["/admin/signin", "/admin/signin/"].includes(req.nextUrl.pathname);
+    if (req.auth?.user?.admin !== true && !signInPage) {
         const url = new URL("/admin/signin", req.nextUrl.origin);
         return Response.redirect(url);
     }

@@ -14,7 +14,7 @@ type ActionResult<T> = { ok: true; value: T } | { ok: false; error: string };
 
 async function requireAdmin() {
     const session = await auth();
-    if (!session?.user || !process.env.ADMIN_GITHUB_LOGIN) throw new Error("Unauthorized");
+    if (session?.user?.admin !== true) throw new Error("Unauthorized");
 }
 
 function refreshKnowledge() {

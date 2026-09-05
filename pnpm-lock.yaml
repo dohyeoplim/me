@@ -38,6 +38,9 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.31
         version: 5.0.0-beta.31(next@16.2.9(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+      otpauth:
+        specifier: 9.5.2
+        version: 9.5.2
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -678,6 +681,10 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@noble/hashes@2.4.0':
+    resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
+    engines: {node: '>= 20.19.0'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2914,6 +2921,9 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
+  otpauth@9.5.2:
+    resolution: {integrity: sha512-GQ5emWR/x1tcExT62IBT0UfO95wZzJZyxYOJOGVeQF47SYEN9vmh0vISvDZaNMuFJRG+IaWCKtfm+t9Bfoal6w==}
+
   own-keys@1.0.1:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
     engines: {node: '>= 0.4'}
@@ -4069,6 +4079,8 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.2.9':
     optional: true
+
+  '@noble/hashes@2.4.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -6545,6 +6557,10 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
       word-wrap: 1.2.5
+
+  otpauth@9.5.2:
+    dependencies:
+      '@noble/hashes': 2.4.0
 
   own-keys@1.0.1:
     dependencies:
