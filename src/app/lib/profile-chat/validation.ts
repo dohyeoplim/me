@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { cardIdSchema, documentIdSchema } from "./answer-content";
 
 export const maxBodyBytes = 48 * 1024;
 
@@ -13,6 +14,8 @@ export const questionSchema = z
     .object({
         question: z.string().trim().min(1).max(600),
         history: z.array(messageSchema).max(6).default([]),
+        shownCardIds: z.array(cardIdSchema).max(12).default([]),
+        contextSourceIds: z.array(documentIdSchema).max(6).default([]),
     })
     .strict();
 

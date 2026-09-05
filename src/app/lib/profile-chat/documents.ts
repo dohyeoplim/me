@@ -26,7 +26,9 @@ export type ProfileDocument = ProfileSource & {
 const projectKeywords: Record<string, string[]> = {
     MochiCall: ["모치콜", "음성", "병원", "교통", "전화", "speech", "asr", "lora", "transportation"],
     Collog: ["콜로그", "콜록", "가족", "건강", "음성", "전화", "노인", "health", "family", "calls"],
-    WONNIT: ["워닛", "공간", "대여", "모바일", "온디바이스", "ios", "core ml", "vision"],
+    WONNIT: [
+        "워닛", "공간", "대여", "모바일", "온디바이스", "아이폰", "iphone", "ios", "core ml", "vision",
+    ],
     DocFusionX: ["독퓨전", "독일", "울름", "문서", "검색", "graphrag", "retrieval", "ulm"],
 };
 
@@ -52,7 +54,10 @@ export const profileDocuments: ProfileDocument[] = [
             research.eact.result,
             research.eact.errorResult,
         ].join(". "),
-        keywords: ["이액트", "연구", "논문", "체크섬", "식별", "인식", "eact", "ctc", "checksum", "wacv", "research"],
+        keywords: [
+            "이액트", "연구", "논문", "체크섬", "식별", "인식",
+            "eact", "ctc", "checksum", "wacv", "research",
+        ],
     },
     {
         id: "research-interests",
@@ -73,7 +78,9 @@ export const profileDocuments: ProfileDocument[] = [
             research.additionalPublications[0].status,
             "Dohyeop Lim is the second author. Individual contributions are not listed in the CV.",
         ].join(". "),
-        keywords: ["논문", "표", "공동저자", "연구", "table", "recognition", "wacv", "publication", "research"],
+        keywords: [
+            "논문", "표", "공동저자", "연구", "table", "recognition", "wacv", "publication", "research",
+        ],
         kind: "research",
         cardId: null,
     },
@@ -144,7 +151,10 @@ export const profileDocuments: ProfileDocument[] = [
         text: beyondTheLab.communities
             .map(({ name, period, role, description }) => `${name}. ${period}. ${role}. ${description}`)
             .join("\n"),
-        keywords: ["동아리", "멋사", "멋쟁이사자", "운영", "부회장", "세션", "likelion", "gdg", "community"],
+        keywords: [
+            "동아리", "멋사", "멋쟁이사자", "운영", "부회장", "세션", "likelion", "gdg", "community",
+            "outside", "leadership",
+        ],
     },
     {
         id: "international-experience",

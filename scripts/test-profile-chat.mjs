@@ -8,10 +8,11 @@ import { spawnSync } from "node:child_process";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const require = createRequire(import.meta.url);
 const output = mkdtempSync(join(tmpdir(), "profile-chat-tests-"));
+const tests = ["profile-chat/profile-chat.test", "knowledge/knowledge.test"];
 
 try {
     const compile = spawnSync(process.execPath, [
-        require.resolve("typescript/lib/tsc.js"), "src/app/lib/profile-chat/profile-chat.test.ts",
+        require.resolve("typescript/lib/tsc.js"), ...tests.map((test) => `src/app/lib/${test}.ts`),
         "--outDir", output, "--module", "commonjs", "--target", "es2022",
         "--esModuleInterop", "--skipLibCheck", "--types", "node",
     ], { cwd: root, stdio: "inherit" });
@@ -19,7 +20,7 @@ try {
     if (compile.status !== 0) {
         process.exitCode = compile.status ?? 1;
     } else {
-        const result = spawnSync(process.execPath, ["--test", join(output, "lib/profile-chat/profile-chat.test.js")], {
+        const result = spawnSync(process.execPath, ["--test", ...tests.map((test) => join(output, `lib/${test}.js`))], {
             cwd: root,
             stdio: "inherit",
             env: { ...process.env, NODE_PATH: join(root, "node_modules") },

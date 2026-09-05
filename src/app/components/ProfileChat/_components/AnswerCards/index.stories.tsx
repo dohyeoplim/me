@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { profileCardRegistry } from "@/app/lib/profile-chat/types";
-import "../../portfolio.css";
+import "@/app/portfolio/portfolio.css";
 import "@/app/styles/dds-answer-cards.css";
 import ProfileChatCards from ".";
 

@@ -7,6 +7,7 @@ import { HeaderSlotProvider } from "./components/Header/HeaderSlot";
 import { PreviousPathProvider } from "./components/PreviousPath";
 import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next";
+import { ProfileChatProvider } from "./components/ProfileChat/Context";
 
 export const metadata: Metadata = {
     title: "Dohyeop",
@@ -25,13 +26,15 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${pretendard.variable} antialiased`}>
-                <PreviousPathProvider>
-                    <HeaderSlotProvider>
-                        <Header />
-                        {children}
-                        <Footer />
-                    </HeaderSlotProvider>
-                </PreviousPathProvider>
+                <ProfileChatProvider>
+                    <PreviousPathProvider>
+                        <HeaderSlotProvider>
+                            <Header />
+                            {children}
+                            <Footer />
+                        </HeaderSlotProvider>
+                    </PreviousPathProvider>
+                </ProfileChatProvider>
                 <Analytics />
             </body>
         </html>

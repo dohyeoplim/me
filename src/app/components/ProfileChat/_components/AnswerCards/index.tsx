@@ -8,12 +8,12 @@ import Metric from "@/app/components/DDS/Metric";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Surface from "@/app/components/DDS/Surface";
 import { profileCardRegistry, type ProfileCard, type ProfileCardId } from "@/app/lib/profile-chat/types";
-import { background, beyondTheLab, experience } from "../../_data/background";
-import { hero } from "../../_data/hero";
-import { projects } from "../../_data/projects";
-import { research } from "../../_data/research";
-import ProjectVisual from "../ProjectVisual";
-import RecognitionDemo from "../RecognitionDemo";
+import { background, beyondTheLab, experience } from "@/app/portfolio/_data/background";
+import { hero } from "@/app/portfolio/_data/hero";
+import { projects } from "@/app/portfolio/_data/projects";
+import { research } from "@/app/portfolio/_data/research";
+import ProjectVisual from "@/app/portfolio/_components/ProjectVisual";
+import RecognitionDemo from "@/app/portfolio/_components/RecognitionDemo";
 
 type CardProps = {
     title: string;

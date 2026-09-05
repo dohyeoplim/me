@@ -1,0 +1,205 @@
+@reference "../globals.css";
+
+.dds-answer-blocks,
+.dds-answer-block {
+    display: grid;
+    gap: var(--spacing-dds-lg);
+    min-width: 0;
+}
+
+.dds-answer-block {
+    padding: var(--spacing-dds-lg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-panel);
+    background: var(--surface-panel);
+    overflow-wrap: anywhere;
+}
+
+.dds-answer-block > .dds-section-heading {
+    margin-bottom: 0;
+}
+
+.dds-answer-detail-facts {
+    @apply font-body;
+    display: grid;
+    gap: var(--spacing-dds-md);
+}
+
+.dds-answer-detail-facts > div {
+    display: grid;
+    gap: var(--spacing-dds-2xs);
+}
+
+.dds-answer-detail-facts > div + div {
+    padding-top: var(--spacing-dds-md);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.dds-answer-detail-facts dt {
+    @apply font-support;
+    color: var(--text-secondary);
+}
+
+.dds-answer-steps,
+.dds-answer-timeline {
+    display: grid;
+    min-width: 0;
+    list-style: none;
+}
+
+.dds-answer-steps .dds-disclosure {
+    margin: 0;
+}
+
+.dds-answer-steps .dds-disclosure summary {
+    @apply font-body;
+    justify-content: space-between;
+    padding-block: var(--spacing-dds-sm);
+}
+
+.dds-answer-steps li + li {
+    border-top: 1px solid var(--border-subtle);
+}
+
+.dds-answer-comparison {
+    @apply font-support;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+
+.dds-answer-comparison table {
+    width: 100%;
+    min-width: calc(var(--spacing-dds-5xl) * 4);
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.dds-answer-comparison th,
+.dds-answer-comparison td {
+    padding: var(--spacing-dds-sm) var(--spacing-dds-md);
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+}
+
+.dds-answer-comparison th {
+    font-weight: 500;
+}
+
+.dds-answer-comparison thead th {
+    background: var(--surface-muted);
+}
+
+.dds-answer-comparison tbody th {
+    color: var(--text-secondary);
+}
+
+.dds-answer-timeline {
+    @apply font-support;
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-answer-timeline li {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+}
+
+.dds-answer-timeline li + li {
+    padding-top: var(--spacing-dds-lg);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.dds-answer-timeline li > div {
+    display: grid;
+    gap: var(--spacing-dds-xs);
+}
+
+.dds-answer-date {
+    color: var(--text-secondary);
+}
+
+.dds-repository-section,
+.dds-repository-grid {
+    display: grid;
+    gap: var(--spacing-dds-md);
+    min-width: 0;
+}
+
+.dds-repository-card {
+    @apply font-support;
+    display: grid;
+    gap: var(--spacing-dds-sm);
+    min-width: 0;
+    padding: var(--spacing-dds-lg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-panel);
+    background: var(--surface-panel);
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+    transition:
+        background-color var(--duration-feedback) var(--ease-feedback),
+        border-color var(--duration-feedback) var(--ease-feedback);
+}
+
+.dds-repository-card:is(:hover, :focus-visible) {
+    border-color: var(--border-control);
+    background: var(--surface-muted);
+}
+
+.dds-repository-heading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-dds-sm);
+    color: var(--text-primary);
+}
+
+.dds-repository-heading h4 {
+    min-width: 0;
+}
+
+.dds-repository-heading svg {
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.dds-repository-heading > svg:last-child {
+    margin-left: auto;
+}
+
+.dds-repository-reason {
+    color: var(--text-primary);
+}
+
+.dds-repository-description {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.dds-repository-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--spacing-dds-xs) var(--spacing-dds-md);
+    padding-top: var(--spacing-dds-xs);
+}
+
+@media (min-width: 640px) {
+    .dds-answer-detail-facts > div {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+        gap: var(--spacing-dds-lg);
+    }
+
+    .dds-answer-timeline li {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+        gap: var(--spacing-dds-lg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dds-repository-card {
+        transition: none;
+    }
+}
