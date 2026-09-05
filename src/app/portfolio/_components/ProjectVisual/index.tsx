@@ -1,74 +1,83 @@
-import { ArrowRight, AudioLines, FileText, ScanLine } from "lucide-react";
 import type { Project } from "../../_data/projects";
-import { cn } from "@/app/lib/utils";
-
-const wave = [12, 20, 14, 32, 44, 25, 51, 64, 38, 22, 48, 58, 30, 44, 21, 12, 26, 42, 18, 10];
 
 export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
     if (kind === "speech") {
         return (
-            <div className="flex h-full flex-col justify-center gap-dds-xl px-dds-xl" aria-hidden="true">
-                <div className="flex h-16 items-center justify-center gap-dds-xs">
-                    {wave.map((height, index) => (
-                        <span key={index} className="w-1.5 rounded-full bg-faint" style={{ height }} />
-                    ))}
-                </div>
-                <div className="flex items-center justify-center gap-dds-sm font-support text-muted">
-                    <AudioLines size={17} /> Call <ArrowRight size={14} /> ASR
-                    <ArrowRight size={14} /> <FileText size={17} /> Trip
-                </div>
+            <div className="h-full" aria-hidden="true">
+                <svg viewBox="0 0 480 320" className="h-full w-full" fill="none">
+                    <g className="text-mark" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M54 240H426" />
+                        <path d="m160 240 24 10 38-18 36 14 36-6" />
+                    </g>
+                    <g className="text-ink" stroke="currentColor" strokeWidth="3">
+                        <rect x="58" y="101" width="100" height="138" rx="7" />
+                        <path d="M91 239v-45h34v45M108 122v32M92 138h32M78 174h12M126 174h12" />
+                        <path d="M294 158h86l34 26 6 34H294Z" />
+                        <path d="M372 166h23l14 18h-37ZM318 170h36v48h-36Z" />
+                        <circle cx="320" cy="220" r="14" />
+                        <circle cx="392" cy="220" r="14" />
+                    </g>
+                    <g className="text-diagram" stroke="currentColor" strokeWidth="3.25">
+                        <path d="M160 168h21l9-14 10 30 11-42 12 46 12-37 12 30 11-21 11 14 13-6h12" />
+                        <path d="m286 160 8 8-8 8" />
+                        <circle cx="386" cy="94" r="18" />
+                        <circle cx="386" cy="94" r="4" />
+                        <path d="m373 106 13 22 13-22" />
+                    </g>
+                </svg>
             </div>
         );
     }
 
     if (kind === "calls") {
         return (
-            <div className="flex h-full flex-col justify-center px-dds-xl" aria-hidden="true">
-                <div className="grid grid-cols-3 gap-dds-sm">
-                    {["Call 01", "Call 02", "Call 03"].map((label, index) => (
-                        <div key={label} className="rounded-dds border border-line bg-surface p-dds-sm">
-                            <AudioLines size={19} strokeWidth={2} className="mb-dds-lg text-faint" />
-                            <p className="mb-dds-sm font-support text-muted">{label}</p>
-                            <div className="h-1 rounded bg-wash">
-                                <div className="h-1 rounded bg-mark" style={{ width: `${45 + index * 20}%` }} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div className="mx-auto h-5 w-px bg-line" />
-                <p className="text-center font-support text-muted">Context for the next conversation</p>
+            <div className="h-full" aria-hidden="true">
+                <svg viewBox="0 0 480 320" className="h-full w-full" fill="none">
+                    <g className="text-ink" stroke="currentColor" strokeWidth="3">
+                        <rect x="58" y="68" width="120" height="184" rx="18" />
+                        <path d="M101 88h34" />
+                        <circle cx="118" cy="228" r="4" />
+                        <path d="M82 160h10l6-12 7 28 8-39 9 44 9-38 9 31 8-21 8 13" />
+                        <path d="M278 124h144M320 151h74M320 180h60M320 209h80" />
+                        <circle cx="302" cy="151" r="4" />
+                        <circle cx="302" cy="180" r="4" />
+                        <circle cx="302" cy="209" r="4" />
+                    </g>
+                    <g className="text-mark" stroke="currentColor" strokeWidth="2.5">
+                        <rect x="276" y="77" width="148" height="166" rx="12" />
+                    </g>
+                    <g className="text-diagram" stroke="currentColor" strokeWidth="3.25">
+                        <path d="M178 160h16l8-12 8 26 9-32 10 35 10-26 9 18 10-9h12" />
+                        <path d="m262 152 8 8-8 8" />
+                        <circle cx="306" cy="100" r="17" />
+                        <path d="M306 90v20M296 100h20" />
+                    </g>
+                </svg>
             </div>
         );
     }
 
     if (kind === "vision") {
         return (
-            <div className="flex h-full flex-col justify-center gap-dds-lg px-dds-xl" aria-hidden="true">
-                <div className="flex items-center justify-center gap-dds-lg">
-                    {["Before", "After"].map((label, index) => (
-                        <div key={label} className="flex-1">
-                            <div
-                                className={cn(
-                                    "relative flex h-24 items-center justify-center",
-                                    "rounded-dds border border-line",
-                                )}
-                            >
-                                <ScanLine size={48} strokeWidth={1.25} className="text-mark" />
-                                <span className="absolute bottom-4 left-4 h-5 w-7 rounded-dds border border-faint" />
-                                {index === 1 && (
-                                    <span
-                                        className={cn(
-                                            "absolute right-4 top-4 h-6 w-8 rounded-dds",
-                                            "border border-action",
-                                        )}
-                                    />
-                                )}
-                            </div>
-                            <p className="mt-dds-xs text-center font-support text-muted">{label}</p>
-                        </div>
-                    ))}
-                </div>
-                <p className="text-center font-support text-muted">Visual comparison, on device</p>
+            <div className="h-full" aria-hidden="true">
+                <svg viewBox="0 0 480 320" className="h-full w-full" fill="none">
+                    <g className="text-mark" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M58 58h364v190H58ZM58 216h364M58 248l54-32M422 248l-54-32" />
+                    </g>
+                    <g className="text-ink" stroke="currentColor" strokeWidth="3">
+                        <rect x="125" y="125" width="64" height="56" rx="6" />
+                        <path d="m112 183 10 16h70l10-16ZM130 199l-6 33M184 199l8 33M112 162v30M202 162v30" />
+                        <path d="M322 190v-71" />
+                        <path d="m322 145-30-19 6 32 24 12ZM322 132l29-21-5 34-24 13Z" />
+                        <path d="m322 134-12-30 12-16 12 16Z" />
+                        <path d="m292 190 10 42h40l10-42Z" />
+                    </g>
+                    <g className="text-diagram" stroke="currentColor" strokeWidth="3">
+                        <rect x="94" y="92" width="132" height="152" rx="8" />
+                        <rect x="260" y="84" width="120" height="160" rx="8" />
+                        <path d="m201 105 6 6 12-14M353 97l6 6 12-14" />
+                    </g>
+                </svg>
             </div>
         );
     }
