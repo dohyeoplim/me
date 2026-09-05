@@ -43,6 +43,7 @@
 .knowledge-preview {
     background: var(--surface-muted);
     border-radius: var(--radius-panel);
+    corner-shape: squircle;
     padding: var(--spacing-dds-lg);
     overflow-wrap: anywhere;
 }
@@ -71,9 +72,10 @@
     min-width: 0;
     border: 1px solid var(--border-control);
     border-radius: var(--control-radius);
+    corner-shape: squircle;
     background: var(--surface-panel);
     color: var(--text-primary);
-    padding: var(--spacing-dds-xs) var(--spacing-dds-sm);
+    padding: var(--spacing-dds-xs) var(--control-padding-inline-compact);
     min-height: var(--button-height-medium);
     font: inherit;
 }
@@ -95,8 +97,9 @@
 .knowledge-source-list > a {
     display: grid;
     gap: var(--spacing-dds-2xs);
-    padding: var(--spacing-dds-sm);
+    padding: var(--spacing-dds-sm) var(--control-padding-inline-compact);
     border-radius: var(--control-radius);
+    corner-shape: squircle;
     overflow-wrap: anywhere;
 }
 

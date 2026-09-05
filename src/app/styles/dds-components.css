@@ -61,6 +61,7 @@
 .dds-surface {
     min-width: 0;
     border-radius: var(--radius-panel);
+    corner-shape: squircle;
 }
 
 .dds-surface[data-variant="plain"] {
@@ -188,6 +189,33 @@
     max-width: 100%;
     height: var(--spacing-dds-xs);
     background: var(--diagram-accent);
+}
+
+.dds-corner-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-corner-sample {
+    width: 100%;
+    height: var(--spacing-dds-3xl);
+    margin-bottom: var(--spacing-dds-sm);
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-panel);
+    corner-shape: squircle;
+}
+
+.dds-corner-sample[data-corner="control"] {
+    border-radius: var(--control-radius);
+}
+
+.dds-corner-sample[data-corner="surface"] {
+    border-radius: var(--radius-panel);
+}
+
+.dds-corner-sample[data-corner="pill"] {
+    border-radius: var(--radius-pill);
 }
 
 .dds-specimen-grid {
@@ -321,6 +349,7 @@
     min-width: 0;
     border: 1px solid var(--border-control);
     border-radius: var(--control-radius);
+    corner-shape: squircle;
     background: var(--surface-panel);
     color: var(--text-primary);
     transition:
@@ -339,13 +368,13 @@
 
 .dds-text-field[data-size="medium"] .dds-text-field-input {
     min-height: var(--button-height-medium);
-    padding: var(--spacing-dds-2xs) var(--spacing-dds-sm);
+    padding: var(--spacing-dds-2xs) var(--control-padding-inline-compact);
 }
 
 .dds-text-field[data-size="large"] .dds-text-field-input {
     @apply font-body;
     min-height: var(--button-height-large);
-    padding: var(--spacing-dds-xs) var(--spacing-dds-md);
+    padding: var(--spacing-dds-xs) var(--control-padding-inline-default);
 }
 
 .dds-text-field[data-variant="line"] .dds-text-field-input {

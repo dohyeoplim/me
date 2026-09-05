@@ -41,6 +41,7 @@
     margin-top: var(--spacing-dds-lg);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-dds-small);
+    corner-shape: squircle;
     background: var(--surface-panel);
 }
 
@@ -161,6 +162,7 @@
     aspect-ratio: 8 / 5;
     overflow: hidden;
     border-radius: var(--radius-dds-small);
+    corner-shape: squircle;
     background: var(--surface-panel);
 }
 
@@ -240,6 +242,7 @@
     overflow-x: auto;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-navigation);
+    corner-shape: squircle;
     background: var(--surface-floating);
     box-shadow: var(--shadow-floating);
     scrollbar-width: none;
@@ -253,9 +256,10 @@
     display: flex;
     align-items: center;
     min-height: var(--button-height-medium);
-    padding: var(--spacing-dds-2xs) var(--spacing-dds-sm);
+    padding: var(--spacing-dds-2xs) var(--control-padding-inline-compact);
     border-bottom: 2px solid transparent;
     border-radius: var(--control-radius);
+    corner-shape: squircle;
     color: var(--text-secondary);
 }
 

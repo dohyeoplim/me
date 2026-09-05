@@ -1,5 +1,5 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
-import { colors, spacing, typography } from "../../data";
+import { colors, corners, spacing, typography } from "../../data";
 
 export default function FoundationsShowcase() {
     return (
@@ -47,6 +47,21 @@ export default function FoundationsShowcase() {
                         </div>
                     ))}
                 </dl>
+            </div>
+            <div className="dds-guide-group">
+                <SectionHeading
+                    title="Corners"
+                    variant="subsection"
+                    description="Squircle corners with a rounded fallback. Pills are reserved for compact choices."
+                />
+                <div className="dds-corner-grid">
+                    {corners.map(({ name, value }) => (
+                        <div key={value}>
+                            <div className="dds-corner-sample" data-corner={value} aria-hidden="true" />
+                            <p className="font-support">{name}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );

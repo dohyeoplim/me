@@ -2,6 +2,7 @@
     --surface-page: var(--color-grey-50);
     --surface-panel: #fff;
     --surface-muted: var(--color-grey-100);
+    --selection-background: color-mix(in srgb, var(--diagram-accent) 32%, var(--surface-panel));
     --diagram-accent: #547a9f;
     --text-primary: var(--color-grey-900);
     --text-secondary: var(--color-grey-600);
@@ -10,11 +11,14 @@
     --accent-soft: var(--color-grey-100);
     --success: var(--color-grey-700);
     --success-soft: var(--color-grey-100);
-    --radius-panel: 0.5rem;
+    --radius-panel: 0.75rem;
+    --radius-control: 0.5rem;
+    --radius-pill: 999px;
     --duration-reveal: 480ms;
     --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
     --layout-content-width: 56rem;
     --layout-reading-width: 42rem;
+    --layout-chat-width: 48rem;
     --layout-copy-width: 34rem;
     --site-header-min-height: 4.5rem;
     --site-header-row-height: 4.5rem;
@@ -24,16 +28,20 @@
     --button-height-medium: 2.25rem;
     --button-height-large: 2.75rem;
     --button-padding-small: 0.125rem;
-    --control-radius: var(--radius-dds-small);
+    --control-radius: var(--radius-control);
+    --control-padding-inline-compact: var(--spacing-dds-md);
+    --control-padding-inline-default: 1.25rem;
+    --control-padding-inline-large: var(--spacing-dds-lg);
     --border-control: var(--color-grey-300);
-    --duration-feedback: 120ms;
+    --duration-feedback: 200ms;
     --ease-feedback: cubic-bezier(0.2, 0, 0, 1);
     --surface-floating: rgb(255 255 255 / 0.96);
     --surface-portrait: #e9e9eb;
     --shadow-floating: 0 4px 16px rgb(15 15 16 / 0.08);
-    --radius-navigation: 1rem;
-    --radius-composer: 1.75rem;
-    --surface-chat-focus: color-mix(in srgb, var(--diagram-accent) 13%, transparent);
+    --radius-navigation: var(--radius-pill);
+    --radius-composer: var(--radius-pill);
+    --surface-chat-focus: color-mix(in srgb, var(--diagram-accent) 18%, var(--surface-panel));
+    --motion-icon-shift: 0.0625rem;
 }
 
 .dds-container {
@@ -121,8 +129,9 @@
     --spacing-dds-5xl: 8rem;
     --spacing-dds-section: clamp(5rem, 10vw, 8rem);
     --spacing-dds-page-top: clamp(8rem, 15vw, 11rem);
-    --radius-dds: 0.5rem;
-    --radius-dds-small: 0.25rem;
+    --radius-dds: 0.75rem;
+    --radius-dds-small: 0.5rem;
+    --radius-dds-pill: 999px;
 }
 
 @layer base {
@@ -132,7 +141,7 @@
     }
 
     ::selection {
-        background: var(--accent-soft);
+        background: var(--selection-background);
         color: var(--text-primary);
     }
 }
@@ -140,6 +149,7 @@
 @utility ds-panel {
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-panel);
+    corner-shape: squircle;
     background: var(--surface-panel);
 }
 
@@ -161,6 +171,7 @@
     flex-shrink: 0;
     border: 1px solid transparent;
     border-radius: var(--control-radius);
+    corner-shape: squircle;
     @apply font-body03-regular;
     transition:
         background-color var(--duration-feedback) var(--ease-feedback),
@@ -171,17 +182,17 @@
 
 .ds-button[data-size="small"] {
     min-height: var(--button-height-small);
-    padding: var(--button-padding-small) var(--spacing-dds-sm);
+    padding: var(--button-padding-small) var(--control-padding-inline-compact);
 }
 
 .ds-button[data-size="medium"] {
     min-height: var(--button-height-medium);
-    padding: var(--spacing-dds-2xs) var(--spacing-dds-md);
+    padding: var(--spacing-dds-2xs) var(--control-padding-inline-default);
 }
 
 .ds-button[data-size="large"] {
     min-height: var(--button-height-large);
-    padding: var(--spacing-dds-xs) var(--spacing-dds-lg);
+    padding: var(--spacing-dds-xs) var(--control-padding-inline-large);
     @apply font-body02-regular;
 }
 
@@ -263,11 +274,11 @@
 }
 
 .dds-link:is(:hover, :focus-visible) .dds-link-icon {
-    transform: translateX(2px);
+    transform: translateX(var(--motion-icon-shift));
 }
 
 .dds-link[data-icon="external"]:is(:hover, :focus-visible) .dds-link-icon {
-    transform: translate(1px, -1px);
+    transform: translate(var(--motion-icon-shift), calc(-1 * var(--motion-icon-shift)));
 }
 
 .dds-choice {
@@ -308,6 +319,10 @@
     inset: 0;
 }
 
+.dds-lottie-player :is(path, rect, circle, ellipse, line, polyline, polygon) {
+    vector-effect: non-scaling-stroke;
+}
+
 .dds-lottie-replay {
     position: absolute;
     right: var(--spacing-dds-sm);
@@ -327,6 +342,7 @@
 .ds-icon-button {
     aspect-ratio: 1;
     border-radius: 50%;
+    corner-shape: round;
 }
 
 .ds-icon-button[data-size="small"] {

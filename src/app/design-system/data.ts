@@ -36,6 +36,12 @@ export const spacing = [
     { name: "Between columns", token: "2xl", value: 48 },
 ];
 
+export const corners = [
+    { name: "Control", value: "control" },
+    { name: "Surface", value: "surface" },
+    { name: "Pill", value: "pill" },
+] as const;
+
 export const buttonSizes = [
     { size: "small", label: "Small", height: 28 },
     { size: "medium", label: "Medium", height: 36 },

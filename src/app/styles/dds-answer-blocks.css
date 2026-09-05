@@ -11,6 +11,7 @@
     padding: var(--spacing-dds-lg);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-panel);
+    corner-shape: squircle;
     background: var(--surface-panel);
     overflow-wrap: anywhere;
 }
@@ -134,6 +135,7 @@
     padding: var(--spacing-dds-lg);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-panel);
+    corner-shape: squircle;
     background: var(--surface-panel);
     color: var(--text-secondary);
     overflow-wrap: anywhere;
