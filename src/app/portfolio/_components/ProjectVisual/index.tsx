@@ -13,7 +13,7 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                         <span key={index} className="w-1.5 rounded-full bg-faint" style={{ height }} />
                     ))}
                 </div>
-                <div className="flex items-center justify-center gap-dds-sm font-body03-regular text-muted">
+                <div className="flex items-center justify-center gap-dds-sm font-support text-muted">
                     <AudioLines size={17} /> Call <ArrowRight size={14} /> ASR
                     <ArrowRight size={14} /> <FileText size={17} /> Trip
                 </div>
@@ -27,8 +27,8 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                 <div className="grid grid-cols-3 gap-dds-sm">
                     {["Call 01", "Call 02", "Call 03"].map((label, index) => (
                         <div key={label} className="rounded-dds border border-line bg-surface p-dds-sm">
-                            <AudioLines size={19} strokeWidth={1.3} className="mb-dds-lg text-faint" />
-                            <p className="mb-dds-sm font-body03-light text-muted">{label}</p>
+                            <AudioLines size={19} strokeWidth={2} className="mb-dds-lg text-faint" />
+                            <p className="mb-dds-sm font-support text-muted">{label}</p>
                             <div className="h-1 rounded bg-wash">
                                 <div className="h-1 rounded bg-mark" style={{ width: `${45 + index * 20}%` }} />
                             </div>
@@ -36,7 +36,7 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                     ))}
                 </div>
                 <div className="mx-auto h-5 w-px bg-line" />
-                <p className="text-center font-body03-regular text-muted">Context for the next conversation</p>
+                <p className="text-center font-support text-muted">Context for the next conversation</p>
             </div>
         );
     }
@@ -53,7 +53,7 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                                     "rounded-dds border border-line",
                                 )}
                             >
-                                <ScanLine size={48} strokeWidth={0.6} className="text-mark" />
+                                <ScanLine size={48} strokeWidth={1.25} className="text-mark" />
                                 <span className="absolute bottom-4 left-4 h-5 w-7 rounded-dds border border-faint" />
                                 {index === 1 && (
                                     <span
@@ -64,11 +64,11 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                                     />
                                 )}
                             </div>
-                            <p className="mt-dds-xs text-center font-body03-light text-muted">{label}</p>
+                            <p className="mt-dds-xs text-center font-support text-muted">{label}</p>
                         </div>
                     ))}
                 </div>
-                <p className="text-center font-body03-regular text-muted">Visual comparison, On device</p>
+                <p className="text-center font-support text-muted">Visual comparison, on device</p>
             </div>
         );
     }
@@ -76,7 +76,7 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
     return (
         <div className="flex h-full flex-col justify-center px-dds-xl" aria-hidden="true">
             <svg viewBox="0 0 300 150" className="mx-auto h-36 w-full">
-                <g stroke="var(--border-subtle)" fill="none">
+                <g stroke="var(--border-subtle)" strokeWidth="2" fill="none">
                     <path d="M 45 40 L 150 75 L 250 30 M 45 115 L 150 75 L 250 120 M 150 75 L 150 15" />
                     <path d="M 45 40 L 45 115 M 250 30 L 250 120" strokeDasharray="3 4" />
                 </g>
@@ -96,17 +96,26 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                             rx="4"
                             fill="white"
                             stroke="var(--border-subtle)"
+                            strokeWidth="2"
                         />
                         <path
                             d={`M ${cx - 5} ${cy - 3} h 10 M ${cx - 5} ${cy + 3} h 7`}
                             stroke="var(--color-grey-300)"
+                            strokeWidth="1.75"
                         />
                     </g>
                 ))}
-                <circle cx="150" cy="75" r="16" fill="var(--accent-soft)" stroke="var(--accent)" />
+                <circle
+                    cx="150"
+                    cy="75"
+                    r="16"
+                    fill="var(--accent-soft)"
+                    stroke="var(--accent)"
+                    strokeWidth="2"
+                />
                 <circle cx="150" cy="75" r="4" fill="var(--accent)" />
             </svg>
-            <p className="text-center font-body03-regular text-muted">Sections become connected context</p>
+            <p className="text-center font-support text-muted">Sections become connected context</p>
         </div>
     );
 }
