@@ -25,7 +25,8 @@ export const beyondTheLab = {
             name: "LIKELION University",
             period: "2025 to present",
             role: "SeoulTech, Vice President, 14th cohort. Member, 13th cohort.",
-            description: "Coordinate a 30-member chapter. Organized four technical sessions, invited talks, and hackathons.",
+            description:
+                "Coordinate a 30-member chapter. Organized four technical sessions, invited talks, and hackathons.",
         },
         {
             name: "Google Developer Groups on Campus",

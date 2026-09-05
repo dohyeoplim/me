@@ -6,7 +6,9 @@ export const research = {
         "how evaluation can identify weaknesses, and how those findings can guide foundation model training.",
     additionalPublications: [
         {
-            title: "Imagine the Structure Before You Speak: Structural Imagination in Latent Space for Table Recognition",
+            title:
+                "Imagine the Structure Before You Speak: " +
+                "Structural Imagination in Latent Space for Table Recognition",
             authors: "MinKi Jeong, Dohyeop Lim, Jongyoul Park",
             status: "WACV 2027, under review",
             role: "Co-author",
