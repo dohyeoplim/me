@@ -27,7 +27,16 @@ export default async function AdminDashboard() {
                 <span className="font-body05-light text-grey-400">edit</span>
             </Link>
 
-            <h2 className="font-head01-medium text-grey-900">Home</h2>
+            <Link href="/admin/knowledge" className="dds-link">
+                AI knowledge
+            </Link>
+
+            <div className="flex flex-col gap-dds-xs">
+                <h2 className="font-head01-medium text-ink">Saved sections</h2>
+                <p className="font-body03-regular text-muted">
+                    The home page now uses AI knowledge. These saved sections remain available for editing.
+                </p>
+            </div>
 
             <EntryList entries={entries} type="home_section" />
 

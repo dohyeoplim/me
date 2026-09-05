@@ -5,9 +5,22 @@ import { research } from "../../portfolio/_data/research";
 import type { ProfileCardId, ProfileSource } from "./types";
 
 export type ProfileDocument = ProfileSource & {
-    id: ProfileCardId;
+    id: string;
     text: string;
     keywords: string[];
+    cardId?: ProfileCardId | null;
+    kind?: string;
+    repository?: {
+        fullName: string;
+        url: string;
+        description: string;
+        owner: string;
+        ownerType: "User" | "Organization";
+        language: string | null;
+        topics?: string[];
+        archived?: boolean;
+        fork?: boolean;
+    };
 };
 
 const projectKeywords: Record<string, string[]> = {
@@ -22,7 +35,7 @@ export const profileDocuments: ProfileDocument[] = [
         id: "profile",
         title: "Dohyeop Lim",
         url: "/portfolio",
-        text: `${hero.name}. ${hero.title}. ${hero.bio}`,
+        text: `${hero.name}. ${hero.title}. ${hero.bio} ${research.affiliation}`,
         keywords: ["소개", "누구", "연구", "연구실", "지도교수", "about", "background", "lab", "advisor"],
     },
     {
@@ -40,6 +53,29 @@ export const profileDocuments: ProfileDocument[] = [
             research.eact.errorResult,
         ].join(". "),
         keywords: ["이액트", "연구", "논문", "체크섬", "식별", "인식", "eact", "ctc", "checksum", "wacv", "research"],
+    },
+    {
+        id: "research-interests",
+        title: "Research interests",
+        url: "/portfolio#research",
+        text: research.interests,
+        keywords: ["관심", "향후", "연구", "계획", "future", "interests", "next", "training", "composition"],
+        kind: "research",
+        cardId: null,
+    },
+    {
+        id: "table-recognition",
+        title: "Table recognition paper",
+        url: research.additionalPublications[0].url,
+        text: [
+            research.additionalPublications[0].title,
+            research.additionalPublications[0].authors,
+            research.additionalPublications[0].status,
+            "Dohyeop Lim is the second author. Individual contributions are not listed in the CV.",
+        ].join(". "),
+        keywords: ["논문", "표", "공동저자", "연구", "table", "recognition", "wacv", "publication", "research"],
+        kind: "research",
+        cardId: null,
     },
     {
         id: "industrial-ocr",
@@ -111,6 +147,17 @@ export const profileDocuments: ProfileDocument[] = [
         keywords: ["동아리", "멋사", "멋쟁이사자", "운영", "부회장", "세션", "likelion", "gdg", "community"],
     },
     {
+        id: "international-experience",
+        title: "Visiting student in Germany",
+        url: "/portfolio#beyond-the-lab",
+        text: beyondTheLab.visits
+            .map(({ name, role, period, description }) => `${name}. ${role}. ${period}. ${description}`)
+            .join("\n"),
+        keywords: ["독일", "울름", "방문", "경험", "germany", "ulm", "visiting", "docfusionx", "experience"],
+        kind: "experience",
+        cardId: null,
+    },
+    {
         id: "education",
         title: "Education",
         url: "/portfolio#background",
@@ -118,13 +165,16 @@ export const profileDocuments: ProfileDocument[] = [
             ...background.education.map(({ school, course, period }) => `${school}. ${course}. ${period}`),
             background.achievement,
         ].join("\n"),
-        keywords: ["학력", "학교", "학점", "성적", "장학", "전공", "독일", "gpa", "degree", "scholarship", "grade"],
+        keywords: ["학력", "학교", "학점", "성적", "장학", "전공", "gpa", "degree", "scholarship", "grade"],
     },
     {
         id: "skills",
         title: background.experienceTitle,
         url: "/portfolio#background",
         text: experience.map(({ label, items }) => `${label}. ${items}`).join("\n"),
-        keywords: ["기술", "도구", "언어", "개발", "스택", "skill", "tools", "programming", "language"],
+        keywords: [
+            "기술", "도구", "언어", "개발", "스택", "영어", "skill", "tools", "programming", "language",
+            "english", "korean", "toefl", "spoken",
+        ],
     },
 ];
