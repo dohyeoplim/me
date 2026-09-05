@@ -213,7 +213,7 @@
 
 .dds-button-scale-sample {
     display: flex;
-    min-height: 3.25rem;
+    min-height: var(--button-height-large);
     align-items: center;
 }
 

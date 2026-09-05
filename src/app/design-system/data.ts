@@ -37,9 +37,9 @@ export const spacing = [
 ];
 
 export const buttonSizes = [
-    { size: "small", label: "Small", height: 32 },
-    { size: "medium", label: "Medium", height: 44 },
-    { size: "large", label: "Large", height: 52 },
+    { size: "small", label: "Small", height: 28 },
+    { size: "medium", label: "Medium", height: 36 },
+    { size: "large", label: "Large", height: 44 },
 ] as const;
 
 export const buttonStates = [

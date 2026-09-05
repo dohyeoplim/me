@@ -18,6 +18,10 @@
     --site-header-row-height: 4.5rem;
     --section-navigation-height: 3.5rem;
     --header-fade-height: 1.5rem;
+    --button-height-small: 1.75rem;
+    --button-height-medium: 2.25rem;
+    --button-height-large: 2.75rem;
+    --button-padding-small: 0.125rem;
 }
 
 .dds-container {
@@ -153,18 +157,18 @@
 }
 
 .ds-button[data-size="small"] {
-    min-height: 2rem;
-    padding: var(--spacing-dds-2xs) var(--spacing-dds-sm);
+    min-height: var(--button-height-small);
+    padding: var(--button-padding-small) var(--spacing-dds-sm);
 }
 
 .ds-button[data-size="medium"] {
-    min-height: 2.75rem;
-    padding: var(--spacing-dds-xs) var(--spacing-dds-md);
+    min-height: var(--button-height-medium);
+    padding: var(--spacing-dds-2xs) var(--spacing-dds-md);
 }
 
 .ds-button[data-size="large"] {
-    min-height: 3.25rem;
-    padding: var(--spacing-dds-sm) var(--spacing-dds-lg);
+    min-height: var(--button-height-large);
+    padding: var(--spacing-dds-xs) var(--spacing-dds-lg);
     @apply font-body02-regular;
 }
 
@@ -217,7 +221,8 @@
     @apply font-body03-regular;
     color: var(--text-secondary);
     border-bottom: 1px solid transparent;
-    padding-block: var(--spacing-dds-sm);
+    min-height: var(--button-height-medium);
+    padding-block: var(--spacing-dds-2xs);
 }
 
 .dds-choice[aria-pressed="true"] {
@@ -272,17 +277,17 @@
 }
 
 .ds-icon-button[data-size="small"] {
-    width: 2rem;
+    width: var(--button-height-small);
     padding: 0;
 }
 
 .ds-icon-button[data-size="medium"] {
-    width: 2.75rem;
+    width: var(--button-height-medium);
     padding: 0;
 }
 
 .ds-icon-button[data-size="large"] {
-    width: 3.25rem;
+    width: var(--button-height-large);
     padding: 0;
 }
 

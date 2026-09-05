@@ -32,7 +32,7 @@ export default function ButtonShowcase() {
                                 <Bell size={18} aria-hidden="true" />
                             </IconButton>
                         </div>
-                        <p className="font-support">Icon, 52px</p>
+                        <p className="font-support">Icon, {buttonSizes[2].height}px</p>
                     </div>
                 </div>
             </div>
