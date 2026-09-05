@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "eslint",
         "storybook": "storybook dev -p 6006 --no-open --disable-telemetry",
-        "build-storybook": "storybook build --disable-telemetry"
+        "build-storybook": "storybook build --disable-telemetry",
+        "test:profile-chat": "node scripts/test-profile-chat.mjs"
     },
     "dependencies": {
         "@neondatabase/serverless": "^1.1.0",
