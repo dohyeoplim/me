@@ -1,0 +1,200 @@
+:root {
+    --surface-page: var(--color-grey-50);
+    --surface-panel: #fff;
+    --surface-muted: var(--color-grey-100);
+    --text-primary: var(--color-grey-900);
+    --text-secondary: var(--color-grey-500);
+    --border-subtle: var(--color-grey-200);
+    --accent: #355bd6;
+    --accent-soft: #edf1ff;
+    --success: #32694c;
+    --success-soft: #edf5ef;
+    --radius-panel: 1rem;
+    --space-section: clamp(5rem, 10vw, 8rem);
+    --duration-reveal: 650ms;
+    --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+    :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 5px;
+    }
+
+    ::selection {
+        background: var(--accent-soft);
+        color: var(--text-primary);
+    }
+}
+
+@utility font-display-light {
+    @apply text-[clamp(2.75rem,6.5vw,4.75rem)] font-light leading-[1.08] tracking-[-0.045em];
+}
+
+@utility font-metric-light {
+    @apply text-[clamp(2rem,4vw,3rem)] font-light leading-tight tracking-tight tabular-nums;
+}
+
+@utility ds-panel {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-panel);
+    background: var(--surface-panel);
+}
+
+@utility ds-section {
+    padding-block: var(--space-section);
+    scroll-margin-top: 9rem;
+}
+
+@utility ds-label {
+    @apply text-sm font-normal leading-5 tracking-normal;
+    color: var(--text-secondary);
+}
+
+.ds-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+    letter-spacing: normal;
+    transition:
+        background-color 160ms,
+        border-color 160ms,
+        color 160ms;
+}
+
+.ds-button[data-size="small"] {
+    min-height: 2rem;
+    padding: 0.375rem 0.75rem;
+}
+
+.ds-button[data-size="medium"] {
+    min-height: 2.75rem;
+    padding: 0.6875rem 1rem;
+}
+
+.ds-button[data-size="large"] {
+    min-height: 3.25rem;
+    padding: 0.9375rem 1.25rem;
+    font-size: 1rem;
+}
+
+.ds-button[data-variant="solid"] {
+    background: var(--text-primary);
+    color: var(--surface-panel);
+}
+
+.ds-button[data-variant="solid"]:is(:hover, [data-preview-state="hover"]) {
+    background: var(--color-grey-600);
+}
+
+.ds-button[data-variant="solid"]:is(:active, [data-preview-state="pressed"]) {
+    background: var(--accent);
+}
+
+.ds-button[data-variant="outline"] {
+    border-color: var(--border-subtle);
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.ds-button[data-variant="outline"]:is(:hover, [data-preview-state="hover"]) {
+    border-color: var(--color-grey-400);
+    background: var(--surface-muted);
+}
+
+.ds-button[data-variant="text"] {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.ds-button[data-variant="text"]:is(:hover, [data-preview-state="hover"]) {
+    background: var(--surface-muted);
+    color: var(--text-primary);
+}
+
+.ds-button:is([data-variant="outline"], [data-variant="text"]):is(:active, [data-preview-state="pressed"]) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.ds-button:disabled {
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+.ds-button[data-preview-state="focus"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+}
+
+.ds-icon-button {
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.ds-icon-button[data-size="small"] {
+    width: 2rem;
+    padding: 0;
+}
+
+.ds-icon-button[data-size="medium"] {
+    width: 2.75rem;
+    padding: 0;
+}
+
+.ds-icon-button[data-size="large"] {
+    width: 3.25rem;
+    padding: 0;
+}
+
+.ds-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    width: fit-content;
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8125rem;
+    line-height: 1.125rem;
+    background: var(--surface-muted);
+    color: var(--text-secondary);
+}
+
+.ds-badge[data-tone="accent"] {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.ds-badge[data-tone="success"] {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.scroll-reveal[data-visible="true"] {
+    animation: reveal-content var(--duration-reveal) var(--ease-reveal) both;
+}
+
+@keyframes reveal-content {
+    from {
+        opacity: 0.35;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-reveal[data-visible="true"] {
+        animation: none;
+    }
+}

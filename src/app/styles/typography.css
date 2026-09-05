@@ -43,13 +43,13 @@
 }
 
 @utility font-caption01-light {
-    @apply text-xs font-light leading-4 uppercase tracking-[0.15em];
+    @apply text-sm font-normal leading-5 tracking-normal;
 }
 
 @utility font-caption02-light {
-    @apply text-[9px] font-light leading-3 tracking-widest uppercase;
+    @apply text-sm font-light leading-5 tracking-normal;
 }
 
 @utility font-caption03-regular {
-    @apply text-[8px] font-normal leading-3 tracking-widest;
+    @apply text-xs font-normal leading-4 tracking-normal;
 }
