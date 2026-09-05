@@ -31,24 +31,19 @@ export default function ChapterNav() {
     }, []);
 
     return (
-        <nav
-            aria-label="Portfolio sections"
-            className="sticky top-17 z-30 border-y border-grey-200 bg-grey-50/95 backdrop-blur-md md:top-25"
-        >
-            <ol className="flex gap-5 overflow-x-auto sm:gap-8">
-                {chapters.map(({ id, label }, index) => (
+        <nav aria-label="Portfolio sections" className="portfolio-nav">
+            <ol className="flex gap-dds-lg overflow-x-auto sm:gap-dds-xl">
+                {chapters.map(({ id, label }) => (
                     <li key={id} className="shrink-0">
                         <a
                             href={`#${id}`}
                             aria-current={active === id ? "location" : undefined}
                             className={cn(
-                                "flex min-h-14 items-center gap-2 border-b py-4 text-sm transition-colors",
-                                active === id
-                                    ? "border-grey-900 text-grey-900"
-                                    : "border-transparent text-grey-500 hover:text-grey-900",
+                                "flex min-h-14 items-center gap-dds-xs border-b py-dds-md",
+                                "font-body03-regular transition-colors",
+                                active === id ? "border-ink text-ink" : "border-transparent text-muted hover:text-ink",
                             )}
                         >
-                            <span className="hidden text-grey-400 sm:inline">0{index + 1}</span>
                             {label}
                         </a>
                     </li>

@@ -1,6 +1,6 @@
 export const hero = {
-    period: "Selected work · 2025 to 2026",
-    title: "Understanding documents.",
+    period: "Selected work, 2025 to 2026",
+    title: "Research in document understanding and applied AI.",
     subtitle: "Building useful AI.",
     name: "Dohyeop Lim",
     bio:

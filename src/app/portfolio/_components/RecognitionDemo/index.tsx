@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ArrowRight } from "lucide-react";
-import Button from "@/app/components/DDS/Button";
-import Badge from "@/app/components/DDS/Badge";
+import { Check } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 
 const unconstrained = [2, 1, 2, 0, 1, 2, 1];
@@ -16,29 +14,32 @@ export default function RecognitionDemo() {
     const selected = enabled ? constrained : unconstrained;
 
     return (
-        <figure className="ds-panel overflow-hidden">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-grey-100 p-5 sm:px-8">
-                <p className="ds-label">Inside the decoder</p>
-                <div className="flex gap-1" role="group" aria-label="Compare decoding methods">
-                    <Button
-                        size="small"
-                        variant={enabled ? "text" : "solid"}
+        <figure className="portfolio-decoder">
+            <div className={cn(
+                "flex flex-wrap items-center justify-between gap-dds-md",
+                "border-b border-line p-dds-lg sm:px-dds-xl",
+            )}>
+                <p className="font-body03-regular">Inside the decoder</p>
+                <div className="flex gap-dds-2xs" role="group" aria-label="Compare decoding methods">
+                    <button
+                        type="button"
+                        className="dds-choice"
                         aria-pressed={!enabled}
                         onClick={() => setEnabled(false)}
                     >
                         CTC
-                    </Button>
-                    <Button
-                        size="small"
-                        variant={enabled ? "solid" : "text"}
+                    </button>
+                    <button
+                        type="button"
+                        className="dds-choice"
                         aria-pressed={enabled}
                         onClick={() => setEnabled(true)}
                     >
                         E-ACT
-                    </Button>
+                    </button>
                 </div>
             </div>
-            <div className="grid items-center gap-5 p-5 sm:p-8 md:grid-cols-[1fr_150px]">
+            <div className="grid items-center gap-dds-lg p-dds-lg sm:p-dds-xl md:grid-cols-[1fr_150px]">
                 <div>
                     <svg
                         viewBox="0 0 460 205"
@@ -91,9 +92,6 @@ export default function RecognitionDemo() {
                                 />
                             )),
                         )}
-                        <text x="35" y="198" fontSize="12" fill="var(--text-secondary)">
-                            Recognition timesteps
-                        </text>
                         <path
                             d="M 186 194 H 420 M 414 190 L 420 194 L 414 198"
                             fill="none"
@@ -101,13 +99,13 @@ export default function RecognitionDemo() {
                         />
                     </svg>
                 </div>
-                <div className="flex flex-wrap gap-2 md:flex-col" aria-label="Decoding constraints">
+                <div className="flex flex-wrap gap-dds-xs md:flex-col" aria-label="Decoding constraints">
                     {["Length", "Alphabet", "Checksum"].map((label) => (
                         <span
                             key={label}
                             className={cn(
-                                "flex items-center gap-2 text-sm transition-colors",
-                                enabled ? "text-[var(--accent)]" : "text-grey-400",
+                                "flex items-center gap-dds-xs font-body03-regular transition-colors",
+                                enabled ? "text-action" : "text-faint",
                             )}
                         >
                             <Check size={14} aria-hidden="true" className={enabled ? "opacity-100" : "opacity-20"} />
@@ -116,17 +114,11 @@ export default function RecognitionDemo() {
                     ))}
                 </div>
             </div>
-            <figcaption className="flex flex-col gap-3 border-t border-grey-100 p-5 sm:px-8">
-                <div className="flex flex-wrap items-center gap-3" aria-live="polite">
-                    <Badge tone={enabled ? "accent" : "neutral"}>
-                        {enabled ? "Best valid path" : "Highest-scoring path"}
-                    </Badge>
-                    <ArrowRight size={14} className="text-grey-400" aria-hidden="true" />
-                    <span className="text-sm text-grey-600">
-                        {enabled ? "Rules participate in decoding." : "Identifier rules are not enforced."}
-                    </span>
-                </div>
-                <p className="text-xs leading-5 text-grey-500">Method illustration, not an experimental prediction.</p>
+            <figcaption className="font-body02-light text-muted px-dds-lg" aria-live="polite">
+                {enabled
+                    ? "Length, alphabet, and checksum rules guide the selection."
+                    : "Without identifier constraints, the highest-scoring path can still be invalid."}
+                <span className="sr-only">Method illustration, not an experimental prediction.</span>
             </figcaption>
         </figure>
     );

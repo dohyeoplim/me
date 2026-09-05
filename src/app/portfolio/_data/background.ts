@@ -28,7 +28,7 @@ export const beyondTheLab = {
         {
             name: "LIKELION University",
             period: "2025 to present",
-            role: "SeoulTech · Vice President, 14th cohort",
+            role: "SeoulTech, Vice President, 14th cohort",
             description:
                 "Coordinating a 30-member chapter, technical sessions, invited talks, and hackathons. " +
                 "Previously a member of the 13th cohort.",
@@ -36,7 +36,7 @@ export const beyondTheLab = {
         {
             name: "GDG on Campus",
             period: "2025 to present",
-            role: "SeoulTech · Core team, 5th & 6th cohorts",
+            role: "SeoulTech, Core team, 5th & 6th cohorts",
             description:
                 "Helping the campus developer community learn together. Organized 13 technical sessions " +
                 "during the 5th cohort.",
@@ -45,6 +45,9 @@ export const beyondTheLab = {
 };
 
 export const background = {
+    achievement:
+        "Ranked first in Applied Artificial Intelligence with a GPA of 4.34 / 4.5. " +
+        "Awarded full tuition for five consecutive semesters.",
     title: "Background",
     metrics: [
         { value: "4.34 / 4.5", label: "GPA" },
@@ -59,7 +62,7 @@ export const background = {
         },
         {
             school: "Technische Hochschule Ulm, Germany",
-            course: "Visiting student · Deep Learning for Industrial Data",
+            course: "Visiting student, Deep Learning for Industrial Data",
             period: "January to February 2026",
         },
     ],

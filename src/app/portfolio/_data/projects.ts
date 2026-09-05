@@ -21,7 +21,7 @@ export const projects: Project[] = [
         contribution:
             "Fine-tuned Korean ASR with LoRA and combined specialized and multi-domain adapters at inference.",
         outcome: "Different adapters led in full-call and streaming inputs. Combining predictions improved both.",
-        recognition: "Grand Prize · AICOSS Summer AI SCI Bootcamp 2026",
+        recognition: "Grand Prize, AICOSS Summer AI SCI Bootcamp 2026",
         href: "https://github.com/Fresh-Mango-Mochi/welfare-call-asr",
         visual: "speech",
         tags: ["Speech recognition", "LoRA"],
@@ -33,7 +33,7 @@ export const projects: Project[] = [
         description: "Health and lifestyle records for older adults, drawn from family conversations.",
         contribution: "Built transcription, health extraction, and acoustic analysis with tracking across calls.",
         outcome: "Previous conversations become context for noticing changes and preparing follow-up questions.",
-        recognition: "LIKELION 2026 · Honorable Mention of 317 teams · 2nd in AAC of 128 teams",
+        recognition: "LIKELION 2026, Honorable Mention of 317 teams, 2nd in AAC of 128 teams",
         href: "https://github.com/Collog-App",
         visual: "calls",
         tags: ["Audio analysis", "Longitudinal records"],
@@ -51,7 +51,7 @@ export const projects: Project[] = [
     },
     {
         name: "DocFusionX",
-        period: "January to February 2026 · Ulm, Germany",
+        period: "January to February 2026, Ulm, Germany",
         title: "Long documents, connected context.",
         description: "A structure-aware GraphRAG system for retrieval and reasoning over long documents.",
         contribution:
@@ -64,8 +64,9 @@ export const projects: Project[] = [
 ];
 
 export const projectSection = {
+    detailsLabel: "What I learned",
     title: "Selected projects",
     description: "Machine learning, carried through to the people who use it.",
-    visualCaption: "Concept diagram",
+    visualCaption: "Project process illustration",
     repositoryLabel: "GitHub",
 };

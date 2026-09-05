@@ -4,7 +4,7 @@ export const research = {
     eact: {
         name: "E-ACT",
         role: "First author",
-        status: "WACV 2027 · Under review",
+        status: "WACV 2027, Under review",
         headline: "One wrong character can make an entire identifier unusable.",
         description:
             "I developed a factorized CTC decoder that brings length, allowed characters, and checksum " +
@@ -32,7 +32,7 @@ export const research = {
     },
     industrial: {
         name: "Industrial OCR data & evaluation",
-        context: "SeoulTech × KETI · National R&D",
+        context: "SeoulTech × KETI, National R&D",
         count: "~8,000",
         countLabel: "images annotated",
         steps: ["Collection", "Annotation", "Cross-check"],
@@ -45,7 +45,7 @@ export const research = {
     },
     kraftbox: {
         name: "Kraftbox",
-        context: "Synthetic documents · Vision-language models",
+        context: "Synthetic documents, Vision-language models",
         description:
             "Built a generation pipeline with dynamic tables, automatic annotations, and shared fields " +
             "across forms. Added validation rules and controlled inconsistencies for extraction and verification " +
