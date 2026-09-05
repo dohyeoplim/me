@@ -1,11 +1,9 @@
 import Disclosure from "@/app/components/DDS/Disclosure";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
-import type { ProfileAnswerBlock, ProfileSource } from "@/app/lib/profile-chat/types";
-import AnswerSources from "../AnswerSources";
+import type { ProfileAnswerBlock } from "@/app/lib/profile-chat/types";
 
 type Props = {
     blocks: ProfileAnswerBlock[];
-    sources: ProfileSource[];
 };
 
 function BlockContent({ block }: { block: ProfileAnswerBlock }) {
@@ -76,7 +74,7 @@ function BlockContent({ block }: { block: ProfileAnswerBlock }) {
     }
 }
 
-export default function AnswerBlocks({ blocks, sources }: Props) {
+export default function AnswerBlocks({ blocks }: Props) {
     if (!blocks.length) return null;
 
     return (
@@ -85,7 +83,6 @@ export default function AnswerBlocks({ blocks, sources }: Props) {
                 <section className="dds-answer-block" key={`${block.type}-${index}`} aria-label={block.title}>
                     <SectionHeading title={block.title} variant="subsection" as="h3" />
                     <BlockContent block={block} />
-                    <AnswerSources sources={sources.filter(({ id }) => block.sourceIds.includes(id))} />
                 </section>
             ))}
         </div>

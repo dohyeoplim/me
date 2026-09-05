@@ -1,14 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import type { ProfileAnswerBlock, ProfileSource } from "@/app/lib/profile-chat/types";
+import type { ProfileAnswerBlock } from "@/app/lib/profile-chat/types";
 import "@/app/styles/dds-chat.css";
 import "@/app/styles/dds-answer-blocks.css";
 import AnswerBlocks from ".";
-
-const sources: ProfileSource[] = [
-    { id: "collog", title: "Collog", url: "https://github.com/Collog-App" },
-    { id: "mochicall", title: "MochiCall", url: "https://github.com/Fresh-Mango-Mochi/welfare-call-asr" },
-    { id: "education", title: "Education", url: "/portfolio#background" },
-];
 
 const facts: ProfileAnswerBlock = {
     type: "facts",
@@ -68,7 +62,7 @@ const meta = {
     title: "Profile/Answer blocks",
     component: AnswerBlocks,
     parameters: { layout: "padded" },
-    args: { blocks: [facts], sources },
+    args: { blocks: [facts] },
 } satisfies Meta<typeof AnswerBlocks>;
 
 export default meta;

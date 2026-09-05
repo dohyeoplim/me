@@ -27,13 +27,7 @@ export default function RepositoryCards({ repositories }: Props) {
                         {repository.description && (
                             <p className="dds-repository-description">{repository.description}</p>
                         )}
-                        <div className="dds-repository-meta">
-                            <span>
-                                {repository.ownerType === "Organization" ? "Organization" : "Personal account"}
-                                {", "}{repository.owner}
-                            </span>
-                            {repository.language && <span>{repository.language}</span>}
-                        </div>
+                        {repository.language && <p className="dds-repository-meta">{repository.language}</p>}
                     </a>
                 ))}
             </div>

@@ -15,6 +15,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const InitialQuestions: Story = {};
+export const AnimatedEntrance: Story = { args: { animateEntrance: true } };
 export const AllQuestions: Story = { args: { questions: suggestedQuestions } };
 export const FollowUps: Story = {
     args: {
@@ -33,6 +34,12 @@ export const FollowUps: Story = {
                 sourceIds: ["mochicall"],
             },
         ],
+    },
+};
+export const CompactFollowUps: Story = {
+    args: {
+        ...FollowUps.args,
+        layout: "compact",
     },
 };
 export const Pending: Story = { args: { disabled: true } };

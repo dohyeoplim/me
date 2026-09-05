@@ -135,7 +135,7 @@ export default function useProfileConversation() {
         setQuestion("");
         setPendingQuestion("");
         setError("");
-        setNotice("Conversation cleared.");
+        setNotice("");
     }
 
     function retryAvailability() {
