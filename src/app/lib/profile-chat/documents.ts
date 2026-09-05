@@ -106,6 +106,8 @@ export const profileDocuments: ProfileDocument[] = [
             "evaluation",
             "research",
         ],
+        kind: "research",
+        cardId: null,
     },
     {
         id: "kraftbox",
@@ -124,6 +126,8 @@ export const profileDocuments: ProfileDocument[] = [
             "document",
             "research",
         ],
+        kind: "research",
+        cardId: null,
     },
     ...projects.map((project) => ({
         id: project.name.toLowerCase() as ProfileCardId,
@@ -143,6 +147,8 @@ export const profileDocuments: ProfileDocument[] = [
             ...beyondTheLab.infrastructure.responsibilities.map(({ title, detail }) => `${title}, ${detail}`),
         ].join(". "),
         keywords: ["인프라", "서버", "클러스터", "분산", "도커", "gpu", "mig", "docker", "infiniband"],
+        kind: "experience",
+        cardId: null,
     },
     {
         id: "community",
@@ -155,6 +161,8 @@ export const profileDocuments: ProfileDocument[] = [
             "동아리", "멋사", "멋쟁이사자", "운영", "부회장", "세션", "likelion", "gdg", "community",
             "outside", "leadership",
         ],
+        kind: "experience",
+        cardId: null,
     },
     {
         id: "international-experience",
@@ -176,6 +184,8 @@ export const profileDocuments: ProfileDocument[] = [
             background.achievement,
         ].join("\n"),
         keywords: ["학력", "학교", "학점", "성적", "장학", "전공", "gpa", "degree", "scholarship", "grade"],
+        kind: "education",
+        cardId: null,
     },
     {
         id: "skills",
@@ -186,5 +196,7 @@ export const profileDocuments: ProfileDocument[] = [
             "기술", "도구", "언어", "개발", "스택", "영어", "skill", "tools", "programming", "language",
             "english", "korean", "toefl", "spoken",
         ],
+        kind: "experience",
+        cardId: null,
     },
 ];

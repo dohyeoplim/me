@@ -57,7 +57,6 @@ const projectNames = new Map([
     ["mochicall", "MochiCall"],
     ["wonnit", "WONNIT"],
     ["docfusionx", "DocFusionX"],
-    ["kraftbox", "Kraftbox"],
 ]);
 
 export function followUpQuestions(answer: ProfileChatAnswer, previousQuestions: string[]): ProfileFollowUp[] {
@@ -77,7 +76,7 @@ export function followUpQuestions(answer: ProfileChatAnswer, previousQuestions: 
         question: "Show me repositories related to this work.",
         sourceIds: context,
     }] : [];
-    const candidates = [...answer.followUps, ...contextual, ...related, ...suggestedQuestions];
+    const candidates = [...answer.followUps, ...contextual, ...related];
     const seen = new Set<string>();
     const seenLabels = new Set<string>();
 

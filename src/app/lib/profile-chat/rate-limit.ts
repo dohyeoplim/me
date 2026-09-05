@@ -1,8 +1,8 @@
 import { createHmac } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 
-export const clientLimit = 8;
-export const dailyLimit = 150;
+export const clientLimit = 50;
+export const dailyLimit = 1_000;
 const clientWindow = 10 * 60 * 1000;
 const dayWindow = 24 * 60 * 60 * 1000;
 

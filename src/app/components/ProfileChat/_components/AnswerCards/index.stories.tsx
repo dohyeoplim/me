@@ -26,8 +26,4 @@ export const Projects: Story = {
         ],
     },
 };
-export const Education: Story = { args: { cards: [profileCardRegistry.education] } };
-export const Experience: Story = {
-    args: { cards: [profileCardRegistry.infrastructure, profileCardRegistry.community, profileCardRegistry.skills] },
-};
 export const UnknownCard: Story = { args: { cards: [{ type: "project", id: "not-registered" }] } };

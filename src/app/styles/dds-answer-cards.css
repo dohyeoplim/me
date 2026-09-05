@@ -68,6 +68,7 @@
     aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: var(--radius-dds-small);
+    corner-shape: squircle;
     background: var(--surface-muted);
 }
 
@@ -97,36 +98,6 @@
     padding-top: var(--spacing-dds-md);
 }
 
-.dds-answer-records {
-    display: grid;
-    gap: var(--spacing-dds-lg);
-}
-
-.dds-answer-records > div + div {
-    border-top: 1px solid var(--border-subtle);
-    padding-top: var(--spacing-dds-lg);
-}
-
-.dds-answer-facts {
-    @apply font-support;
-    display: grid;
-    gap: var(--spacing-dds-md);
-}
-
-p + .dds-answer-facts {
-    margin-top: var(--spacing-dds-lg);
-}
-
-.dds-answer-facts > div {
-    display: grid;
-    gap: var(--spacing-dds-2xs);
-    min-width: 0;
-}
-
-.dds-answer-facts dt {
-    font-weight: 500;
-}
-
 .dds-answer-card .portfolio-decoder {
     margin-top: var(--spacing-dds-md);
 }
@@ -139,10 +110,5 @@ p + .dds-answer-facts {
 
     .dds-answer-project-content {
         align-self: stretch;
-    }
-
-    .dds-answer-facts > div {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-        gap: var(--spacing-dds-lg);
     }
 }

@@ -18,12 +18,12 @@ export const profileAnswerBlockSchema = z
         z.object({
             type: z.literal("facts"),
             ...blockBase,
-            items: z.array(z.object({ label: plainText(60), value: plainText(280) }).strict()).min(2).max(6),
+            items: z.array(z.object({ label: plainText(60), value: plainText(200) }).strict()).min(2).max(6),
         }).strict(),
         z.object({
             type: z.literal("steps"),
             ...blockBase,
-            items: z.array(z.object({ title: plainText(70), description: plainText(280) }).strict()).min(2).max(6),
+            items: z.array(z.object({ title: plainText(70), description: plainText(220) }).strict()).min(2).max(6),
         }).strict(),
         z.object({
             type: z.literal("comparison"),
@@ -31,8 +31,8 @@ export const profileAnswerBlockSchema = z
             columns: z.array(plainText(60)).min(2).max(3),
             rows: z.array(z.object({
                 label: plainText(60),
-                values: z.array(plainText(200)).min(2).max(3),
-            }).strict()).min(2).max(6),
+                values: z.array(plainText(140)).min(2).max(3),
+            }).strict()).min(2).max(5),
         }).strict(),
         z.object({
             type: z.literal("timeline"),
@@ -40,8 +40,8 @@ export const profileAnswerBlockSchema = z
             items: z.array(z.object({
                 date: plainText(60),
                 title: plainText(70),
-                description: plainText(280),
-            }).strict()).min(2).max(6),
+                description: plainText(200),
+            }).strict()).min(2).max(5),
         }).strict(),
     ])
     .refine((block) => {
@@ -55,12 +55,13 @@ export const profileFollowUpSchema = z.object({
 }).strict();
 
 export const generatedAnswerSchema = z.object({
+    grounding: z.enum(["supported", "unsupported"]),
     answer: plainText(1200),
     sourceIds: z.array(documentIdSchema).max(6),
     cardIds: z.array(cardIdSchema).max(4),
-    blocks: z.array(profileAnswerBlockSchema).max(3),
+    blocks: z.array(profileAnswerBlockSchema).max(2),
     followUps: z.array(profileFollowUpSchema).max(4),
-    repositories: z.array(z.object({ sourceId: documentIdSchema, reason: plainText(200) }).strict()).max(3),
+    repositories: z.array(z.object({ sourceId: documentIdSchema, reason: plainText(160) }).strict()).max(3),
 }).strict();
 
 const sourceUrlSchema = z.string().max(2000).refine((value) => {
@@ -96,11 +97,11 @@ export const profileChatAnswerSchema = z.object({
     }).strict()).max(6),
     cards: z.array(z.object({
         id: cardIdSchema,
-        type: z.enum(["profile", "research", "project", "education", "experience"]),
+        type: z.enum(["profile", "research", "project"]),
     }).strict()
         .refine((card) => profileCardRegistry[card.id].type === card.type)
         .transform((card) => profileCardRegistry[card.id])).max(4),
-    blocks: z.array(profileAnswerBlockSchema).max(3),
+    blocks: z.array(profileAnswerBlockSchema).max(2),
     followUps: z.array(profileFollowUpSchema).max(4),
     repositories: z.array(profileRepositorySchema).max(3),
 }).strict().refine((answer) => {

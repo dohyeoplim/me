@@ -6,7 +6,9 @@ export type PublishedKnowledgeSource = Omit<KnowledgeSource, "cardId"> & { cardI
 
 export function createPortfolioSources(): KnowledgeSource[] {
     return profileDocuments.map((document) => {
-        const fallbackCardId = document.id in profileCardRegistry ? document.id as ProfileCardId : null;
+        const fallbackCardId = Object.hasOwn(profileCardRegistry, document.id)
+            ? document.id as ProfileCardId
+            : null;
         const cardId = document.cardId === undefined ? fallbackCardId : document.cardId;
         const kind = cardId ? profileCardRegistry[cardId].type : "experience";
         return KnowledgeSourceSchema.parse({
@@ -22,7 +24,7 @@ export function createPortfolioSources(): KnowledgeSource[] {
 export function effectivePublishedSource(source: KnowledgeSource): PublishedKnowledgeSource {
     const canonical = profileDocuments.find(({ id }) => id === source.id);
     const cardIsCurrent = source.origin !== "portfolio" || canonical?.text.trim() === source.text.trim();
-    const cardId = cardIsCurrent && source.cardId && source.cardId in profileCardRegistry
+    const cardId = cardIsCurrent && source.cardId && Object.hasOwn(profileCardRegistry, source.cardId)
         ? source.cardId as ProfileCardId
         : null;
     return { ...source, cardId };

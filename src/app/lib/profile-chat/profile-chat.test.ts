@@ -4,7 +4,7 @@ import { followUpQuestions, suggestedQuestions } from "../../components/ProfileC
 import { answerQuestion, parseAnswer } from "./answer";
 import { profileChatAnswerSchema } from "./answer-content";
 import { profileDocuments, type ProfileDocument } from "./documents";
-import { consumeLocalBudget } from "./rate-limit";
+import { clientLimit, consumeLocalBudget, dailyLimit } from "./rate-limit";
 import { excerptDocument, retrieveDocuments } from "./retrieval";
 import { createAnswerFormat } from "./response-format";
 import { ChatError, maxBodyBytes, questionSchema, readQuestion, validateOrigin } from "./validation";
@@ -32,7 +32,14 @@ function responsePayload(
                 content: [{
                     type: "output_text",
                     text: JSON.stringify({
-                        answer, sourceIds, cardIds, blocks: [], followUps: [], repositories: [], ...content,
+                        grounding: sourceIds.length ? "supported" : "unsupported",
+                        answer,
+                        sourceIds,
+                        cardIds,
+                        blocks: [],
+                        followUps: [],
+                        repositories: [],
+                        ...content,
                     }),
                 }],
             },
@@ -44,6 +51,9 @@ test("retrieves public sources for English and Korean questions", () => {
     assert.equal(retrieveDocuments("What did he contribute to MochiCall?")[0].id, "mochicall");
     assert.equal(retrieveDocuments("학점과 장학금이 궁금해")[0].id, "education");
     assert.equal(retrieveDocuments("E-ACT 체크섬은 어떻게 사용해?")[0].id, "eact");
+    assert.equal(retrieveDocuments("What is E-ACT?").some(({ id }) => id === "collog"), false);
+    assert.equal(retrieveDocuments("What is EACT?")[0].id, "eact");
+    assert.equal(retrieveDocuments("Does React process family calls?").some(({ id }) => id === "eact"), false);
     assert.ok(retrieveDocuments("What research has he done?").some(({ id }) => id === "eact"));
     assert.ok(retrieveDocuments("음성 인식 프로젝트 알려줘").some(({ id }) => id === "mochicall"));
 });
@@ -119,8 +129,30 @@ test("reads message output after other items and validates every source ID", () 
     assert.throws(() => parseAnswer(responsePayload("Unverified", ["unknown-source"]), documents), {
         code: "invalid_sources",
     });
+    assert.throws(
+        () => parseAnswer(
+            responsePayload("He worked on Korean speech recognition.", ["unknown-source", "mochicall"]),
+            documents,
+        ),
+        { code: "invalid_sources" },
+    );
     const unknownAnswer = responsePayload("The public profile does not provide that information.", []);
     assert.deepEqual(parseAnswer(unknownAnswer, documents).sources, []);
+    assert.throws(
+        () => parseAnswer(
+            responsePayload("Unsupported factual answer.", [], [], { grounding: "supported" }),
+            documents,
+        ),
+        { code: "invalid_sources" },
+    );
+    const unsupportedWithSource = parseAnswer(
+        responsePayload("Unsupported answer.", ["mochicall"], ["mochicall"], {
+            grounding: "unsupported",
+        }),
+        documents,
+    );
+    assert.deepEqual(unsupportedWithSource.sources, []);
+    assert.deepEqual(unsupportedWithSource.cards, []);
 });
 
 test("rejects refusals, malformed output and incomplete responses", () => {
@@ -149,28 +181,90 @@ test("rejects refusals, malformed output and incomplete responses", () => {
     );
 });
 
-test("allows only predefined cards supported by a selected and cited source", () => {
+test("accepts a verified text-only answer without optional component fields", () => {
+    const payload = {
+        status: "completed",
+        output: [{
+            type: "message",
+            content: [{
+                type: "output_text",
+                text: JSON.stringify({
+                    grounding: "supported",
+                    answer: "Collog organizes health details from family calls.",
+                    sourceIds: ["collog"],
+                }),
+            }],
+        }],
+    };
+    const answer = parseAnswer(payload, profileDocuments);
+    assert.equal(answer.answer, "Collog organizes health details from family calls.");
+    assert.deepEqual(answer.cards, []);
+    assert.deepEqual(answer.blocks, []);
+    assert.deepEqual(answer.followUps, []);
+    assert.deepEqual(answer.repositories, []);
+});
+
+test("keeps only predefined cards supported by a selected and cited source", () => {
     const documents = retrieveDocuments("MochiCall");
     const result = parseAnswer(responsePayload("He worked on Korean ASR.", ["mochicall"], ["mochicall"]), documents);
     assert.deepEqual(result.cards, [{ type: "project", id: "mochicall" }]);
-    assert.throws(() => parseAnswer(responsePayload("Answer", ["mochicall"], ["eact"]), documents), {
-        code: "invalid_cards",
-    });
-    assert.throws(() => parseAnswer(responsePayload("Answer", [], ["mochicall"]), documents), {
-        code: "invalid_cards",
-    });
-    assert.throws(() => parseAnswer(responsePayload("Answer", ["mochicall"], ["<script>"]), documents), {
-        code: "invalid_response",
-    });
+    assert.deepEqual(parseAnswer(responsePayload("Answer", ["mochicall"], ["eact"]), documents).cards, []);
+    assert.deepEqual(parseAnswer(responsePayload("Answer", [], ["mochicall"]), documents).cards, []);
+    const mixed = parseAnswer(
+        responsePayload("Answer", ["mochicall"], ["unknown-card", "<script>", "mochicall"]),
+        documents,
+    );
+    assert.deepEqual(mixed.cards, [{ type: "project", id: "mochicall" }]);
 });
 
-test("supports all four projects while rejecting responses beyond the card limit", () => {
+test("uses dynamic blocks for general facts without repeating current cards", () => {
+    const educationBlock = {
+        type: "facts",
+        title: "Academic background",
+        sourceIds: ["education"],
+        items: [
+            { label: "Degree", value: "B.Eng. in Applied Artificial Intelligence" },
+            { label: "School", value: "SeoulTech" },
+        ],
+    };
+    const education = parseAnswer(responsePayload("He studies applied AI.", ["education"], ["education"], {
+        blocks: [educationBlock],
+    }), profileDocuments);
+    assert.deepEqual(education.cards, []);
+    assert.equal(education.blocks.length, 1);
+
+    const projectBlock = {
+        ...educationBlock,
+        title: "Collog details",
+        sourceIds: ["collog"],
+    };
+    const project = parseAnswer(responsePayload("Collog is a speech project.", ["collog"], ["collog"], {
+        blocks: [projectBlock],
+    }), profileDocuments);
+    assert.equal(project.cards.length, 1);
+    assert.deepEqual(project.blocks, []);
+
+    const mixed = parseAnswer(responsePayload("His work spans projects and education.", ["collog", "education"], [
+        "collog",
+    ], {
+        blocks: [{ ...educationBlock, sourceIds: ["collog", "education"] }],
+    }), profileDocuments);
+    assert.equal(mixed.blocks.length, 0);
+
+    const followUp = parseAnswer(responsePayload("Here are more Collog details.", ["collog"], ["collog"], {
+        blocks: [projectBlock],
+    }), profileDocuments, { shownCardIds: ["collog"] });
+    assert.deepEqual(followUp.cards, []);
+    assert.equal(followUp.blocks.length, 1);
+});
+
+test("supports all four projects while bounding excess card selections", () => {
     const documents = retrieveDocuments("Show me all projects");
     const projectIds = ["mochicall", "collog", "wonnit", "docfusionx"];
     const answer = responsePayload("Here are his projects.", projectIds, projectIds);
     assert.equal(parseAnswer(answer, documents).cards.length, 4);
     const tooManyCards = responsePayload("Answer", projectIds, [...projectIds, "mochicall"]);
-    assert.throws(() => parseAnswer(tooManyCards, documents), { code: "invalid_response" });
+    assert.equal(parseAnswer(tooManyCards, documents).cards.length, 4);
 });
 
 test("enforces both budgets and preserves the site allowance when a client is blocked", () => {
@@ -198,23 +292,95 @@ test("waits until every exhausted budget can be used again", () => {
         { key: "site", limit: 150, expiresAt: 20000 },
     ];
     assert.deepEqual(consumeLocalBudget(budgets, 0, counters), { allowed: false, retryAfter: 20 });
+    assert.equal(clientLimit, 50);
+    assert.equal(dailyLimit, 1_000);
 });
 
 test("sends a bounded structured Responses request without storing the conversation", async (context) => {
+    const logs: string[] = [];
+    context.mock.method(console, "info", (message: unknown) => logs.push(String(message)));
     context.mock.method(globalThis, "fetch", async (url: string, options: RequestInit) => {
         assert.equal(url, "https://api.openai.com/v1/responses");
         const body = JSON.parse(String(options.body));
         assert.equal(body.store, false);
+        assert.equal(body.prompt_cache_key, "profile-chat-v4");
         assert.equal(body.max_output_tokens, 1800);
         assert.equal(body.text.format.type, "json_schema");
         assert.equal(body.text.format.strict, true);
         assert.equal(body.input.at(-1).content, "What is E-ACT?");
+        assert.ok(body.instructions.length < 2_500);
+        const evidence = JSON.parse(body.input[0].content);
+        assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("keywords" in document)));
+        assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("url" in document)));
         assert.ok(options.signal);
-        return Response.json(responsePayload("A decoder for structured identifier recognition.", ["eact"]));
+        return Response.json({
+            ...responsePayload("A decoder for structured identifier recognition.", ["eact"]),
+            usage: {
+                input_tokens: 1200,
+                input_tokens_details: { cached_tokens: 256 },
+                output_tokens: 80,
+                total_tokens: 1280,
+            },
+        }, { headers: { "x-request-id": "request-123" } });
     });
 
     const question = questionSchema.parse({ question: "What is E-ACT?" });
     assert.equal((await answerQuestion(question, undefined, async () => profileDocuments)).sources[0].id, "eact");
+    const usage = JSON.parse(logs[0]);
+    assert.deepEqual(
+        {
+            event: usage.event,
+            requestId: usage.requestId,
+            inputTokens: usage.inputTokens,
+            cachedInputTokens: usage.cachedInputTokens,
+            outputTokens: usage.outputTokens,
+        },
+        {
+            event: "profile_chat_usage",
+            requestId: "request-123",
+            inputTokens: 1200,
+            cachedInputTokens: 256,
+            outputTokens: 80,
+        },
+    );
+    assert.equal(logs[0].includes(question.question), false);
+});
+
+test("bounds evidence and history before sending a model request", async (context) => {
+    const documents: ProfileDocument[] = Array.from({ length: 6 }, (_, index) => ({
+        id: `budget-${index}`,
+        title: `Budget document ${index}`,
+        text: `Important budget fact ${index}. ` + "Background details. ".repeat(1_300),
+        url: "/portfolio",
+        keywords: ["budget"],
+        cardId: null,
+    }));
+    const history = Array.from({ length: 6 }, (_, index) => ({
+        role: index % 2 ? "assistant" as const : "user" as const,
+        content: `${index} ${"history ".repeat(300)}`,
+    }));
+
+    context.mock.method(globalThis, "fetch", async (_url: string, options: RequestInit) => {
+        const bodyText = String(options.body);
+        const body = JSON.parse(bodyText);
+        const evidence = JSON.parse(body.input[0].content);
+        const requestHistory = body.input.slice(1, -1);
+        assert.ok(Buffer.byteLength(bodyText) < 30_000);
+        assert.ok(evidence.publicDocuments.reduce(
+            (total: number, document: { text: string }) => total + document.text.length,
+            0,
+        ) <= 14_000);
+        assert.ok(evidence.publicDocuments.every((document: { text: string }) => document.text.length <= 4_000));
+        assert.equal(requestHistory.length, 4);
+        assert.ok(requestHistory.every(({ content }: { content: string }) => content.length <= 700));
+        return Response.json(responsePayload("The documents contain budget facts.", ["budget-0"]));
+    });
+
+    await answerQuestion(
+        { question: "What are the budget facts?", history, shownCardIds: [], contextSourceIds: [] },
+        undefined,
+        async () => documents,
+    );
 });
 
 test("does not expose upstream error contents", async (context) => {
@@ -262,7 +428,7 @@ test("returns deeper Collog blocks without repeating previously shown specialize
     assert.equal(profileChatAnswerSchema.safeParse(followUp).success, true);
 });
 
-test("validates every block type and comparison column alignment", () => {
+test("validates every block type and omits malformed comparisons", () => {
     const facts = {
         type: "facts",
         title: "Collog",
@@ -289,29 +455,31 @@ test("validates every block type and comparison column alignment", () => {
         sourceIds: ["wonnit", "collog"],
     };
     const blocks = [facts, comparison, timeline];
-    const payload = responsePayload("He works with speech and vision.", ["mochicall", "collog", "wonnit"], [], {
+    for (const block of blocks) {
+        const payload = responsePayload("He works with speech and vision.", ["mochicall", "collog", "wonnit"], [], {
+            blocks: [block],
+        });
+        assert.equal(parseAnswer(payload, profileDocuments).blocks[0].type, block.type);
+    }
+    const bounded = responsePayload("He works with speech and vision.", ["mochicall", "collog", "wonnit"], [], {
         blocks,
     });
-    assert.equal(parseAnswer(payload, profileDocuments).blocks.length, 3);
+    assert.equal(parseAnswer(bounded, profileDocuments).blocks.length, 2);
     const invalid = { ...comparison, columns: ["MochiCall", "Collog", "WONNIT"] };
     const invalidPayload = responsePayload("Comparison", ["mochicall", "collog"], [], { blocks: [invalid] });
-    assert.throws(
-        () => parseAnswer(invalidPayload, profileDocuments),
-        { code: "invalid_response" },
-    );
+    assert.deepEqual(parseAnswer(invalidPayload, profileDocuments).blocks, []);
 });
 
-test("rejects uncited sources, unsupported block types, excess entries and markup", () => {
+test("omits uncited or malformed optional blocks without losing a verified answer", () => {
     const block = {
         type: "facts",
         title: "Collog",
         items: [{ label: "Input", value: "Family calls" }, { label: "Output", value: "Health records" }],
         sourceIds: ["collog"],
     };
-    assert.throws(
-        () => parseAnswer(responsePayload("Answer", ["mochicall"], [], { blocks: [block] }), profileDocuments),
-        { code: "invalid_blocks" },
-    );
+    const uncited = parseAnswer(responsePayload("Answer", ["mochicall"], [], { blocks: [block] }), profileDocuments);
+    assert.deepEqual(uncited.blocks, []);
+    assert.deepEqual(uncited.sources.map(({ id }) => id), ["mochicall"]);
     for (const invalid of [
         { ...block, type: "html", html: "<button>Run</button>" },
         { ...block, title: "<script>alert(1)</script>" },
@@ -320,9 +488,9 @@ test("rejects uncited sources, unsupported block types, excess entries and marku
         { ...block, items: [] },
         { ...block, sourceIds: [] },
     ]) {
-        assert.throws(
-            () => parseAnswer(responsePayload("Answer", ["collog"], [], { blocks: [invalid] }), profileDocuments),
-            { code: "invalid_response" },
+        assert.deepEqual(
+            parseAnswer(responsePayload("Answer", ["collog"], [], { blocks: [invalid] }), profileDocuments).blocks,
+            [],
         );
     }
 });
@@ -341,10 +509,11 @@ test("follow-up suggestions can use published catalog sources outside retrieved 
     });
     assert.equal(result.followUps.length, 1);
     assert.equal(result.followUps[0].sourceIds[0], "mochicall");
-    assert.throws(() => parseAnswer(payload, documents), { code: "invalid_follow_ups" });
+    assert.equal(parseAnswer(payload, documents).followUps.length, 1);
+    assert.equal(parseAnswer(payload, documents).followUps[0].sourceIds[0], "collog");
 });
 
-test("repository recommendations resolve trusted metadata and reject model-supplied links", () => {
+test("repository recommendations resolve trusted metadata and omit unsupported selections", () => {
     const repository: ProfileDocument = {
         id: "github-collog-server",
         title: "Collog-App/server",
@@ -374,23 +543,21 @@ test("repository recommendations resolve trusted metadata and reject model-suppl
     const injected = responsePayload("Repository", [repository.id], [], {
         repositories: [{ ...recommendation, url: "https://other.example" }],
     });
-    assert.throws(() => parseAnswer(injected, [repository]), { code: "invalid_response" });
+    assert.deepEqual(parseAnswer(injected, [repository]).repositories, []);
     const uncited = responsePayload("Repository", [], [], { repositories: [recommendation] });
-    assert.throws(() => parseAnswer(uncited, [repository]), { code: "invalid_repositories" });
-    assert.throws(() => parseAnswer(payload, [{ ...repository, repository: undefined }]), {
-        code: "invalid_repositories",
-    });
+    assert.deepEqual(parseAnswer(uncited, [repository]).repositories, []);
+    assert.deepEqual(parseAnswer(payload, [{ ...repository, repository: undefined }]).repositories, []);
     const unsafe = { ...repository, repository: { ...repository.repository!, url: "https://other.example" } };
-    assert.throws(() => parseAnswer(payload, [unsafe]), { code: "invalid_response" });
+    assert.deepEqual(parseAnswer(payload, [unsafe]).repositories, []);
 });
 
 test("published custom records support blocks while explicit null disables a legacy card", () => {
     const source = profileDocuments.find(({ id }) => id === "collog")!;
     const custom = { ...source, id: "collog-notes", cardId: null };
     assert.equal(retrieveDocuments("Collog", [], [custom])[0].id, "collog-notes");
-    assert.throws(
-        () => parseAnswer(responsePayload("Collog", ["collog"], ["collog"]), [{ ...source, cardId: null }]),
-        { code: "invalid_cards" },
+    assert.deepEqual(
+        parseAnswer(responsePayload("Collog", ["collog"], ["collog"]), [{ ...source, cardId: null }]).cards,
+        [],
     );
     assert.deepEqual(retrieveDocuments("Tell me about Collog", [], []), []);
     assert.deepEqual(retrieveDocuments("Anything else", [], [], ["collog"]), []);
@@ -614,6 +781,6 @@ test("follow-up questions avoid repeating generated and curated labels", () => {
     }), sources);
     const suggestions = followUpQuestions(answer, ["Which projects use speech recognition?"]);
     assert.equal(suggestions.filter(({ label }) => label === "More about Collog").length, 1);
-    assert.equal(suggestions.length, 4);
+    assert.equal(suggestions.length, 2);
     assert.ok(suggestions.every(({ question }) => question !== "Which projects use speech recognition?"));
 });

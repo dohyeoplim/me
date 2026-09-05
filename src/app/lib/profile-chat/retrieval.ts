@@ -114,43 +114,83 @@ function scoreDocument(document: ProfileDocument, query: string) {
     const text = normalize(`${document.title} ${document.text}`);
     const title = normalize(document.title);
     const terms = queryTerms(query);
+    const textLatinTerms = new Set(text.match(/[a-z0-9]+/g) ?? []);
+    const titleLatinTerms = new Set(title.match(/[a-z0-9]+/g) ?? []);
+    const queryLatinTerms = new Set(query.match(/[a-z0-9]+/g) ?? []);
+    const hasLatinTerm = (latinTerms: Set<string>, term: string) => {
+        if (latinTerms.has(term)) return true;
+        if (term.length > 3 && term.endsWith("s") && latinTerms.has(term.slice(0, -1))) return true;
+        return latinTerms.has(`${term}s`);
+    };
+    const includesTerm = (value: string, latinTerms: Set<string>, term: string) => {
+        return /^[a-z0-9]+$/.test(term) ? hasLatinTerm(latinTerms, term) : value.includes(term);
+    };
     const keywordScore = document.keywords.reduce((score, keyword) => {
-        return score + (query.includes(normalize(keyword)) ? 3 : 0);
+        const normalizedKeyword = normalize(keyword);
+        const matches = /^[a-z0-9]+$/.test(normalizedKeyword)
+            ? hasLatinTerm(queryLatinTerms, normalizedKeyword)
+            : query.includes(normalizedKeyword);
+        return score + (matches ? 3 : 0);
     }, 0);
-    const titleScore = query.includes(title) || query.includes(document.id) ? 12 : 0;
+    const compact = (value: string) => value.replace(/[^\p{L}\p{N}]/gu, "");
+    const compactTitle = compact(title);
+    const documentId = normalize(document.id);
+    const idMatches = /^[a-z0-9]+$/.test(documentId)
+        ? queryLatinTerms.has(documentId)
+        : query.includes(documentId);
+    const compactTitleMatches = compactTitle.length >= 4 && (/^[a-z0-9]+$/.test(compactTitle)
+        ? queryLatinTerms.has(compactTitle)
+        : compact(query).includes(compactTitle));
+    const titleScore = query.includes(title)
+        || idMatches
+        || compactTitleMatches ? 12 : 0;
     const termScore = terms.reduce((score, term) => {
-        return score + (title.includes(term) ? 4 : text.includes(term) ? 1 : 0);
+        return score + (includesTerm(title, titleLatinTerms, term) ? 4
+            : includesTerm(text, textLatinTerms, term) ? 1 : 0);
     }, 0);
 
     return keywordScore + titleScore + termScore;
 }
 
-export function excerptDocument(document: ProfileDocument, question: string, history: ChatMessage[] = []) {
-    if (document.text.length <= 10000) return document.text;
+export function excerptDocument(
+    document: ProfileDocument,
+    question: string,
+    history: ChatMessage[] = [],
+    maximum = 10_000,
+) {
+    const limit = Math.max(1, Math.floor(maximum));
+    if (document.text.length <= limit) return document.text;
+    if (limit < 600) return document.text.slice(0, limit);
 
     const terms = queryTerms(normalize(question));
     const previous = history.filter(({ role }) => role === "user").at(-1)?.content ?? "";
     const contextTerms = queryTerms(normalize(previous));
-    const windows = Array.from({ length: Math.ceil(document.text.length / 1800) }, (_, index) => {
-        const start = index * 1800;
-        const end = Math.min(start + 2400, document.text.length);
+    const separator = "\n\n…\n\n";
+    const introLength = Math.min(1_000, Math.floor((limit - separator.length * 2) / 3));
+    const windowLength = Math.floor((limit - introLength - separator.length * 2) / 2);
+    const stride = Math.max(300, Math.floor(windowLength * 0.75));
+    const windowCount = Math.ceil((document.text.length - introLength) / stride);
+    const windows = Array.from({ length: windowCount }, (_, index) => {
+        const start = introLength + index * stride;
+        const end = Math.min(start + windowLength, document.text.length);
         const passage = normalize(document.text.slice(start, end));
         const score = terms.reduce((total, term) => total + Number(passage.includes(term)), 0)
             + contextTerms.reduce((total, term) => total + Number(passage.includes(term)) * 0.2, 0);
         return { start, end, score };
     });
-    const matches = windows.slice(1)
+    const matches = windows
         .filter(({ score }) => score > 0)
         .sort((first, second) => second.score - first.score);
-    if (!matches.length) return document.text.slice(0, 10000);
-    const selected = [windows[0], ...matches.slice(0, 3)].sort((first, second) => first.start - second.start);
+    if (!matches.length) return document.text.slice(0, limit);
+    const selected = [{ start: 0, end: introLength }, ...matches.slice(0, 2)]
+        .sort((first, second) => first.start - second.start);
     const ranges = selected.reduce<{ start: number; end: number }[]>((result, range) => {
         const previous = result.at(-1);
         if (previous && range.start <= previous.end) previous.end = Math.max(previous.end, range.end);
         else result.push({ start: range.start, end: range.end });
         return result;
     }, []);
-    return ranges.map(({ start, end }) => document.text.slice(start, end)).join("\n\n…\n\n");
+    return ranges.map(({ start, end }) => document.text.slice(start, end)).join(separator);
 }
 
 export function retrieveDocuments(

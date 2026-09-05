@@ -29,23 +29,23 @@ export function createAnswerFormat(
         object({
             type: { type: "string", enum: ["facts"] },
             ...blockBase,
-            items: array(object({ label: text(60), value: text(280) }), 6, 2),
+            items: array(object({ label: text(60), value: text(200) }), 6, 2),
         }),
         object({
             type: { type: "string", enum: ["steps"] },
             ...blockBase,
-            items: array(object({ title: text(70), description: text(280) }), 6, 2),
+            items: array(object({ title: text(70), description: text(220) }), 6, 2),
         }),
         object({
             type: { type: "string", enum: ["comparison"] },
             ...blockBase,
             columns: array(text(60), 3, 2),
-            rows: array(object({ label: text(60), values: array(text(200), 3, 2) }), 6, 2),
+            rows: array(object({ label: text(60), values: array(text(140), 3, 2) }), 5, 2),
         }),
         object({
             type: { type: "string", enum: ["timeline"] },
             ...blockBase,
-            items: array(object({ date: text(60), title: text(70), description: text(280) }), 6, 2),
+            items: array(object({ date: text(60), title: text(70), description: text(200) }), 5, 2),
         }),
     ];
 
@@ -54,10 +54,11 @@ export function createAnswerFormat(
         name: "profile_answer",
         strict: true,
         schema: object({
+            grounding: { type: "string", enum: ["supported", "unsupported"] },
             answer: text(480),
             sourceIds: array(source, sourceIds.length ? 6 : 0),
             cardIds: array(identifier(cardIds), cardIds.length ? 4 : 0),
-            blocks: array({ anyOf: blocks }, sourceIds.length ? 3 : 0),
+            blocks: array({ anyOf: blocks }, sourceIds.length ? 2 : 0),
             followUps: array(object({
                 label: text(70),
                 question: text(180),
@@ -65,7 +66,7 @@ export function createAnswerFormat(
             }), suggestionIds.length ? 4 : 0),
             repositories: array(object({
                 sourceId: identifier(repositories),
-                reason: text(200),
+                reason: text(160),
             }), Math.min(repositories.length, 3)),
         }),
     };

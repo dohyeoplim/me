@@ -4,11 +4,9 @@ import { ArrowUpRight } from "lucide-react";
 import { ButtonLink } from "@/app/components/DDS/Button";
 import Disclosure from "@/app/components/DDS/Disclosure";
 import LottieGraphic from "@/app/components/DDS/LottieGraphic";
-import Metric from "@/app/components/DDS/Metric";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Surface from "@/app/components/DDS/Surface";
 import { profileCardRegistry, type ProfileCard, type ProfileCardId } from "@/app/lib/profile-chat/types";
-import { background, beyondTheLab, experience } from "@/app/portfolio/_data/background";
 import { hero } from "@/app/portfolio/_data/hero";
 import { projects } from "@/app/portfolio/_data/projects";
 import { research } from "@/app/portfolio/_data/research";
@@ -76,35 +74,6 @@ function EactCard() {
     );
 }
 
-function IndustrialCard() {
-    const { industrial } = research;
-
-    return (
-        <AnswerCard title={industrial.name}>
-            <div className="dds-answer-copy">
-                <Metric value={industrial.count} label={industrial.countLabel} />
-                <p>{industrial.description}</p>
-            </div>
-            <Disclosure label="Evaluation finding" variant="plain">
-                <p>{industrial.insight}</p>
-            </Disclosure>
-        </AnswerCard>
-    );
-}
-
-function KraftboxCard() {
-    const { kraftbox } = research;
-
-    return (
-        <AnswerCard title={kraftbox.name}>
-            <p className="font-support">{kraftbox.description}</p>
-            <Disclosure label="Model evaluation" variant="plain">
-                <p>{kraftbox.insight}</p>
-            </Disclosure>
-        </AnswerCard>
-    );
-}
-
 function ProjectCard({ name }: { name: string }) {
     const project = projects.find((item) => item.name === name);
     if (!project) return null;
@@ -156,88 +125,13 @@ function ProjectCard({ name }: { name: string }) {
     );
 }
 
-function EducationCard() {
-    return (
-        <AnswerCard title="Education">
-            <div className="dds-answer-records">
-                {background.education.map((education) => (
-                    <div className="dds-answer-copy" key={education.school}>
-                        <h4 className="font-body">{education.school}</h4>
-                        <p>{education.course}</p>
-                        <p className="text-muted">{education.period}</p>
-                    </div>
-                ))}
-            </div>
-            <Disclosure label="Academic record" variant="plain">
-                <p>{background.achievement}</p>
-            </Disclosure>
-        </AnswerCard>
-    );
-}
-
-function InfrastructureCard() {
-    const { infrastructure } = beyondTheLab;
-
-    return (
-        <AnswerCard title={infrastructure.title}>
-            <p className="font-support">{infrastructure.description}</p>
-            <dl className="dds-answer-facts">
-                {infrastructure.responsibilities.map(({ title, detail }) => (
-                    <div key={title}>
-                        <dt>{title}</dt>
-                        <dd>{detail}</dd>
-                    </div>
-                ))}
-            </dl>
-        </AnswerCard>
-    );
-}
-
-function CommunityCard() {
-    return (
-        <AnswerCard title="Community">
-            <div className="dds-answer-records">
-                {beyondTheLab.communities.map((community) => (
-                    <div className="dds-answer-copy" key={community.name}>
-                        <h4 className="font-body">{community.name}</h4>
-                        <p>{community.role}</p>
-                        <p>{community.description}</p>
-                        <p className="text-muted">{community.period}</p>
-                    </div>
-                ))}
-            </div>
-        </AnswerCard>
-    );
-}
-
-function SkillsCard() {
-    return (
-        <AnswerCard title={background.experienceTitle}>
-            <dl className="dds-answer-facts">
-                {experience.map(({ label, items }) => (
-                    <div key={label}>
-                        <dt>{label}</dt>
-                        <dd>{items}</dd>
-                    </div>
-                ))}
-            </dl>
-        </AnswerCard>
-    );
-}
-
 const cardRenderers = {
     profile: () => <ProfileCardContent />,
     eact: () => <EactCard />,
-    "industrial-ocr": () => <IndustrialCard />,
-    kraftbox: () => <KraftboxCard />,
     mochicall: () => <ProjectCard name="MochiCall" />,
     collog: () => <ProjectCard name="Collog" />,
     wonnit: () => <ProjectCard name="WONNIT" />,
     docfusionx: () => <ProjectCard name="DocFusionX" />,
-    education: () => <EducationCard />,
-    infrastructure: () => <InfrastructureCard />,
-    community: () => <CommunityCard />,
-    skills: () => <SkillsCard />,
 } satisfies Record<ProfileCardId, () => ReactNode>;
 
 export default function ProfileChatCards({ cards }: Props) {

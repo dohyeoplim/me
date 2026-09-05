@@ -39,6 +39,12 @@ test("edited portfolio facts disable the static card", () => {
     assert.equal(effectivePublishedSource({ ...source, text: "Updated owner notes." }).cardId, null);
 });
 
+test("removed and inherited card names never become specialized cards", () => {
+    const source = createPortfolioSources().find(({ id }) => id === "education")!;
+    assert.equal(effectivePublishedSource({ ...source, cardId: "education" }).cardId, null);
+    assert.equal(effectivePublishedSource({ ...source, cardId: "constructor" }).cardId, null);
+});
+
 test("repository IDs are stable, distinct, and valid source identifiers", () => {
     assert.equal(repositorySourceId("Collog-App/server"), repositorySourceId("collog-app/SERVER"));
     assert.notEqual(repositorySourceId("my-org/app"), repositorySourceId("my/org-app"));
