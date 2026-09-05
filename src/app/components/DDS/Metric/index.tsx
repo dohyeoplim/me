@@ -1,15 +1,21 @@
-type Props = {
+import type { ComponentProps } from "react";
+import { cn } from "@/app/lib/utils";
+
+export type MetricProps = ComponentProps<"div"> & {
     value: string;
     label: string;
     detail?: string;
+    variant?: "inline" | "stacked";
 };
 
-export default function Metric({ value, label, detail }: Props) {
+export default function Metric({ value, label, detail, variant = "inline", className, ...props }: MetricProps) {
     return (
-        <div className="flex flex-col items-start gap-dds-xs">
-            <p className="font-metric-light">{value}</p>
-            <p className="font-body03-regular">{label}</p>
-            {detail && <p className="ds-label max-w-64">{detail}</p>}
+        <div className={cn("dds-metric", className)} data-variant={variant} {...props}>
+            <p className="dds-metric-result font-body">
+                <strong>{value}</strong>
+                <span>{label}</span>
+            </p>
+            {detail && <p className="font-support text-muted">{detail}</p>}
         </div>
     );
 }

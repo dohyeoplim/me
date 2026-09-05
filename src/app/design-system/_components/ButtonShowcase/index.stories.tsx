@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Buttons: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const canvas = within(within(canvasElement).getByRole("region", { name: "Interactive button examples" }));
         await userEvent.click(canvas.getByRole("button", { name: "Save" }));
         await expect(canvas.getByRole("button", { name: "Saved" })).toHaveAttribute("aria-pressed", "true");
         await userEvent.click(canvas.getByRole("button", { name: "Continue" }));

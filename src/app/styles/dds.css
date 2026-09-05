@@ -4,7 +4,7 @@
     --surface-muted: var(--color-grey-100);
     --diagram-accent: #547a9f;
     --text-primary: var(--color-grey-900);
-    --text-secondary: var(--color-grey-500);
+    --text-secondary: var(--color-grey-600);
     --border-subtle: var(--color-grey-200);
     --accent: var(--color-grey-800);
     --accent-soft: var(--color-grey-100);
@@ -13,6 +13,69 @@
     --radius-panel: 0.5rem;
     --duration-reveal: 480ms;
     --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+    --layout-content-width: 56rem;
+    --site-header-min-height: 4.5rem;
+    --site-header-row-height: 4.5rem;
+    --section-navigation-height: 3.5rem;
+    --header-fade-height: 1.5rem;
+}
+
+.dds-container {
+    width: 100%;
+    max-width: var(--layout-content-width);
+    margin-inline: auto;
+    padding-inline: var(--spacing-dds-lg);
+}
+
+.site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--header-fade-height));
+    background: linear-gradient(
+        to bottom,
+        var(--surface-page) 0,
+        var(--surface-page) calc(100% - var(--header-fade-height)),
+        transparent 100%
+    );
+}
+
+.site-header-main {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--site-header-min-height);
+    gap: var(--spacing-dds-xs) var(--spacing-dds-lg);
+    padding-block: var(--spacing-dds-xs);
+    pointer-events: auto;
+}
+
+.site-header-secondary {
+    position: relative;
+    pointer-events: auto;
+}
+
+.site-header a[aria-current="page"] {
+    color: var(--text-primary);
+}
+
+.site-header-actions:empty {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --site-header-min-height: 6rem;
+        --site-header-row-height: 6rem;
+    }
 }
 
 @theme inline {
@@ -66,7 +129,7 @@
 
 @utility ds-section {
     padding-block: var(--spacing-dds-section);
-    scroll-margin-top: 9rem;
+    scroll-margin-top: calc(var(--site-header-row-height) + var(--section-navigation-height) + var(--spacing-dds-lg));
 }
 
 @utility ds-label {
@@ -246,7 +309,7 @@
 
 @keyframes reveal-content {
     from {
-        opacity: 0.35;
+        opacity: 1;
         transform: translateY(12px);
     }
     to {

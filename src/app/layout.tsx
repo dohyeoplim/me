@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { pretendard } from "@/assets/fonts/pretendard";
 import "./globals.css";
+import "./styles/dds-components.css";
 import Header from "./components/Header";
 import { HeaderSlotProvider } from "./components/Header/HeaderSlot";
 import { PreviousPathProvider } from "./components/PreviousPath";

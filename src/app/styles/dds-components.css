@@ -1,0 +1,303 @@
+.dds-section-heading {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+    margin-bottom: var(--spacing-dds-xl);
+}
+
+.dds-section-heading[data-variant="subsection"] {
+    gap: var(--spacing-dds-xs);
+    margin-bottom: var(--spacing-dds-lg);
+}
+
+.dds-section-heading > p {
+    max-width: 42rem;
+}
+
+.dds-disclosure {
+    border-block: 1px solid var(--border-subtle);
+}
+
+.dds-disclosure summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-dds-md);
+    cursor: pointer;
+    list-style: none;
+    padding-block: var(--spacing-dds-sm);
+}
+
+.dds-disclosure summary::-webkit-details-marker {
+    display: none;
+}
+
+.dds-disclosure summary::after {
+    content: "+";
+    flex-shrink: 0;
+}
+
+.dds-disclosure[open] summary::after {
+    content: "−";
+}
+
+.dds-disclosure-content {
+    display: grid;
+    gap: var(--spacing-dds-md);
+    padding-block: var(--spacing-dds-sm) var(--spacing-dds-lg);
+}
+
+.dds-disclosure[data-variant="plain"] {
+    border: 0;
+    margin-top: var(--spacing-dds-sm);
+}
+
+.dds-disclosure[data-variant="plain"] summary {
+    justify-content: flex-start;
+    padding-block: var(--spacing-dds-2xs);
+}
+
+.dds-surface {
+    min-width: 0;
+    border-radius: var(--radius-panel);
+}
+
+.dds-surface[data-variant="plain"] {
+    background: transparent;
+}
+
+.dds-surface[data-variant="subtle"] {
+    background: var(--surface-muted);
+}
+
+.dds-surface[data-variant="outlined"] {
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-panel);
+}
+
+.dds-surface[data-padding="compact"] {
+    padding: var(--spacing-dds-lg);
+}
+
+.dds-surface[data-padding="comfortable"] {
+    padding: var(--spacing-dds-xl);
+}
+
+.dds-metric {
+    display: grid;
+    gap: var(--spacing-dds-xs);
+}
+
+.dds-metric-result {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--spacing-dds-xs);
+    row-gap: var(--spacing-dds-2xs);
+    align-items: baseline;
+}
+
+.dds-metric-result > strong {
+    font-weight: 600;
+}
+
+.dds-metric[data-variant="stacked"] .dds-metric-result {
+    display: grid;
+}
+
+.ds-button {
+    min-width: 0;
+    max-width: 100%;
+    text-align: center;
+    text-decoration: none;
+    white-space: normal;
+}
+
+.ds-button > svg {
+    flex-shrink: 0;
+}
+
+.ds-button:is([data-variant="outline"], [data-variant="text"])[aria-pressed="true"] {
+    border-color: var(--text-primary);
+    background: var(--text-primary);
+    color: var(--surface-panel);
+}
+
+.dds-guide-header {
+    display: grid;
+    gap: var(--spacing-dds-md);
+    padding-bottom: var(--spacing-dds-3xl);
+}
+
+.dds-guide-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-dds-lg);
+    margin-top: var(--spacing-dds-lg);
+}
+
+.dds-guide-nav > a {
+    padding-block: var(--spacing-dds-xs);
+    text-decoration-thickness: 1px;
+    text-underline-offset: var(--spacing-dds-2xs);
+}
+
+.dds-guide-nav > a:hover {
+    text-decoration-line: underline;
+}
+
+.dds-guide-group + .dds-guide-group {
+    margin-top: var(--spacing-dds-3xl);
+}
+
+.dds-color-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-color-swatch {
+    height: var(--spacing-dds-3xl);
+    margin-bottom: var(--spacing-dds-sm);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-dds-small);
+}
+
+.dds-type-sample {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+    padding-block: var(--spacing-dds-lg);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dds-type-sample > dd {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.dds-spacing-sample {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--spacing-dds-lg);
+    padding-block: var(--spacing-dds-md);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dds-spacing-bar {
+    max-width: 100%;
+    height: var(--spacing-dds-xs);
+    background: var(--diagram-accent);
+}
+
+.dds-specimen-grid {
+    display: grid;
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-specimen-stack {
+    display: grid;
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-button-scale {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-dds-xl);
+    align-items: start;
+}
+
+.dds-button-scale > div {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+    justify-items: start;
+}
+
+.dds-button-scale-sample {
+    display: flex;
+    min-height: 3.25rem;
+    align-items: center;
+}
+
+.dds-state-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dds-state-table th {
+    font-weight: 400;
+    text-align: left;
+}
+
+.dds-state-table :is(th, td) {
+    padding: var(--spacing-dds-md) var(--spacing-dds-sm);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dds-state-table :is(th, td):first-child {
+    padding-left: 0;
+}
+
+.dds-state-table :is(th, td):last-child {
+    padding-right: 0;
+}
+
+.dds-state-table tr:last-child > :is(th, td) {
+    border-bottom: 0;
+}
+
+.dds-state-table thead {
+    color: var(--text-secondary);
+}
+
+.dds-state-table-wrap {
+    overflow-x: auto;
+}
+
+.dds-state-table-wrap .dds-state-table {
+    min-width: 36rem;
+}
+
+.dds-example-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-dds-sm);
+}
+
+.dds-motion-sample {
+    display: grid;
+    gap: var(--spacing-dds-xl);
+    align-items: center;
+}
+
+.dds-narrow-example {
+    width: calc(var(--spacing-dds-5xl) + var(--spacing-dds-4xl));
+    max-width: 100%;
+}
+
+@media (min-width: 640px) {
+    .dds-color-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .dds-type-sample {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+        gap: var(--spacing-dds-xl);
+        align-items: baseline;
+    }
+
+    .dds-specimen-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dds-motion-sample {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+}
+.dds-guide-page {
+    padding-top: calc(var(--site-header-row-height) + var(--spacing-dds-2xl));
+}
+
+.dds-guide-page .ds-section {
+    padding-block: var(--spacing-dds-3xl);
+    scroll-margin-top: calc(var(--site-header-row-height) + var(--spacing-dds-lg) - var(--spacing-dds-3xl));
+}

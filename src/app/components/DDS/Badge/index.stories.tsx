@@ -14,3 +14,7 @@ type Story = StoryObj<typeof meta>;
 export const Neutral: Story = {};
 export const Accent: Story = { args: { tone: "accent", children: "Under review" } };
 export const Success: Story = { args: { tone: "success", children: "Complete" } };
+export const LongStatus: Story = {
+    args: { children: "Submitted for review at WACV 2027" },
+    decorators: [(Story) => <div className="dds-narrow-example"><Story /></div>],
+};

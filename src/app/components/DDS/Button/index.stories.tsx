@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArrowRight, User } from "lucide-react";
 import { expect, fn, userEvent, within } from "storybook/test";
-import Button from ".";
+import Button, { ButtonLink } from ".";
 
 const meta = {
     title: "DDS/Button",
@@ -23,6 +23,18 @@ export const Text: Story = { args: { variant: "text" } };
 export const Small: Story = { args: { size: "small" } };
 export const Large: Story = { args: { size: "large" } };
 export const Disabled: Story = { args: { disabled: true } };
+export const Selected: Story = { args: { variant: "outline", "aria-pressed": true, children: "Saved" } };
+export const LongLabel: Story = {
+    args: { variant: "outline", children: "Download the complete research report" },
+    decorators: [(Story) => <div className="dds-narrow-example"><Story /></div>],
+};
+export const Link: Story = {
+    render: () => <ButtonLink href="/portfolio" variant="outline">View portfolio</ButtonLink>,
+    play: async ({ canvasElement }) => {
+        await expect(within(canvasElement).getByRole("link", { name: "View portfolio" }))
+            .toHaveAttribute("href", "/portfolio");
+    },
+};
 export const RightIcon: Story = {
     args: {
         children: (
@@ -49,5 +61,15 @@ export const Keyboard: Story = {
         await expect(button).toHaveFocus();
         await userEvent.keyboard("{Enter}");
         await expect(args.onClick).toHaveBeenCalledOnce();
+    },
+};
+
+export const DisabledInteraction: Story = {
+    args: { disabled: true },
+    play: async ({ canvasElement, args }) => {
+        const button = within(canvasElement).getByRole("button");
+        await expect(button).toBeDisabled();
+        button.click();
+        await expect(args.onClick).not.toHaveBeenCalled();
     },
 };
