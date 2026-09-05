@@ -1,54 +1,105 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { cn } from "@/app/lib/utils";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useHeaderSecondaryNode } from "@/app/components/Header/HeaderSlot";
 import { chapters } from "../../_data/navigation";
 
 export default function ChapterNav() {
+    const secondary = useHeaderSecondaryNode();
+    const anchor = useRef<HTMLDivElement>(null);
+    const nav = useRef<HTMLElement>(null);
+    const docked = useRef(false);
+    const previousFocus = useRef<string | null>(null);
+    const previousScroll = useRef(0);
     const [active, setActive] = useState<string>(chapters[0].id);
+    const [stuck, setStuck] = useState(false);
+    const [height, setHeight] = useState(56);
+
+    useLayoutEffect(() => {
+        const list = nav.current?.querySelector("ul");
+        if (list) list.scrollLeft = previousScroll.current;
+        if (previousFocus.current) {
+            const link = [...(nav.current?.querySelectorAll("a") ?? [])].find(
+                (item) => item.getAttribute("href") === previousFocus.current,
+            );
+            link?.focus({ preventScroll: true });
+            previousFocus.current = null;
+        }
+    }, [stuck]);
 
     useEffect(() => {
-        const sections = chapters.map(({ id }) => document.getElementById(id));
-        let frame = 0;
+        const element = nav.current;
+        if (!element) return;
+        const measure = () => {
+            const measured = element.getBoundingClientRect().height;
+            setHeight(measured);
+            document.documentElement.style.setProperty("--section-navigation-height", `${measured}px`);
+        };
+        const observer = new ResizeObserver(measure);
+        observer.observe(element);
+        measure();
+        return () => observer.disconnect();
+    }, [stuck]);
 
+    useEffect(() => {
+        let frame = 0;
         const update = () => {
-            const current = sections.filter((section) => section && section.getBoundingClientRect().top <= 220);
+            const header = document.querySelector(".site-header-main");
+            const headerHeight = header?.getBoundingClientRect().height ?? 0;
+            const navHeight = nav.current?.getBoundingClientRect().height ?? 0;
+            const top = anchor.current?.getBoundingClientRect().top ?? Infinity;
+            const next = Boolean(secondary) && top <= headerHeight;
+            if (next !== docked.current) {
+                const focused = document.activeElement;
+                previousFocus.current =
+                    focused instanceof HTMLAnchorElement && nav.current?.contains(focused)
+                        ? focused.getAttribute("href")
+                        : null;
+                previousScroll.current = nav.current?.querySelector("ul")?.scrollLeft ?? 0;
+                docked.current = next;
+                setStuck(next);
+            }
+            const current = chapters.filter(({ id }) => {
+                const section = document.getElementById(id);
+                const heading = section?.querySelector("h2");
+                return heading && heading.getBoundingClientRect().top <= headerHeight + navHeight + 32;
+            });
             setActive(current.at(-1)?.id ?? chapters[0].id);
             frame = 0;
         };
-        const onScroll = () => {
+        const schedule = () => {
             if (!frame) frame = requestAnimationFrame(update);
         };
-
         update();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll);
+        window.addEventListener("scroll", schedule, { passive: true });
+        window.addEventListener("resize", schedule);
         return () => {
             cancelAnimationFrame(frame);
-            window.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
+            window.removeEventListener("scroll", schedule);
+            window.removeEventListener("resize", schedule);
         };
-    }, []);
+    }, [secondary]);
+
+    const navigation = (
+        <nav ref={nav} aria-label="Portfolio sections" className="portfolio-section-nav">
+            <div className="dds-container">
+                <ul>
+                    {chapters.map(({ id, label }) => (
+                        <li key={id}>
+                            <a href={`#${id}`} aria-current={active === id ? "location" : undefined}>
+                                {label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </nav>
+    );
 
     return (
-        <nav aria-label="Portfolio sections" className="portfolio-nav">
-            <ol className="flex gap-dds-lg overflow-x-auto sm:gap-dds-xl">
-                {chapters.map(({ id, label }) => (
-                    <li key={id} className="shrink-0">
-                        <a
-                            href={`#${id}`}
-                            aria-current={active === id ? "location" : undefined}
-                            className={cn(
-                                "flex min-h-14 items-center gap-dds-xs border-b py-dds-md",
-                                "font-body03-regular transition-colors",
-                                active === id ? "border-ink text-ink" : "border-transparent text-muted hover:text-ink",
-                            )}
-                        >
-                            {label}
-                        </a>
-                    </li>
-                ))}
-            </ol>
-        </nav>
+        <div ref={anchor} className="portfolio-nav-anchor" style={stuck ? { height } : undefined}>
+            {stuck && secondary ? createPortal(navigation, secondary) : navigation}
+        </div>
     );
 }

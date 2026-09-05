@@ -1,12 +1,8 @@
 export const hero = {
-    period: "Selected work, 2025 to 2026",
-    title: "Research in document understanding and applied AI.",
-    subtitle: "Building useful AI.",
+    title: "Undergraduate researcher",
     name: "Dohyeop Lim",
     bio:
-        "Undergraduate researcher in Applied Artificial Intelligence at SeoulTech. " +
-        "I study document understanding and structured identifier recognition in the Visual Intelligence Lab, " +
-        "advised by Prof. Jongyoul Park.",
+        "At SeoulTech's Visual Intelligence Lab, advised by Prof. Jongyoul Park. " +
+        "I study document understanding and structured identifier recognition.",
     image: { src: "/profile.png", alt: "Dohyeop Lim" },
-    action: "Explore the work",
 };

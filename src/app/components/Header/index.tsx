@@ -1,52 +1,59 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Item from "./_components/Item";
-import { useHeaderSlotRef } from "./HeaderSlot";
-
-const tint =
-    "linear-gradient(to bottom, rgb(250 250 252 / 1) 0%, rgb(250 250 252 / 0.85) 45%, rgb(250 250 252 / 0) 100%)";
+import { useHeaderSecondaryRef, useHeaderSlotRef } from "./HeaderSlot";
 
 export default function Header() {
     const pathname = usePathname();
+    const main = useRef<HTMLElement>(null);
     const setNode = useHeaderSlotRef();
-
+    const setSecondaryNode = useHeaderSecondaryRef();
     const isAdmin = pathname.startsWith("/admin");
-    const label = isAdmin ? "CMS" : "Dohyeop Lim";
-    const href = isAdmin ? "/admin" : "/";
+
+    useEffect(() => {
+        const element = main.current;
+        if (!element) return;
+        const measure = () => {
+            document.documentElement.style.setProperty(
+                "--site-header-row-height",
+                `${element.getBoundingClientRect().height}px`,
+            );
+        };
+        const observer = new ResizeObserver(measure);
+        observer.observe(element);
+        measure();
+        return () => observer.disconnect();
+    }, []);
 
     return (
-        <header
-            style={{ viewTransitionName: "site-header" }}
-            className="fixed top-0 left-0 w-full z-50 pointer-events-none"
-        >
-            <div className="absolute inset-0" style={{ background: tint }} />
-            <div className="relative max-w-4xl mx-auto px-dds-lg pt-dds-md md:pt-dds-2xl pb-dds-lg md:pb-dds-xl">
-                <nav className="pointer-events-auto w-full flex items-center justify-between">
-                    <Link href={href} transitionTypes={["nav-back"]}>
-                        <Item label={label} className="select-none" />
-                    </Link>
-                    <div className="flex items-center gap-dds-md">
-                        {!isAdmin &&
-                            [
-                                { href: "/portfolio", label: "Portfolio" },
-                                { href: "/blog", label: "Writing" },
-                            ].map(({ href, label }) => (
-                                <Link
-                                    key={href}
-                                    href={href}
-                                    aria-current={pathname.startsWith(href) ? "page" : undefined}
-                                    transitionTypes={["nav-forward"]}
-                                    className="font-body04-light text-muted transition-colors hover:text-ink"
-                                >
-                                    {label}
-                                </Link>
-                            ))}
-                        <div ref={setNode} className="flex items-center gap-dds-sm" />
-                    </div>
-                </nav>
-            </div>
+        <header style={{ viewTransitionName: "site-header" }} className="site-header">
+            <nav ref={main} className="dds-container site-header-main" aria-label="Main navigation">
+                <Link href={isAdmin ? "/admin" : "/"} transitionTypes={["nav-back"]}>
+                    <Item label={isAdmin ? "CMS" : "Dohyeop Lim"} className="select-none" />
+                </Link>
+                <div className="flex items-center gap-dds-lg">
+                    {!isAdmin &&
+                        [
+                            { href: "/portfolio", label: "Portfolio" },
+                            { href: "/blog", label: "Writing" },
+                        ].map(({ href, label }) => (
+                            <Link
+                                key={href}
+                                href={href}
+                                aria-current={pathname.startsWith(href) ? "page" : undefined}
+                                transitionTypes={["nav-forward"]}
+                                className="font-support text-muted transition-colors hover:text-ink"
+                            >
+                                {label}
+                            </Link>
+                        ))}
+                    <div ref={setNode} className="site-header-actions flex items-center gap-dds-sm" />
+                </div>
+            </nav>
+            <div ref={setSecondaryNode} className="site-header-secondary" />
         </header>
     );
 }

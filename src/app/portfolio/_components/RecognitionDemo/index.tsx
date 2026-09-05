@@ -15,12 +15,9 @@ export default function RecognitionDemo() {
 
     return (
         <figure className="portfolio-decoder">
-            <div className={cn(
-                "flex flex-wrap items-center justify-between gap-dds-md",
-                "border-b border-line p-dds-lg sm:px-dds-xl",
-            )}>
-                <p className="font-body03-regular">Inside the decoder</p>
-                <div className="flex gap-dds-2xs" role="group" aria-label="Compare decoding methods">
+            <div className="portfolio-decoder-heading">
+                <p className="font-support">Inside the decoder</p>
+                <div className="flex gap-dds-md" role="group" aria-label="Compare decoding methods">
                     <button
                         type="button"
                         className="dds-choice"
@@ -39,7 +36,7 @@ export default function RecognitionDemo() {
                     </button>
                 </div>
             </div>
-            <div className="grid items-center gap-dds-lg p-dds-lg sm:p-dds-xl md:grid-cols-[1fr_150px]">
+            <div className="portfolio-decoder-body">
                 <div>
                     <svg
                         viewBox="0 0 460 205"
@@ -114,7 +111,7 @@ export default function RecognitionDemo() {
                     ))}
                 </div>
             </div>
-            <figcaption className="font-body02-light text-muted px-dds-lg" aria-live="polite">
+            <figcaption className="portfolio-decoder-caption" aria-live="polite">
                 {enabled
                     ? "Length, alphabet, and checksum rules guide the selection."
                     : "Without identifier constraints, the highest-scoring path can still be invalid."}

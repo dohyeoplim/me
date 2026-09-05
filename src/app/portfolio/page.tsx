@@ -15,12 +15,16 @@ export const metadata: Metadata = {
 export default function PortfolioPage() {
     return (
         <SlideTransition>
-            <main id="main-content" className="mx-auto w-full max-w-4xl px-dds-lg pb-dds-4xl">
-                <PortfolioHero />
+            <main id="main-content" className="portfolio-page">
+                <div className="dds-container">
+                    <PortfolioHero />
+                </div>
                 <ChapterNav />
-                <Research />
-                <Projects />
-                <Background />
+                <div className="dds-container">
+                    <Research />
+                    <Projects />
+                    <Background />
+                </div>
             </main>
         </SlideTransition>
     );

@@ -36,3 +36,12 @@ Storybook uses the [Next.js Vite framework](https://storybook.js.org/docs/get-st
 Run `pnpm lint` and `pnpm build` before committing.
 The existing CMS needs `DATABASE_URL` for the full application build and data-backed routes.
 The portfolio and DDS pages use local content and require no database calls.
+
+The portfolio uses separate page, section, work-title, body, and supporting-text styles.
+Research results stay within the reading text size. Extra methods use the shared Disclosure component.
+The section navigation moves into the shared header when scrolled, preserving focus and horizontal scroll.
+Both navigation rows use the same container and a single fading background.
+The public DDS guide shows examples. Internal names and prop controls stay in Storybook.
+
+Design review references include [visual hierarchy](https://www.nngroup.com/articles/principles-visual-design/)
+and [focused content](https://www.nngroup.com/articles/aesthetic-minimalist-design/).

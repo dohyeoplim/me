@@ -9,51 +9,37 @@ export const experience = [
 ];
 
 export const beyondTheLab = {
-    title: "Beyond the lab",
+    title: "Experience",
     infrastructure: {
-        title: "Supporting shared research",
-        description:
-            "As a participating researcher in a national AI infrastructure R&D project, I support LLM " +
-            "data processing and the GPU environments used across laboratories.",
-        interest:
-            "Working with researchers has drawn me toward distributed training, experiment monitoring, " +
-            "and recovery during long training runs.",
+        title: "Research infrastructure",
+        description: "Participating researcher in national AI infrastructure R&D, supporting LLM data processing.",
         responsibilities: [
-            { icon: "gpu", title: "GPU resources", detail: "NVIDIA MIG partitioning & allocation" },
-            { icon: "container", title: "Research environments", detail: "Docker preparation & distribution" },
-            { icon: "network", title: "Shared infrastructure", detail: "Bastion access, servers & InfiniBand" },
+            { title: "GPU resources", detail: "NVIDIA MIG partitioning and allocation" },
+            { title: "Research environments", detail: "Docker preparation and distribution" },
+            { title: "Shared infrastructure", detail: "Bastion access, servers, and InfiniBand" },
         ],
     },
     communities: [
         {
             name: "LIKELION University",
             period: "2025 to present",
-            role: "SeoulTech, Vice President, 14th cohort",
-            description:
-                "Coordinating a 30-member chapter, technical sessions, invited talks, and hackathons. " +
-                "Previously a member of the 13th cohort.",
+            role: "SeoulTech, Vice President, 14th cohort. Member, 13th cohort.",
+            description: "Coordinate a 30-member chapter, technical sessions, invited talks, and hackathons.",
         },
         {
-            name: "GDG on Campus",
+            name: "Google Developer Groups on Campus",
             period: "2025 to present",
-            role: "SeoulTech, Core team, 5th & 6th cohorts",
-            description:
-                "Helping the campus developer community learn together. Organized 13 technical sessions " +
-                "during the 5th cohort.",
+            role: "SeoulTech, Core team member, 5th and 6th cohorts",
+            description: "Organized 13 technical sessions in the 5th cohort.",
         },
     ],
 };
 
 export const background = {
     achievement:
-        "Ranked first in Applied Artificial Intelligence with a GPA of 4.34 / 4.5. " +
-        "Awarded full tuition for five consecutive semesters.",
+        "GPA 4.34 / 4.5, ranked first in the department. " +
+        "Academic Excellence Scholarship, full tuition for five consecutive semesters.",
     title: "Background",
-    metrics: [
-        { value: "4.34 / 4.5", label: "GPA" },
-        { value: "1st", label: "In the department" },
-        { value: "5 semesters", label: "Full-tuition scholarship", detail: "Consecutive academic excellence awards" },
-    ],
     education: [
         {
             school: "Seoul National University of Science and Technology",
@@ -67,12 +53,4 @@ export const background = {
         },
     ],
     experienceTitle: "Technical experience",
-    next: {
-        label: "What I want to explore next",
-        question: "How does the data we choose shape what a model can do?",
-        description:
-            "I want to study how data composition shapes domain-specific capabilities, how evaluation " +
-            "reveals weaknesses, and how those findings can guide foundation model training.",
-        action: "Back to the research",
-    },
 };
