@@ -12,7 +12,7 @@ export default function SectionTitle({
                     {includeStroke && (
                         <div className="w-8 h-[0.5px] bg-grey-500" />
                     )}
-                    <h3 className="font-caption02-light text-grey-500 uppercase">
+                    <h3 className="font-caption02-light text-grey-500">
                         {subtitle}
                     </h3>
                 </div>
