@@ -26,7 +26,7 @@ export function hashRecoveryCode(value: string) {
     return createHash("sha256").update(normalizeRecoveryCode(value)).digest("hex");
 }
 
-export function hashAccessKey(value: string) {
+export function hashAdminPassword(value: string) {
     return createHash("sha256").update(value.trim()).digest("hex");
 }
 
@@ -44,9 +44,11 @@ function recoveryHashes() {
         .slice(0, 16);
 }
 
-export function matchesAdminAccessKey(value: unknown) {
-    const expected = process.env.AUTH_ADMIN_ACCESS_HASH?.trim().toLowerCase() ?? "";
-    const candidate = typeof value === "string" && value.length <= 200 ? hashAccessKey(value) : hashAccessKey("");
+export function matchesAdminPassword(value: unknown) {
+    const expected = process.env.AUTH_ADMIN_PASSWORD_HASH?.trim().toLowerCase() ?? "";
+    const candidate = typeof value === "string" && value.length <= 200
+        ? hashAdminPassword(value)
+        : hashAdminPassword("");
     return /^[a-f0-9]{64}$/.test(expected) && safeEqual(expected, candidate);
 }
 
@@ -97,11 +99,11 @@ export function matchAdminCredential(value: unknown, timestamp = Date.now()): Cr
 
 export function isAdminAuthConfigured() {
     const secret = process.env.AUTH_TOTP_SECRET?.replace(/\s/g, "").toUpperCase();
-    const accessHash = process.env.AUTH_ADMIN_ACCESS_HASH?.trim().toLowerCase() ?? "";
+    const passwordHash = process.env.AUTH_ADMIN_PASSWORD_HASH?.trim().toLowerCase() ?? "";
     if (
         !process.env.DATABASE_URL?.trim()
         || !process.env.AUTH_SECRET?.trim()
-        || !/^[a-f0-9]{64}$/.test(accessHash)
+        || !/^[a-f0-9]{64}$/.test(passwordHash)
         || !secret
     ) return false;
     try {
@@ -226,7 +228,7 @@ async function claimCredential(match: CredentialMatch) {
 export type AdminCredentialResult = "valid" | "invalid" | "rate-limited";
 
 export async function verifyAdminCredential(
-    accessKey: unknown,
+    password: unknown,
     value: unknown,
     request: Request,
 ): Promise<AdminCredentialResult> {
@@ -234,5 +236,5 @@ export async function verifyAdminCredential(
     const budget = await consumeAttempt(request);
     if (!budget.allowed) return "rate-limited";
     const match = matchAdminCredential(value);
-    return matchesAdminAccessKey(accessKey) && match && await claimCredential(match) ? "valid" : "invalid";
+    return matchesAdminPassword(password) && match && await claimCredential(match) ? "valid" : "invalid";
 }

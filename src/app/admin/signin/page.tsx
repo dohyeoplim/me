@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import Surface from "@/app/components/DDS/Surface";
+import TextField from "@/app/components/DDS/TextField";
 import { isAdminAuthConfigured } from "@/app/lib/admin-auth";
 import SubmitButton from "./_components/SubmitButton";
 import { signInWithTotp } from "./actions";
@@ -11,7 +11,7 @@ type SignInPageProps = {
 };
 
 const errorMessages: Record<string, string> = {
-    invalid: "The credentials were not accepted. Check them and try again.",
+    invalid: "The password or verification code is incorrect. Try again.",
     "rate-limited": "Too many attempts. Wait a moment and try again.",
     unavailable: "Admin authentication is temporarily unavailable.",
 };
@@ -25,72 +25,59 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
     const configured = isAdminAuthConfigured();
 
     return (
-        <main className={styles.signIn}>
-            <Surface className={styles.panel} padding="comfortable">
-                <header className={styles.header}>
-                    <h1 className="font-head01-medium">Admin sign in</h1>
-                    <p className="font-body03-regular">
-                        {configured
-                            ? "Use the access key and current code saved in Enpass."
-                            : "Admin authentication needs to be configured."}
-                    </p>
-                </header>
+        <main id="main-content" className={styles.signIn}>
+            <header className={styles.header}>
+                <h1 className="font-section-title">Admin sign in</h1>
+                <p className="font-support text-muted">
+                    {configured
+                        ? "Enter your admin password and the current verification code from Enpass."
+                        : "Admin authentication needs to be configured."}
+                </p>
+            </header>
 
-                {configured ? <form action={signInWithTotp} className={styles.form}>
-                    <div className={styles.field}>
-                        <label htmlFor="admin-access-key" className="font-caption01-light">
-                            Access key
-                        </label>
-                        <input
-                            id="admin-access-key"
-                            name="accessKey"
+            {configured ? (
+                <form action={signInWithTotp} className={styles.form}>
+                    <div className={styles.fields}>
+                        <TextField
+                            id="admin-password"
+                            name="password"
+                            label="Password"
                             type="password"
                             autoComplete="current-password"
+                            maxLength={200}
                             required
                             autoFocus
-                            aria-invalid={errorMessage ? true : undefined}
+                            invalid={Boolean(errorMessage)}
                             aria-describedby={errorMessage ? "admin-signin-status" : undefined}
-                            className={`${styles.input} font-body03-regular`}
                         />
-                    </div>
-                    <div className={styles.field}>
-                        <label htmlFor="admin-code" className="font-caption01-light">
-                            One-time code or recovery code
-                        </label>
-                        <input
+                        <TextField
                             id="admin-code"
                             name="code"
+                            label="Verification code"
+                            hint="Enter the 6-digit code from Enpass. A recovery code also works."
                             type="text"
                             autoComplete="one-time-code"
                             autoCapitalize="off"
                             autoCorrect="off"
                             spellCheck={false}
+                            maxLength={80}
                             required
-                            aria-invalid={errorMessage ? true : undefined}
-                            aria-describedby={errorMessage ? "admin-code-help admin-signin-status" : "admin-code-help"}
-                            className={`${styles.input} font-body03-regular`}
+                            invalid={Boolean(errorMessage)}
+                            aria-describedby={errorMessage ? "admin-signin-status" : undefined}
                         />
-                        <p id="admin-code-help" className={`${styles.help} font-caption03-regular`}>
-                            Use a 6-digit code or a saved recovery code.
-                        </p>
-                        {errorMessage && (
-                            <p
-                                id="admin-signin-status"
-                                className={`${styles.status} font-caption01-light`}
-                                role="alert"
-                            >
-                                {errorMessage}
-                            </p>
-                        )}
                     </div>
-
-                    <SubmitButton className={styles.submit} />
-                </form> : (
-                    <p className={`${styles.help} font-caption01-light`}>
-                        Run the local authentication setup before signing in.
-                    </p>
-                )}
-            </Surface>
+                    {errorMessage && (
+                        <p id="admin-signin-status" className="font-support" role="alert">
+                            {errorMessage}
+                        </p>
+                    )}
+                    <div className={styles.actions}>
+                        <SubmitButton />
+                    </div>
+                </form>
+            ) : (
+                <p className="font-support text-muted">Run the local authentication setup before signing in.</p>
+            )}
         </main>
     );
 }

@@ -9,7 +9,7 @@ export async function signInWithTotp(formData: FormData) {
     if (!isAdminAuthConfigured()) redirect("/admin/signin?error=unavailable");
     try {
         await signIn("totp", {
-            accessKey: formData.get("accessKey"),
+            password: formData.get("password"),
             code: formData.get("code"),
             redirectTo: "/admin",
         });

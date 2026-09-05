@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import * as OTPAuth from "otpauth";
 import {
-    hashAccessKey,
+    hashAdminPassword,
     hashRecoveryCode,
     isAdminAuthConfigured,
     matchAdminCredential,
-    matchesAdminAccessKey,
+    matchesAdminPassword,
     normalizeRecoveryCode,
 } from ".";
 
@@ -14,7 +14,7 @@ const previousSecret = process.env.AUTH_TOTP_SECRET;
 const previousRecoveryHashes = process.env.AUTH_TOTP_RECOVERY_HASHES;
 const previousDatabaseUrl = process.env.DATABASE_URL;
 const previousAuthSecret = process.env.AUTH_SECRET;
-const previousAccessHash = process.env.AUTH_ADMIN_ACCESS_HASH;
+const previousPasswordHash = process.env.AUTH_ADMIN_PASSWORD_HASH;
 const rfcSecret = OTPAuth.Secret.fromUTF8("12345678901234567890");
 
 type EnvironmentName =
@@ -22,7 +22,7 @@ type EnvironmentName =
     | "AUTH_TOTP_RECOVERY_HASHES"
     | "DATABASE_URL"
     | "AUTH_SECRET"
-    | "AUTH_ADMIN_ACCESS_HASH";
+    | "AUTH_ADMIN_PASSWORD_HASH";
 
 function restoreEnv(name: EnvironmentName, value: string | undefined) {
     if (value === undefined) delete process.env[name];
@@ -39,7 +39,7 @@ test.after(() => {
     restoreEnv("AUTH_TOTP_RECOVERY_HASHES", previousRecoveryHashes);
     restoreEnv("DATABASE_URL", previousDatabaseUrl);
     restoreEnv("AUTH_SECRET", previousAuthSecret);
-    restoreEnv("AUTH_ADMIN_ACCESS_HASH", previousAccessHash);
+    restoreEnv("AUTH_ADMIN_PASSWORD_HASH", previousPasswordHash);
 });
 
 test("accepts the RFC 6238 SHA1 token with the configured six digits", () => {
@@ -130,10 +130,10 @@ test("normalizes and matches a configured recovery code hash", () => {
     assert.equal(matchAdminCredential("ABCD-EFGH-JKLM-NPQS"), null);
 });
 
-test("accepts only the configured access key hash", () => {
-    process.env.AUTH_ADMIN_ACCESS_HASH = hashAccessKey("correct-access-key");
-    assert.equal(matchesAdminAccessKey("correct-access-key"), true);
-    assert.equal(matchesAdminAccessKey("  correct-access-key  "), true);
-    assert.equal(matchesAdminAccessKey("wrong-access-key"), false);
-    assert.equal(matchesAdminAccessKey(undefined), false);
+test("accepts only the configured admin password hash", () => {
+    process.env.AUTH_ADMIN_PASSWORD_HASH = hashAdminPassword("correct-password");
+    assert.equal(matchesAdminPassword("correct-password"), true);
+    assert.equal(matchesAdminPassword("  correct-password  "), true);
+    assert.equal(matchesAdminPassword("wrong-password"), false);
+    assert.equal(matchesAdminPassword(undefined), false);
 });

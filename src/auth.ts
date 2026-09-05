@@ -14,11 +14,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             id: "totp",
             name: "One-time code",
             credentials: {
-                accessKey: { label: "Access key", type: "password" },
+                password: { label: "Password", type: "password" },
                 code: { label: "One-time code", type: "text" },
             },
             async authorize(credentials, request) {
-                const result = await verifyAdminCredential(credentials.accessKey, credentials.code, request);
+                const result = await verifyAdminCredential(credentials.password, credentials.code, request);
                 if (result === "rate-limited") throw new RateLimitedSignin();
                 return result === "valid" ? { id: "admin", name: "Dohyeop Lim", admin: true } : null;
             },
