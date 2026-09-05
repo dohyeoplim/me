@@ -15,33 +15,17 @@ export default function Projects() {
                 {projects.map((project) => (
                     <Reveal key={project.name}>
                         <article className="portfolio-project">
-                            <div className="portfolio-project-content">
-                                <header className="portfolio-work-heading">
-                                    <h3 className="font-work-title">{project.name}</h3>
-                                    <LinkButton
-                                        href={project.href}
-                                        label={projectSection.repositoryLabel}
-                                        icon="external"
-                                        aria-label={`${project.name} on GitHub`}
-                                    />
-                                </header>
+                            <header className="portfolio-project-heading">
+                                <h3 className="font-work-title">{project.name}</h3>
                                 <p className="portfolio-project-purpose">{project.title}</p>
-                                <p>{project.contribution}</p>
-                                {project.outcome && (
-                                    <Disclosure label={projectSection.detailsLabel} variant="plain">
-                                        <p>{project.outcome}</p>
-                                    </Disclosure>
-                                )}
-                                {project.recognition && <p className="portfolio-recognition">{project.recognition}</p>}
-                                <p className="portfolio-project-period">{project.period}</p>
-                            </div>
+                            </header>
                             <figure className="portfolio-project-media" aria-label={`${project.name} process diagram`}>
                                 {project.image ? (
                                     <Image
                                         src={project.image.src}
                                         alt={project.image.alt}
                                         fill
-                                        sizes="(max-width: 640px) calc(100vw - 48px), 240px"
+                                        sizes="(max-width: 767px) calc(100vw - 48px), 400px"
                                         className="object-cover"
                                     />
                                 ) : (
@@ -50,6 +34,24 @@ export default function Projects() {
                                     </LottieGraphic>
                                 )}
                             </figure>
+                            <div className="portfolio-project-content">
+                                <p>{project.contribution}</p>
+                                {project.recognition && <p className="portfolio-recognition">{project.recognition}</p>}
+                                {project.outcome && (
+                                    <Disclosure label={projectSection.detailsLabel} variant="plain">
+                                        <p>{project.outcome}</p>
+                                    </Disclosure>
+                                )}
+                            </div>
+                            <footer className="portfolio-project-footer">
+                                <p className="portfolio-project-period">{project.period}</p>
+                                <LinkButton
+                                    href={project.href}
+                                    label={projectSection.repositoryLabel}
+                                    icon="external"
+                                    aria-label={`${project.name} on GitHub`}
+                                />
+                            </footer>
                         </article>
                     </Reveal>
                 ))}

@@ -17,7 +17,7 @@ export default function Research() {
                         {eact.role}, {eact.status}
                     </p>
                 </header>
-                <p className="font-body portfolio-measure">{eact.description}</p>
+                <p className="font-body portfolio-research-intro">{eact.description}</p>
                 <RecognitionDemo />
                 <div className="portfolio-findings">
                     <p className="font-body">{eact.result}</p>

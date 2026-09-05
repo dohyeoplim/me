@@ -14,7 +14,7 @@ export default function ChapterNav() {
     const previousScroll = useRef(0);
     const [active, setActive] = useState<string>(chapters[0].id);
     const [stuck, setStuck] = useState(false);
-    const [height, setHeight] = useState(56);
+    const [height, setHeight] = useState(64);
 
     useLayoutEffect(() => {
         const list = nav.current?.querySelector("ul");
@@ -72,10 +72,14 @@ export default function ChapterNav() {
             if (!frame) frame = requestAnimationFrame(update);
         };
         update();
+        const main = document.querySelector("main");
+        const observer = new ResizeObserver(schedule);
+        if (main) observer.observe(main);
         window.addEventListener("scroll", schedule, { passive: true });
         window.addEventListener("resize", schedule);
         return () => {
             cancelAnimationFrame(frame);
+            observer.disconnect();
             window.removeEventListener("scroll", schedule);
             window.removeEventListener("resize", schedule);
         };

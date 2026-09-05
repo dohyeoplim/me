@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import SlideTransition from "@/app/components/SlideTransition";
-import PortfolioHero from "./_components/PortfolioHero";
+import ProfileChat from "./_components/ProfileChat";
 import ChapterNav from "./_components/ChapterNav";
 import Research from "./_components/Research";
 import Projects from "./_components/Projects";
 import Background from "./_components/Background";
 import "./portfolio.css";
+import "../styles/dds-chat.css";
+import "../styles/dds-answer-cards.css";
 
 export const metadata: Metadata = {
     title: "Portfolio, Dohyeop Lim",
@@ -16,9 +18,7 @@ export default function PortfolioPage() {
     return (
         <SlideTransition>
             <main id="main-content" className="portfolio-page">
-                <div className="dds-container">
-                    <PortfolioHero />
-                </div>
+                <ProfileChat />
                 <ChapterNav />
                 <div className="dds-container">
                     <Research />
