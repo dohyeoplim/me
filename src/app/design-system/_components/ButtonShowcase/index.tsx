@@ -13,49 +13,51 @@ export default function ButtonShowcase() {
     const [continued, setContinued] = useState(false);
 
     return (
-        <div className="space-y-14">
+        <div className="space-y-dds-3xl">
             <div>
-                <h3 className="font-head01-medium mb-8">Button scale</h3>
-                <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                <h3 className="font-head01-medium mb-dds-xl">Button scale</h3>
+                <div className="grid grid-cols-2 gap-dds-xl sm:grid-cols-4">
                     {buttonSizes.map(({ size, label, height }) => (
-                        <div key={size} className="flex flex-col items-center gap-5">
-                            <p className="ds-label w-24 border-b border-grey-300 pb-2 text-center">{height}px</p>
+                        <div key={size} className="flex flex-col items-center gap-dds-lg">
+                            <p className="ds-label w-24 border-b border-mark pb-dds-xs text-center">{height}px</p>
                             <div className="flex h-14 items-center">
                                 <Button size={size} variant="outline">
                                     Button
                                 </Button>
                             </div>
-                            <p className="text-sm">{label}</p>
+                            <p className="font-body03-regular">{label}</p>
                         </div>
                     ))}
-                    <div className="flex flex-col items-center gap-5">
-                        <p className="ds-label w-24 border-b border-grey-300 pb-2 text-center">52 × 52px</p>
+                    <div className="flex flex-col items-center gap-dds-lg">
+                        <p className="ds-label w-24 border-b border-mark pb-dds-xs text-center">52 × 52px</p>
                         <div className="flex h-14 items-center">
                             <IconButton size="large" variant="outline" aria-label="Notifications example">
                                 <Bell size={18} aria-hidden="true" />
                             </IconButton>
                         </div>
-                        <p className="text-sm">Icon button</p>
+                        <p className="font-body03-regular">Icon button</p>
                     </div>
                 </div>
             </div>
             <div>
-                <h3 className="font-head01-medium mb-3">Basic states</h3>
-                <p className="ds-label mb-6">Fixed state samples. Use the examples below to try the interactions.</p>
+                <h3 className="font-head01-medium mb-dds-sm">Basic states</h3>
+                <p className="ds-label mb-dds-lg">
+                    Fixed state samples. Use the examples below to try the interactions.
+                </p>
                 <Surface
-                    className="overflow-x-auto p-4 sm:p-7"
+                    className="overflow-x-auto p-dds-md sm:p-dds-xl"
                     tabIndex={0}
                     role="region"
                     aria-label="Button state matrix"
                 >
-                    <table className="w-full min-w-160 border-separate border-spacing-y-5 text-sm">
+                    <table className="w-full min-w-160 border-separate border-spacing-y-5 font-body03-regular">
                         <thead>
                             <tr>
                                 {["State", "Solid", "Outline", "Text", "Right icon", "Left icon"].map((label) => (
                                     <th
                                         key={label}
                                         scope="col"
-                                        className="px-2 pb-3 text-left font-normal text-grey-500"
+                                        className="px-dds-xs pb-dds-sm text-left font-normal text-muted"
                                     >
                                         {label}
                                     </th>
@@ -65,11 +67,11 @@ export default function ButtonShowcase() {
                         <tbody>
                             {buttonStates.map(({ id, label }) => (
                                 <tr key={id}>
-                                    <th scope="row" className="pr-5 text-left font-normal">
+                                    <th scope="row" className="pr-dds-lg text-left font-normal">
                                         {label}
                                     </th>
                                     {buttonVariants.map((variant) => (
-                                        <td key={variant} className="px-2">
+                                        <td key={variant} className="px-dds-xs">
                                             <Button
                                                 variant={variant}
                                                 data-preview-state={id}
@@ -80,12 +82,12 @@ export default function ButtonShowcase() {
                                             </Button>
                                         </td>
                                     ))}
-                                    <td className="px-2">
+                                    <td className="px-dds-xs">
                                         <Button data-preview-state={id} disabled={id === "disabled"} tabIndex={-1}>
                                             Button <ArrowRight size={16} aria-hidden="true" />
                                         </Button>
                                     </td>
-                                    <td className="px-2">
+                                    <td className="px-dds-xs">
                                         <Button data-preview-state={id} disabled={id === "disabled"} tabIndex={-1}>
                                             <User size={16} aria-hidden="true" /> Button
                                         </Button>
@@ -96,18 +98,18 @@ export default function ButtonShowcase() {
                     </table>
                 </Surface>
             </div>
-            <div className="grid gap-10 md:grid-cols-2">
+            <div className="grid gap-dds-2xl md:grid-cols-2">
                 <div>
-                    <h3 className="font-head01-medium mb-6">Icon buttons</h3>
-                    <Surface className="overflow-x-auto p-5">
-                        <table className="w-full border-separate border-spacing-y-4 text-sm">
+                    <h3 className="font-head01-medium mb-dds-lg">Icon buttons</h3>
+                    <Surface className="overflow-x-auto p-dds-lg">
+                        <table className="w-full border-separate border-spacing-y-4 font-body03-regular">
                             <thead>
                                 <tr>
                                     {["State", "Solid", "Outline", "Text"].map((label) => (
                                         <th
                                             key={label}
                                             scope="col"
-                                            className="pb-2 text-left font-normal text-grey-500"
+                                            className="pb-dds-xs text-left font-normal text-muted"
                                         >
                                             {label}
                                         </th>
@@ -117,7 +119,7 @@ export default function ButtonShowcase() {
                             <tbody>
                                 {buttonStates.map(({ id, label }) => (
                                     <tr key={id}>
-                                        <th scope="row" className="pr-3 text-left font-normal">
+                                        <th scope="row" className="pr-dds-sm text-left font-normal">
                                             {label}
                                         </th>
                                         {buttonVariants.map((variant) => (
@@ -140,9 +142,9 @@ export default function ButtonShowcase() {
                     </Surface>
                 </div>
                 <div>
-                    <h3 className="font-head01-medium mb-6">Try the components</h3>
-                    <Surface className="flex min-h-92 flex-col items-start justify-center gap-8 p-7">
-                        <div className="flex flex-wrap gap-3">
+                    <h3 className="font-head01-medium mb-dds-lg">Try the components</h3>
+                    <Surface className="flex min-h-92 flex-col items-start justify-center gap-dds-xl p-dds-xl">
+                        <div className="flex flex-wrap gap-dds-sm">
                             <Button onClick={() => setContinued(true)} disabled={continued}>
                                 {continued ? "Done" : "Continue"}
                                 {continued ? <Check size={16} /> : <ArrowRight size={16} />}
@@ -152,7 +154,7 @@ export default function ButtonShowcase() {
                                 {saved ? "Saved" : "Save"}
                             </Button>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-dds-sm">
                             <IconButton
                                 variant={notifications ? "solid" : "outline"}
                                 aria-label="Toggle notifications"

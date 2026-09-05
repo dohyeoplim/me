@@ -7,8 +7,8 @@ export default function LinkButton({ href, label, icon = "arrow", className, ...
         <a
             href={href}
             className={cn(
-                "inline-flex items-center gap-1 font-body03-regular text-grey-600",
-                "transition-colors hover:text-grey-900",
+                "inline-flex items-center gap-dds-2xs font-body03-regular text-muted",
+                "transition-colors hover:text-ink",
                 className,
             )}
             target={href && href.startsWith("http") ? "_blank" : undefined}
@@ -16,8 +16,8 @@ export default function LinkButton({ href, label, icon = "arrow", className, ...
             {...props}
         >
             {label}
-            {icon === "arrow" && <ArrowRight size={14} className="text-grey-600" />}
-            {icon === "external" && <ExternalLink size={14} className="text-grey-600" />}
+            {icon === "arrow" && <ArrowRight size={14} className="text-muted" />}
+            {icon === "external" && <ExternalLink size={14} className="text-muted" />}
         </a>
     );
 }

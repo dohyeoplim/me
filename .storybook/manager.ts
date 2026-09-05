@@ -7,7 +7,7 @@ addons.setConfig({
         base: "light",
         brandTitle: `${DDS.name} · ${DDS.fullName}`,
         colorPrimary: "#0f0f10",
-        colorSecondary: "#355bd6",
+        colorSecondary: "#1c1c1e",
         appBg: "#fafafc",
         appContentBg: "#fafafc",
         textColor: "#0f0f10",

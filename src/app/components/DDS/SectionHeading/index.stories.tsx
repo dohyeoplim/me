@@ -4,7 +4,7 @@ import SectionHeading from ".";
 const meta = {
     title: "DDS/SectionHeading",
     component: SectionHeading,
-    args: { number: "01", title: "Research", description: "From collecting the data to understanding the errors." },
+    args: { title: "Research", description: "From collecting the data to understanding the errors." },
 } satisfies Meta<typeof SectionHeading>;
 
 export default meta;

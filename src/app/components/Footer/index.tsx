@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="w-full max-w-4xl mx-auto px-6 pb-30">
-            <hr className="h-px text-grey-200 mb-6" />
-            <div className="flex items-center justify-between gap-4">
-                <small className="font-body04-light text-grey-500">&copy; 2026 Dohyeop Lim</small>
+        <footer className="w-full max-w-4xl mx-auto px-dds-lg pb-dds-5xl">
+            <hr className="h-px text-line mb-dds-lg" />
+            <div className="flex items-center justify-between gap-dds-md">
+                <small className="font-body04-light text-muted">&copy; 2026 Dohyeop Lim</small>
                 <Link
                     href="/design-system"
-                    className="text-sm text-grey-500 hover:text-grey-900"
+                    className="font-body03-regular text-muted hover:text-ink"
                     aria-label="DDS, DohyeopLim Design System"
                 >
                     DDS

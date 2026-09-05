@@ -53,3 +53,14 @@
 @utility font-caption03-regular {
     @apply text-xs font-normal leading-4 tracking-normal;
 }
+@utility font-display-light {
+    @apply text-[clamp(2.75rem,6.5vw,4.5rem)] font-light leading-[1.12] tracking-tight;
+}
+
+@utility font-feature-light {
+    @apply text-[clamp(1.75rem,3vw,2.25rem)] font-light leading-snug tracking-tight;
+}
+
+@utility font-metric-light {
+    @apply text-[clamp(2rem,4vw,3rem)] font-light leading-tight tracking-tight tabular-nums;
+}
