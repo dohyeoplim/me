@@ -96,7 +96,7 @@ export default function ComponentShowcase() {
                     <Disclosure label="Research methods">
                         <p>Methods and evaluation notes can sit below a short project description.</p>
                     </Disclosure>
-                    <Disclosure label="Project details" variant="plain" open>
+                    <Disclosure label="Project details" variant="plain" contentTone="subtle" open>
                         <p>Use Enter or Space on the heading to show or hide these details.</p>
                     </Disclosure>
                 </div>

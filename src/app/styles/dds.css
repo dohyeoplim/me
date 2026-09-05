@@ -22,6 +22,7 @@
     --layout-copy-width: 34rem;
     --site-header-min-height: 4.5rem;
     --site-header-row-height: 4.5rem;
+    --site-footer-home-height: 5rem;
     --section-navigation-height: 4rem;
     --header-fade-height: 1.5rem;
     --button-height-small: 1.75rem;
@@ -51,6 +52,14 @@
     padding-inline: var(--spacing-dds-lg);
 }
 
+.site-footer[data-home="true"] {
+    min-height: var(--site-footer-home-height);
+}
+
+body:has(.dds-chat[data-started="true"]) .site-footer[data-home="true"] {
+    display: none;
+}
+
 .site-header {
     position: fixed;
     inset: 0 0 auto;
@@ -66,6 +75,17 @@
         to bottom,
         var(--surface-page) 0,
         var(--surface-page) calc(100% - var(--header-fade-height)),
+        transparent 100%
+    );
+}
+
+.site-header:has(.portfolio-section-nav)::before {
+    inset: 0 0 auto;
+    height: calc(var(--site-header-row-height) + var(--header-fade-height));
+    background: linear-gradient(
+        to bottom,
+        var(--surface-page) 0,
+        var(--surface-page) calc(var(--site-header-row-height) - var(--spacing-dds-xs)),
         transparent 100%
     );
 }
@@ -319,7 +339,7 @@
     inset: 0;
 }
 
-.dds-lottie-player :is(path, rect, circle, ellipse, line, polyline, polygon) {
+.dds-lottie :is(.dds-lottie-player, .dds-lottie-fallback) :is(path, rect, circle, ellipse, line, polyline, polygon) {
     vector-effect: non-scaling-stroke;
 }
 

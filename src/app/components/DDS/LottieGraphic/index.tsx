@@ -12,7 +12,9 @@ type Props = {
 export default function LottieGraphic({ src, children }: Props) {
     const container = useRef<HTMLDivElement>(null);
     const animation = useRef<AnimationItem | null>(null);
-    const [ready, setReady] = useState(false);
+    const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+    const [reducedMotion, setReducedMotion] = useState(false);
+    const ready = loadedSrc === src;
 
     useEffect(() => {
         const element = container.current;
@@ -24,6 +26,7 @@ export default function LottieGraphic({ src, children }: Props) {
         let visible = false;
 
         const sync = () => {
+            setReducedMotion(preference.matches);
             if (!animation.current) return;
             if (preference.matches) animation.current.goToAndStop(animation.current.totalFrames - 1, true);
             else if (visible) animation.current.play();
@@ -34,7 +37,7 @@ export default function LottieGraphic({ src, children }: Props) {
             if (loading || disposed) return;
             loading = true;
             try {
-                const { default: lottie } = await import("lottie-web");
+                const { default: lottie } = await import("lottie-web/build/player/lottie_light");
                 if (disposed) return;
                 const player = lottie.loadAnimation({
                     container: element,
@@ -47,7 +50,7 @@ export default function LottieGraphic({ src, children }: Props) {
                 animation.current = player;
                 player.addEventListener("DOMLoaded", () => {
                     if (disposed) return;
-                    setReady(true);
+                    setLoadedSrc(src);
                     sync();
                 });
                 player.addEventListener("data_failed", () => {
@@ -55,7 +58,7 @@ export default function LottieGraphic({ src, children }: Props) {
                     player.destroy();
                     animation.current = null;
                     loading = false;
-                    setReady(false);
+                    setLoadedSrc(null);
                 });
             } catch {
                 loading = false;
@@ -73,6 +76,7 @@ export default function LottieGraphic({ src, children }: Props) {
 
         observer.observe(element);
         preference.addEventListener("change", sync);
+        sync();
         return () => {
             disposed = true;
             observer.disconnect();
@@ -88,7 +92,7 @@ export default function LottieGraphic({ src, children }: Props) {
                 {children}
             </div>
             <div ref={container} className="dds-lottie-player" aria-hidden="true" />
-            {ready && (
+            {ready && !reducedMotion && (
                 <button
                     type="button"
                     className="dds-lottie-replay"

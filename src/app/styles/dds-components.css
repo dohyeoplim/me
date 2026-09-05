@@ -48,6 +48,14 @@
     padding-block: var(--spacing-dds-sm) var(--spacing-dds-lg);
 }
 
+.dds-disclosure[data-content-tone="subtle"] .dds-disclosure-content {
+    margin-block: var(--spacing-dds-2xs) var(--spacing-dds-sm);
+    padding: var(--spacing-dds-md);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--surface-muted);
+}
+
 .dds-disclosure[data-variant="plain"] {
     border: 0;
     margin-top: var(--spacing-dds-sm);

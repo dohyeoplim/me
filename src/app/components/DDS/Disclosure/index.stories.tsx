@@ -13,6 +13,7 @@ type Story = StoryObj<typeof meta>;
 export const Outlined: Story = {};
 export const Plain: Story = { args: { variant: "plain" } };
 export const Open: Story = { args: { open: true } };
+export const SubtleContent: Story = { args: { contentTone: "subtle", open: true } };
 export const LongLabel: Story = {
     args: { label: "Methods, evaluation settings, and error analysis from the recognition experiments" },
 };
