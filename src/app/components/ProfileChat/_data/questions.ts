@@ -66,11 +66,16 @@ export function followUpQuestions(answer: ProfileChatAnswer, previousQuestions: 
         const name = projectNames.get(id);
         return name ? [{ name, id }] : [];
     });
-    const contextual = projects.map(({ name, id }) => ({
-        label: `More about ${name}`,
-        question: `Tell me more about ${name}, including your specific contributions.`,
-        sourceIds: [id],
-    }));
+    const coveredProjects = new Set(answer.followUps.flatMap(({ sourceIds }) => (
+        sourceIds.length === 1 && projectNames.has(sourceIds[0]) ? sourceIds : []
+    )));
+    const contextual = projects
+        .filter(({ id }) => !coveredProjects.has(id))
+        .map(({ name, id }) => ({
+            label: `More about ${name}`,
+            question: `Tell me more about ${name}, including your specific contributions.`,
+            sourceIds: [id],
+        }));
     const related = context.length > 0 ? [{
         label: "Explore related repositories",
         question: "Show me repositories related to this work.",
@@ -88,4 +93,21 @@ export function followUpQuestions(answer: ProfileChatAnswer, previousQuestions: 
         seenLabels.add(labelKey);
         return true;
     }).slice(0, 4);
+}
+
+export function explorationQuestions(answer: ProfileChatAnswer, previousQuestions: string[]): ProfileFollowUp[] {
+    const focused = followUpQuestions(answer, previousQuestions);
+    const previous = new Set(previousQuestions.map((question) => question.trim().toLowerCase()));
+    const contextIds = new Set(answer.sources.map(({ id }) => id));
+    const focusedQuestions = new Set(focused.map(({ question }) => question.trim().toLowerCase()));
+    const focusedLabels = new Set(focused.map(({ label }) => label.trim().toLowerCase()));
+    const traversal = suggestedQuestions.filter(({ label, question, sourceIds }) => (
+        sourceIds.length > 0
+        && sourceIds.every((id) => !contextIds.has(id))
+        && !previous.has(question.trim().toLowerCase())
+        && !focusedQuestions.has(question.trim().toLowerCase())
+        && !focusedLabels.has(label.trim().toLowerCase())
+    ));
+
+    return [...focused, ...traversal].slice(0, 5);
 }

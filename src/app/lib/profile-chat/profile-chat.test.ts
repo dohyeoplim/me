@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { followUpQuestions, suggestedQuestions } from "../../components/ProfileChat/_data/questions";
+import {
+    explorationQuestions,
+    followUpQuestions,
+    suggestedQuestions,
+} from "../../components/ProfileChat/_data/questions";
 import { answerQuestion, parseAnswer } from "./answer";
 import { profileChatAnswerSchema } from "./answer-content";
 import { profileDocuments, type ProfileDocument } from "./documents";
@@ -783,4 +787,11 @@ test("follow-up questions avoid repeating generated and curated labels", () => {
     assert.equal(suggestions.filter(({ label }) => label === "More about Collog").length, 1);
     assert.equal(suggestions.length, 2);
     assert.ok(suggestions.every(({ question }) => question !== "Which projects use speech recognition?"));
+
+    const renamed = parseAnswer(responsePayload("Collog uses speech recognition.", ["collog"], ["collog"], {
+        followUps: [{ label: "Collog details", question: "How was Collog built?", sourceIds: ["collog"] }],
+    }), sources);
+    const distinct = followUpQuestions(renamed, []);
+    assert.equal(distinct.filter(({ label }) => label.toLowerCase().includes("collog")).length, 1);
+    assert.ok(explorationQuestions(renamed, []).length <= 5);
 });

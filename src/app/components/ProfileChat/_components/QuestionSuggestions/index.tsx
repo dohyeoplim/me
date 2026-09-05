@@ -1,10 +1,9 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
+import { ddsMotionTransition, getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import type { ProfileFollowUp } from "@/app/lib/profile-chat/types";
-
-const movement = { duration: 0.24, ease: [0.2, 0, 0, 1] as const };
 
 type Props = {
     questions: ProfileFollowUp[];
@@ -13,6 +12,7 @@ type Props = {
     label?: string;
     layout?: "grid" | "compact";
     animateEntrance?: boolean;
+    animateLayout?: boolean;
     staggerCount?: number;
 };
 
@@ -23,24 +23,34 @@ export default function QuestionSuggestions({
     label = "Suggested questions",
     layout = "grid",
     animateEntrance = false,
+    animateLayout = true,
     staggerCount = questions.length,
 }: Props) {
     const reducedMotion = useReducedMotion();
+    const shouldAnimateLayout = animateLayout && !reducedMotion;
     if (!questions.length) return null;
 
     return (
         <motion.div
-            layout={reducedMotion ? false : true}
+            layout={shouldAnimateLayout ? "position" : false}
             className="dds-question-grid"
             data-layout={layout}
             role="group"
             aria-label={label}
-            transition={movement}
+            transition={getDdsMotionTransition(reducedMotion)}
         >
-            <AnimatePresence initial={animateEntrance && !reducedMotion} mode="popLayout">
-                {questions.map(({ label: title, question, sourceIds }, index) => (
+            {questions.map(({ label: title, question, sourceIds }, index) => {
+                const initialQuestion = index < staggerCount;
+                const entranceDelay = initialQuestion
+                    ? index * 0.05
+                    : ddsMotionTransition.duration + (index - staggerCount) * 0.04;
+                const entranceTransition = reducedMotion
+                    ? { duration: 0 }
+                    : { ...ddsMotionTransition, delay: animateEntrance ? entranceDelay : 0 };
+
+                return (
                     <motion.button
-                        layout={reducedMotion ? false : "position"}
+                        layout={shouldAnimateLayout ? "position" : false}
                         key={question}
                         type="button"
                         data-variant="outline"
@@ -48,21 +58,18 @@ export default function QuestionSuggestions({
                         className="ds-button dds-question-card"
                         onClick={() => onSelect(question, sourceIds)}
                         disabled={disabled}
-                        initial={animateEntrance && !reducedMotion ? { opacity: 0 } : false}
+                        initial={animateEntrance ? { opacity: 0 } : false}
                         animate={{
                             opacity: 1,
-                            transition: {
-                                ...movement,
-                                delay: animateEntrance && index < staggerCount ? index * 0.05 : 0,
-                            },
+                            transition: entranceTransition,
                         }}
-                        exit={reducedMotion ? undefined : { opacity: 0, transition: movement }}
+                        transition={getDdsMotionTransition(reducedMotion)}
                     >
                         <span>{title}</span>
                         <ArrowUpRight size={16} aria-hidden="true" />
                     </motion.button>
-                ))}
-            </AnimatePresence>
+                );
+            })}
         </motion.div>
     );
 }

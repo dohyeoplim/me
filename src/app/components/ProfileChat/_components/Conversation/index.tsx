@@ -1,8 +1,9 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import Button from "@/app/components/DDS/Button";
+import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import type { ProfileExchange } from "../../Context";
 import AnswerBlocks from "../AnswerBlocks";
 import AnswerCards from "../AnswerCards";
@@ -14,16 +15,27 @@ type Props = {
     pendingQuestion: string;
     pending: boolean;
     error?: string;
+    focusRequest?: number;
+    viewportRef?: RefObject<HTMLDivElement | null>;
     onRetry?: () => void;
 };
 
-export default function Conversation({ exchanges, pendingQuestion, pending, error, onRetry }: Props) {
-    const conversation = useRef<HTMLDivElement>(null);
+export default function Conversation({
+    exchanges,
+    pendingQuestion,
+    pending,
+    error,
+    focusRequest = 0,
+    viewportRef,
+    onRetry,
+}: Props) {
+    const localConversation = useRef<HTMLDivElement>(null);
+    const conversation = viewportRef ?? localConversation;
     const latestExchange = useRef<HTMLDivElement>(null);
     const latestQuestion = useRef<HTMLHeadingElement>(null);
     const scrollSpace = useRef<HTMLDivElement>(null);
     const reducedMotion = useReducedMotion();
-    const movement = { duration: reducedMotion ? 0 : 0.24, ease: [0.2, 0, 0, 1] as const };
+    const movement = getDdsMotionTransition(reducedMotion);
 
     useLayoutEffect(() => {
         const viewport = conversation.current;
@@ -44,7 +56,11 @@ export default function Conversation({ exchanges, pendingQuestion, pending, erro
         observer.observe(exchange);
         align();
         return () => observer.disconnect();
-    }, [exchanges.length, pendingQuestion, reducedMotion]);
+    }, [conversation, exchanges.length, pendingQuestion, reducedMotion]);
+
+    useLayoutEffect(() => {
+        if (focusRequest > 0) latestQuestion.current?.focus({ preventScroll: true });
+    }, [exchanges.length, focusRequest, pendingQuestion]);
 
     return (
         <motion.div
@@ -56,7 +72,6 @@ export default function Conversation({ exchanges, pendingQuestion, pending, erro
             aria-busy={pending}
             initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
             transition={movement}
         >
             <h1 className="sr-only">Ask anything about me</h1>
@@ -66,7 +81,11 @@ export default function Conversation({ exchanges, pendingQuestion, pending, erro
 
                     return (
                         <div key={exchange.id} ref={latest ? latestExchange : null} className="dds-chat-exchange">
-                            <h2 ref={latest ? latestQuestion : null} className="dds-chat-question">
+                            <h2
+                                ref={latest ? latestQuestion : null}
+                                className="dds-chat-question"
+                                tabIndex={-1}
+                            >
                                 <span className="sr-only">You asked. </span>
                                 {exchange.question}
                             </h2>
@@ -86,7 +105,7 @@ export default function Conversation({ exchanges, pendingQuestion, pending, erro
                 })}
                 {pendingQuestion && (
                     <div ref={latestExchange} className="dds-chat-exchange">
-                        <h2 ref={latestQuestion} className="dds-chat-question">
+                        <h2 ref={latestQuestion} className="dds-chat-question" tabIndex={-1}>
                             <span className="sr-only">You asked. </span>
                             {pendingQuestion}
                         </h2>

@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 
 const lineLengths = ["full", "long", "short"] as const;
-const reveal = { duration: 0.24, ease: [0.2, 0, 0, 1] as const };
 
 export default function AnswerLoading() {
     const reducedMotion = useReducedMotion();
@@ -15,7 +15,7 @@ export default function AnswerLoading() {
             initial={{ opacity: 0, y: reducedMotion ? 0 : 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={reducedMotion ? { duration: 0 } : reveal}
+            transition={getDdsMotionTransition(reducedMotion)}
         >
             {lineLengths.map((length, index) => (
                 <span key={length} className="dds-chat-answer-loading-line" data-length={length}>

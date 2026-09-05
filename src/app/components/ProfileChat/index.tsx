@@ -1,38 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { ArrowUp, Square } from "lucide-react";
 import Button from "@/app/components/DDS/Button";
 import IconButton from "@/app/components/DDS/IconButton";
+import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import { hero } from "@/app/portfolio/_data/hero";
 import Conversation from "./_components/Conversation";
 import QuestionSuggestions from "./_components/QuestionSuggestions";
-import { followUpQuestions, suggestedQuestions } from "./_data/questions";
+import ScrollBridge from "./_components/ScrollBridge";
+import { explorationQuestions, suggestedQuestions } from "./_data/questions";
 import useProfileConversation, { chatCopy } from "./_hooks/useProfileConversation";
 
-const transition = { duration: 0.24, ease: [0.2, 0, 0, 1] as const };
 const initialQuestionCount = 8;
 
 export default function ProfileChat() {
     const id = useId();
     const input = useRef<HTMLTextAreaElement>(null);
+    const conversation = useRef<HTMLDivElement>(null);
     const reducedMotion = useReducedMotion();
     const [showAllQuestions, setShowAllQuestions] = useState(false);
+    const [returningHome, setReturningHome] = useState(false);
+    const [answerFocusRequest, setAnswerFocusRequest] = useState(0);
     const chat = useProfileConversation();
     const { exchanges, question, setQuestion, pending, pendingQuestion, availability, error, notice, ask } = chat;
     const started = exchanges.length > 0 || pendingQuestion.length > 0;
     const latestExchange = exchanges.at(-1);
     const followUps = latestExchange && !pendingQuestion
-        ? followUpQuestions(latestExchange, exchanges.map(({ question: previousQuestion }) => previousQuestion))
+        ? explorationQuestions(latestExchange, exchanges.map(({ question }) => question))
         : [];
-    const movement = reducedMotion ? { duration: 0 } : transition;
+    const movement = getDdsMotionTransition(reducedMotion);
     const availabilityStatus = !started && availability === "unavailable"
         ? chatCopy.unavailable
         : notice;
     const status = pending ? chatCopy.pending : availabilityStatus;
     const showFeedback = Boolean(status) || (!started && availability === "unavailable") || (started && !pending);
+    const scrollConversation = useCallback((deltaY: number) => {
+        conversation.current?.scrollBy({ top: deltaY });
+    }, []);
 
     useEffect(() => {
         if (!input.current) return;
@@ -40,19 +47,41 @@ export default function ProfileChat() {
         input.current.style.height = `${input.current.scrollHeight}px`;
     }, [question]);
 
+    function askQuestion(value: string, sourceIds?: string[]) {
+        setReturningHome(false);
+        void ask(value, sourceIds);
+    }
+
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        void ask(question);
+        setAnswerFocusRequest(0);
+        askQuestion(question);
     }
 
     function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
         if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing || event.keyCode === 229) return;
         event.preventDefault();
-        void ask(question);
+        setAnswerFocusRequest(0);
+        askQuestion(question);
     }
 
     function selectQuestion(value: string, sourceIds: string[]) {
-        void ask(value, sourceIds);
+        setAnswerFocusRequest((request) => request + 1);
+        askQuestion(value, sourceIds);
+    }
+
+    function retryPendingQuestion() {
+        setAnswerFocusRequest((request) => request + 1);
+        askQuestion(pendingQuestion, chat.pendingContext);
+    }
+
+    function clearConversation() {
+        setReturningHome(true);
+        setAnswerFocusRequest(0);
+        setShowAllQuestions(false);
+        chat.clearConversation();
+        input.current?.focus();
+        requestAnimationFrame(() => setReturningHome(false));
     }
 
     return (
@@ -61,16 +90,16 @@ export default function ProfileChat() {
                 <LayoutGroup id={`${id}-home`}>
                     <motion.div
                         className="dds-chat-main"
-                    layout={!started && !reducedMotion ? "position" : false}
-                    transition={movement}
-                >
+                        layout={!started && !reducedMotion && !returningHome ? "position" : false}
+                        transition={movement}
+                    >
                         {!started && <div className="dds-chat-glow" aria-hidden="true" />}
                         <AnimatePresence initial={false} mode="popLayout">
                             {!started ? (
                                 <motion.div
                                     key="welcome"
                                     className="dds-chat-welcome"
-                                    initial={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
+                                    initial={returningHome ? false : { opacity: 0, y: -8 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
                                     transition={movement}
@@ -98,37 +127,36 @@ export default function ProfileChat() {
                                     pendingQuestion={pendingQuestion}
                                     pending={pending}
                                     error={error}
-                                    onRetry={() => void ask(pendingQuestion, chat.pendingContext)}
+                                    focusRequest={answerFocusRequest}
+                                    viewportRef={conversation}
+                                    onRetry={retryPendingQuestion}
                                 />
                             )}
                         </AnimatePresence>
                         <div className="dds-chat-dock">
-                            <AnimatePresence initial={false} mode="popLayout">
-                                {followUps.length > 0 && (
-                                    <motion.section
-                                        key={latestExchange?.id}
-                                        className="dds-chat-followups"
-                                        aria-label="Follow-up questions"
-                                        initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: reducedMotion ? 0 : 4 }}
-                                        transition={movement}
-                                    >
-                                        <h2>Keep exploring</h2>
-                                        <QuestionSuggestions
-                                            questions={followUps}
-                                            onSelect={selectQuestion}
-                                            disabled={pending}
-                                            label="Follow-up questions"
-                                            layout="compact"
-                                        />
-                                    </motion.section>
-                                )}
-                            </AnimatePresence>
-                            <form
-                                onSubmit={submit}
-                                className="dds-chat-form"
-                            >
+                            {started && (
+                                <ScrollBridge onScroll={scrollConversation} />
+                            )}
+                            {followUps.length > 0 && (
+                                <motion.section
+                                    key={latestExchange?.id}
+                                    className="dds-chat-followups"
+                                    aria-label="Follow-up questions"
+                                    initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={movement}
+                                >
+                                    <h2>Keep exploring</h2>
+                                    <QuestionSuggestions
+                                        questions={followUps}
+                                        onSelect={selectQuestion}
+                                        disabled={pending}
+                                        label="Follow-up questions"
+                                        layout="compact"
+                                    />
+                                </motion.section>
+                            )}
+                            <form onSubmit={submit} className="dds-chat-form">
                                 <label htmlFor={`${id}-question`} className="sr-only">
                                     {started ? chatCopy.followUp : chatCopy.label}
                                 </label>
@@ -144,7 +172,7 @@ export default function ProfileChat() {
                                         onKeyDown={handleKeyDown}
                                         placeholder={started ? chatCopy.followUp : chatCopy.placeholder}
                                         readOnly={pending}
-                                    aria-describedby={status ? `${id}-status` : undefined}
+                                        aria-describedby={status ? `${id}-status` : undefined}
                                         autoComplete="off"
                                     />
                                     {pending ? (
@@ -176,36 +204,40 @@ export default function ProfileChat() {
                                     )}
                                 </div>
                             </form>
-                        {showFeedback && (
-                            <div className="dds-chat-feedback">
-                                <p id={`${id}-status`} className="dds-chat-status" role="status" aria-live="polite">
-                                    {status}
-                                </p>
-                                {!started && availability === "unavailable" && (
-                                    <Button variant="text" size="small" onClick={chat.retryAvailability}>
-                                        Try again
-                                    </Button>
-                                )}
-                                {started && !pending && (
-                                    <Button
-                                        variant="text"
-                                        size="small"
-                                        onClick={() => {
-                                            chat.clearConversation();
-                                            input.current?.focus();
-                                        }}
-                                        aria-label="Clear conversation"
+                            {showFeedback && (
+                                <div className="dds-chat-feedback">
+                                    <p
+                                        id={`${id}-status`}
+                                        className="dds-chat-status"
+                                        role="status"
+                                        aria-live="polite"
                                     >
-                                        Clear conversation
-                                    </Button>
-                                )}
-                            </div>
-                        )}
+                                        {status}
+                                    </p>
+                                    {!started && availability === "unavailable" && (
+                                        <Button variant="text" size="small" onClick={chat.retryAvailability}>
+                                            Try again
+                                        </Button>
+                                    )}
+                                    {started && !pending && (
+                                        <Button
+                                            variant="text"
+                                            size="small"
+                                            onClick={clearConversation}
+                                            aria-label="Clear conversation"
+                                        >
+                                            Clear conversation
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         {!started && (
-                            <section
+                            <motion.section
                                 className="dds-chat-suggestions"
                                 aria-label="Explore my profile"
+                                layout={reducedMotion || returningHome ? false : "position"}
+                                transition={movement}
                             >
                                 <QuestionSuggestions
                                     questions={suggestedQuestions.slice(
@@ -213,10 +245,14 @@ export default function ProfileChat() {
                                         showAllQuestions ? undefined : initialQuestionCount,
                                     )}
                                     onSelect={selectQuestion}
-                                    animateEntrance
+                                    animateEntrance={!returningHome}
+                                    animateLayout={!returningHome}
                                     staggerCount={initialQuestionCount}
                                 />
-                                <motion.div layout={reducedMotion ? false : "position"} transition={movement}>
+                                <motion.div
+                                    layout={reducedMotion || returningHome ? false : "position"}
+                                    transition={movement}
+                                >
                                     <Button
                                         variant="text"
                                         size="small"
@@ -226,7 +262,7 @@ export default function ProfileChat() {
                                         {showAllQuestions ? "Fewer questions" : "More questions"}
                                     </Button>
                                 </motion.div>
-                            </section>
+                            </motion.section>
                         )}
                     </motion.div>
                 </LayoutGroup>

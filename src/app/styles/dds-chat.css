@@ -11,7 +11,7 @@
     flex-direction: column;
     width: 100%;
     max-width: var(--layout-chat-width);
-    min-height: 100svh;
+    min-height: calc(100svh - var(--site-footer-home-height));
     margin-inline: auto;
     padding-block: calc(var(--site-header-row-height) + var(--spacing-dds-lg)) var(--spacing-dds-lg);
 }
@@ -193,6 +193,7 @@
 .dds-chat-followups h2 {
     @apply font-support;
     color: var(--text-secondary);
+    user-select: none;
 }
 
 .dds-question-grid[data-layout="compact"] {
@@ -227,13 +228,40 @@
     isolation: isolate;
 }
 
-.dds-chat-dock::before {
+.dds-chat[data-started="true"] .dds-chat-dock {
+    width: 100%;
+    max-width: var(--layout-chat-width);
+    margin-inline: auto;
+    margin-top: calc(-1 * var(--spacing-dds-4xl));
+    padding-top: var(--spacing-dds-4xl);
+    pointer-events: none;
+}
+
+.dds-chat[data-started="true"] .dds-chat-dock :is(.dds-chat-scroll-bridge, .dds-chat-composer, .ds-button) {
+    pointer-events: auto;
+}
+
+.dds-chat-scroll-bridge {
+    position: absolute;
+    inset: 0 calc(-1 * var(--spacing-dds-lg)) auto;
+    z-index: 1;
+    height: var(--spacing-dds-4xl);
+    touch-action: none;
+}
+
+.dds-chat[data-started="true"] .dds-chat-dock::before {
     content: "";
     position: absolute;
-    inset: auto calc(-1 * var(--spacing-dds-lg)) calc(-1 * var(--spacing-dds-xs));
+    inset: 0 calc(-1 * var(--spacing-dds-lg)) calc(-1 * var(--spacing-dds-xs));
     z-index: -1;
-    height: calc(var(--header-fade-height) + var(--spacing-dds-4xl));
-    background: linear-gradient(to bottom, transparent, var(--surface-page) 70%);
+    background: linear-gradient(
+        to bottom,
+        transparent 0,
+        color-mix(in srgb, var(--surface-page) 28%, transparent) var(--spacing-dds-2xl),
+        color-mix(in srgb, var(--surface-page) 62%, transparent) var(--spacing-dds-4xl),
+        color-mix(in srgb, var(--surface-page) 88%, transparent) 68%,
+        var(--surface-page) 88%
+    );
     pointer-events: none;
 }
 
@@ -268,8 +296,8 @@
     overscroll-behavior-y: contain;
     padding-block: calc(var(--site-header-row-height) + var(--header-fade-height))
         calc(var(--spacing-dds-xl) + var(--header-fade-height));
-    padding-inline-end: var(--spacing-dds-lg);
-    margin-inline-end: calc(-1 * var(--spacing-dds-lg));
+    padding-inline: var(--spacing-dds-lg);
+    margin-inline: calc(-1 * var(--spacing-dds-lg));
     scrollbar-width: thin;
     scrollbar-color: var(--border-control) transparent;
 }
@@ -296,6 +324,9 @@
 .dds-chat-log {
     display: grid;
     gap: var(--spacing-dds-2xl);
+    width: 100%;
+    max-width: var(--layout-chat-width);
+    margin-inline: auto;
 }
 
 .dds-chat-scroll-space {
@@ -318,6 +349,10 @@
     @apply font-work-title;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
+}
+
+.dds-chat-question:focus-visible {
+    outline: 0;
 }
 
 .dds-chat-answer {
@@ -374,6 +409,7 @@
 }
 
 .dds-chat[data-started="true"] .dds-chat-scene {
+    max-width: none;
     height: 100svh;
     min-height: calc(var(--spacing-dds-5xl) * 3);
     padding-block: 0 var(--spacing-dds-xs);

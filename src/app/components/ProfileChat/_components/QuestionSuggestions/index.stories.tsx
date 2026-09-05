@@ -33,6 +33,16 @@ export const FollowUps: Story = {
                 question: "What did you learn from ASR evaluation on MochiCall?",
                 sourceIds: ["mochicall"],
             },
+            {
+                label: "Where have you studied?",
+                question: "What is your education and academic background?",
+                sourceIds: ["education"],
+            },
+            {
+                label: "What was your work in Germany?",
+                question: "What did you work on during your visiting program in Germany?",
+                sourceIds: ["international-experience", "docfusionx"],
+            },
         ],
     },
 };
