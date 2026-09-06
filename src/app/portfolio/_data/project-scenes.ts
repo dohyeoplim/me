@@ -81,27 +81,27 @@ export const projectScenes = {
         {
             name: "Hospital approach",
             shapes: [
-                path([[126, 238], [444, 238]], "line", 2),
+                path([[96, 238], [414, 238]], "line", 2),
             ],
         },
         {
             name: "Hospital",
             shapes: [
-                rect(346, 117, 76, 120, "paper", 10),
-                rect(369, 143, 30, 9, "accent", 2),
-                rect(380, 132, 9, 31, "accent", 2),
-                rect(373, 210, 22, 27, "soft", 3),
-                rect(368, 205, 32, 5, "accent", 2),
+                rect(316, 117, 76, 120, "paper", 10),
+                rect(339, 143, 30, 9, "accent", 2),
+                rect(350, 132, 9, 31, "accent", 2),
+                rect(343, 210, 22, 27, "soft", 3),
+                rect(338, 205, 32, 5, "accent", 2),
             ],
         },
-        ...voice(94, 154),
+        ...voice(64, 154),
         {
             name: "Transportation",
             shapes: [
-                filledPath([[260, 174], [316, 174], [344, 194], [344, 214], [260, 214]], "accent"),
-                filledPath([[310, 182], [315, 182], [333, 195], [310, 195]], "paper"),
-                ellipse(276, 214, 17, 17, "ink"),
-                ellipse(328, 214, 17, 17, "ink"),
+                filledPath([[230, 174], [286, 174], [314, 194], [314, 214], [230, 214]], "accent"),
+                filledPath([[280, 182], [285, 182], [303, 195], [280, 195]], "paper"),
+                ellipse(246, 214, 17, 17, "ink"),
+                ellipse(298, 214, 17, 17, "ink"),
             ],
             motion: {
                 position: [
