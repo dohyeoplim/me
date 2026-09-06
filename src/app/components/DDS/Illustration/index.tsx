@@ -1,5 +1,6 @@
 import palette from "./palette.json";
 import type { IllustrationScene, IllustrationShape, Point } from "./types";
+import { illustrationTokens } from "./primitives";
 
 function pathData(shape: Extract<IllustrationShape, { kind: "path" }>) {
     const [first] = shape.points;
@@ -23,7 +24,7 @@ function Shape({ shape }: { shape: IllustrationShape }) {
     const style = {
         fill: shape.fill ? palette[shape.fill] : "none",
         stroke: shape.stroke ? palette[shape.stroke] : "none",
-        strokeWidth: shape.strokeWidth ?? 3,
+        strokeWidth: shape.strokeWidth ?? illustrationTokens.stroke.connection,
         strokeLinecap: "round" as const,
         strokeLinejoin: "round" as const,
     };

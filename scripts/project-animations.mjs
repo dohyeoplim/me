@@ -4,12 +4,19 @@ import ts from "typescript";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 const palette = JSON.parse(read("../src/app/components/DDS/Illustration/palette.json"));
-const definition = ts.transpileModule(read("../src/app/portfolio/_data/project-scenes.ts"), {
+const compile = (source) => ts.transpileModule(source, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
-const { projectScenes } = await import(`data:text/javascript;base64,${Buffer.from(definition).toString("base64")}`);
+const moduleUrl = (source) => `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
+const primitivesUrl = moduleUrl(compile(read("../src/app/components/DDS/Illustration/primitives.ts")));
+const { illustrationTokens } = await import(primitivesUrl);
+const definition = compile(read("../src/app/portfolio/_data/project-scenes.ts"));
+const { projectScenes } = await import(moduleUrl(definition.replace(
+    '"@/app/components/DDS/Illustration/primitives"', JSON.stringify(primitivesUrl),
+)));
 const still = (value) => ({ a: 0, k: value });
-const easing = { o: { x: [0.25], y: [0.1] }, i: { x: [0.25], y: [1] } };
+const [x1, y1, x2, y2] = illustrationTokens.motion.easing;
+const easing = { o: { x: [x1], y: [y1] }, i: { x: [x2], y: [y2] } };
 
 function animated(frames, convert, fallback) {
     if (!frames?.length) return still(fallback);
@@ -57,7 +64,7 @@ function group(shape, draw) {
             ...(shape.fill ? [{ ty: "fl", c: still(color(shape.fill)), o: still(100), r: 1 }] : []),
             ...(shape.stroke ? [{
                 ty: "st", c: still(color(shape.stroke)), o: still(100),
-                w: still(shape.strokeWidth ?? 3), lc: 2, lj: 2, ml: 4,
+                w: still(shape.strokeWidth ?? illustrationTokens.stroke.connection), lc: 2, lj: 2, ml: 4,
             }] : []),
             ...(draw ? [{
                 ty: "tm", s: still(0), e: animated(draw, (value) => [value * 100], 100), o: still(0), m: 1,
@@ -69,7 +76,7 @@ function group(shape, draw) {
 
 function composition(scene) {
     return {
-        v: "5.13.0", fr: 30, ip: 0, op: scene.frames, w: scene.width, h: scene.height,
+        v: "5.13.0", fr: illustrationTokens.motion.frameRate, ip: 0, op: scene.frames, w: scene.width, h: scene.height,
         nm: scene.label, ddd: 0, assets: [],
         layers: scene.layers.toReversed().map(({ name, shapes, origin = [0, 0], motion }, index) => ({
             ty: 4, ind: index + 1, nm: name, ddd: 0, sr: 1, ip: 0, op: scene.frames, st: 0, bm: 0,

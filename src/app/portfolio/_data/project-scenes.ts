@@ -1,22 +1,5 @@
-import type {
-    IllustrationColor, IllustrationLayer, IllustrationScene, IllustrationShape, Point,
-} from "@/app/components/DDS/Illustration/types";
-
-const rect = (
-    x: number, y: number, width: number, height: number, fill: IllustrationColor, radius = 4,
-): IllustrationShape => ({ kind: "rect", x, y, width, height, fill, radius });
-
-const ellipse = (x: number, y: number, width: number, height: number, fill: IllustrationColor): IllustrationShape => ({
-    kind: "ellipse", x, y, width, height, fill,
-});
-
-const path = (points: Point[], stroke: IllustrationColor = "accent", strokeWidth = 3): IllustrationShape => ({
-    kind: "path", points, stroke, strokeWidth,
-});
-
-const filledPath = (points: Point[], fill: IllustrationColor): IllustrationShape => ({
-    kind: "path", points, fill, closed: true,
-});
+import type { IllustrationLayer, IllustrationShape } from "@/app/components/DDS/Illustration/types";
+import { ellipse, filledPath, path, rect, scene } from "@/app/components/DDS/Illustration/primitives";
 
 const voice = (x: number, y: number): IllustrationLayer[] => [20, 36, 52, 36, 20].map((height, index) => ({
     name: `Voice ${index}`,
@@ -38,10 +21,6 @@ const paper = (x: number, y: number): IllustrationShape[] => [
     rect(x + 16, y + 46, 40, 5, "line", 2.5),
     rect(x + 16, y + 62, 30, 5, "line", 2.5),
 ];
-
-const scene = (label: string, layers: IllustrationLayer[]): IllustrationScene => ({
-    label, width: 480, height: 320, frames: 120, layers,
-});
 
 export const projectScenes = {
     driving: scene("Near, middle, and far depth features are pooled independently into three feature vectors",

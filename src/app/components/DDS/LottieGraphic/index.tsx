@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AnimationItem } from "lottie-web";
+import { illustrationTokens } from "../Illustration/primitives";
 
 type Props = {
     src: string;
@@ -39,7 +40,7 @@ export default function LottieGraphic({ src, children }: Props) {
                 const player = lottie.loadAnimation({
                     container: element,
                     renderer: "svg",
-                    loop: true,
+                    loop: illustrationTokens.motion.loop,
                     autoplay: false,
                     path: src,
                     rendererSettings: { preserveAspectRatio: "xMidYMid meet", progressiveLoad: true },
