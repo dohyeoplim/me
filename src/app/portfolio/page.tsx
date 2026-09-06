@@ -8,7 +8,7 @@ import PortfolioIntro from "./_components/PortfolioIntro";
 import "./portfolio.css";
 
 export const metadata: Metadata = {
-    title: "Portfolio, Dohyeop Lim",
+    title: "Portfolio :: Dohyeop",
     description: "Research and projects in computer vision, speech recognition, multimodal models, and evaluation.",
 };
 

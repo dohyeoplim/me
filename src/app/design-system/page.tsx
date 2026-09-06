@@ -11,7 +11,7 @@ import SectionNavigation from "@/app/components/DDS/SectionNavigation";
 import { designSystem, navigation } from "./data";
 
 export const metadata: Metadata = {
-    title: `${designSystem.name}, ${designSystem.fullName}`,
+    title: "Design :: Dohyeop",
     description: designSystem.description,
 };
 
