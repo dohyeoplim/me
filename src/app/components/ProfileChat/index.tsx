@@ -237,7 +237,7 @@ function ProfileChatContent() {
                                     {started && !pending && (
                                         <Button
                                             variant="text"
-                                            size="small"
+                                            size="medium"
                                             onClick={clearConversation}
                                             aria-label="Clear conversation"
                                         >
@@ -280,7 +280,7 @@ function ProfileChatContent() {
                                 <div className="dds-chat-more-control">
                                     <Button
                                         variant="text"
-                                        size="small"
+                                        size="medium"
                                         aria-expanded={showAllQuestions}
                                         onClick={() => setShowAllQuestions((previous) => !previous)}
                                     >
