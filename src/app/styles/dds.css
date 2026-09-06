@@ -16,6 +16,7 @@
     --radius-control: 0.5rem;
     --radius-pill: 999px;
     --duration-reveal: 480ms;
+    --duration-diagram-loop: 4s;
     --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
     --layout-content-width: 56rem;
     --layout-reading-width: 42rem;
@@ -230,6 +231,20 @@ body:has(.dds-chat[data-started="true"]) .site-footer[data-home="true"] {
     color: var(--text-primary);
 }
 
+.ds-button[data-variant="soft"] {
+    background: var(--surface-muted);
+    color: var(--text-primary);
+    border-color: transparent;
+}
+
+.ds-button[data-variant="soft"]:is(:hover, [data-preview-state="hover"]) {
+    background: var(--border-subtle);
+}
+
+.ds-button[data-variant="soft"]:is(:active, [data-preview-state="pressed"]) {
+    background: var(--border-control);
+}
+
 .ds-button[data-variant="outline"]:is(:hover, [data-preview-state="hover"]) {
     border-color: var(--text-primary);
     background: var(--surface-muted);
@@ -354,12 +369,6 @@ body:has(.dds-chat[data-started="true"]) .site-footer[data-home="true"] {
 
 .dds-lottie :is(.dds-lottie-player, .dds-lottie-fallback) :is(path, rect, circle, ellipse, line, polyline, polygon) {
     vector-effect: non-scaling-stroke;
-}
-
-.dds-lottie-replay {
-    position: absolute;
-    right: var(--spacing-dds-sm);
-    bottom: var(--spacing-dds-sm);
 }
 
 .ds-button[data-preview-state="focus"] {

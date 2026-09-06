@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AnimationItem } from "lottie-web";
-import { RotateCcw } from "lucide-react";
-import IconButton from "../IconButton";
 
 type Props = {
     src: string;
@@ -14,7 +12,6 @@ export default function LottieGraphic({ src, children }: Props) {
     const container = useRef<HTMLDivElement>(null);
     const animation = useRef<AnimationItem | null>(null);
     const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
-    const [reducedMotion, setReducedMotion] = useState(false);
     const ready = loadedSrc === src;
 
     useEffect(() => {
@@ -27,7 +24,6 @@ export default function LottieGraphic({ src, children }: Props) {
         let visible = false;
 
         const sync = () => {
-            setReducedMotion(preference.matches);
             if (!animation.current) return;
             if (preference.matches) animation.current.goToAndStop(animation.current.totalFrames - 1, true);
             else if (visible) animation.current.play();
@@ -43,7 +39,7 @@ export default function LottieGraphic({ src, children }: Props) {
                 const player = lottie.loadAnimation({
                     container: element,
                     renderer: "svg",
-                    loop: false,
+                    loop: true,
                     autoplay: false,
                     path: src,
                     rendererSettings: { preserveAspectRatio: "xMidYMid meet", progressiveLoad: true },
@@ -93,22 +89,6 @@ export default function LottieGraphic({ src, children }: Props) {
                 {children}
             </div>
             <div ref={container} className="dds-lottie-player" aria-hidden="true" />
-            {ready && !reducedMotion && (
-                <IconButton
-                    type="button"
-                    variant="text"
-                    size="large"
-                    className="dds-lottie-replay"
-                    aria-label="Replay project animation"
-                    onClick={() => {
-                        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                            animation.current?.goToAndPlay(0, true);
-                        }
-                    }}
-                >
-                    <RotateCcw size={16} aria-hidden="true" />
-                </IconButton>
-            )}
         </div>
     );
 }
