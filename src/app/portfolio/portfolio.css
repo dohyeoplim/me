@@ -60,10 +60,6 @@
 
 .portfolio-section + .portfolio-section { border-top: 1px solid var(--border-subtle); }
 
-.portfolio-section:last-child {
-    min-height: calc(100dvh - var(--site-header-row-height) - var(--section-navigation-height));
-}
-
 .portfolio-section > .dds-section-heading { margin-bottom: var(--spacing-dds-2xl); }
 
 .portfolio-section-intro > .dds-section-heading,
@@ -301,7 +297,7 @@
     gap: var(--spacing-dds-xs);
     width: max-content;
     max-width: 100%;
-    margin-inline: auto;
+    margin-inline: 0;
     padding: var(--spacing-dds-2xs);
     overflow-x: auto;
     border: 1px solid var(--border-subtle);
@@ -359,21 +355,27 @@
     .portfolio-project-info { grid-column: 2; grid-row: 2; align-self: start; }
     .portfolio-identity {
         display: grid;
+        grid-row: 1 / span 2;
         align-content: center;
         gap: var(--spacing-dds-sm);
     }
 
-    .portfolio-portrait { grid-row: auto; }
+    .portfolio-portrait { grid-row: 1; }
+    .portfolio-intro-links {
+        grid-column: 2;
+        grid-row: 2;
+        justify-content: center;
+        align-self: start;
+        gap: var(--spacing-dds-md);
+        margin-top: 0;
+    }
 
-    .portfolio-section-intro,
     .portfolio-feature-intro { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--spacing-dds-2xl); }
 
     .portfolio-project,
     .portfolio-research-list,
     .portfolio-experience,
-    .portfolio-education,
-    .portfolio-additional article,
-    .portfolio-skills dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-2xl); }
+    .portfolio-additional article { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-2xl); }
 
     .portfolio-project { row-gap: var(--spacing-dds-md); }
 
@@ -383,7 +385,10 @@
 
     .portfolio-research-list { row-gap: var(--spacing-dds-sm); }
     .portfolio-research-list article { grid-template-rows: subgrid; grid-row: span 3; }
-    .portfolio-skills dl { row-gap: var(--spacing-dds-lg); }
+    .portfolio-skills dl > div {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        gap: var(--spacing-dds-2xl);
+    }
 }
 
 @container portfolio-decoder (min-width: 40rem) {

@@ -83,17 +83,6 @@ body:has(.dds-chat[data-started="true"]) .site-footer[data-home="true"] {
     );
 }
 
-.site-header:has(.portfolio-section-nav)::before {
-    inset: 0 0 auto;
-    height: calc(var(--site-header-row-height) + var(--header-fade-height));
-    background: linear-gradient(
-        to bottom,
-        var(--surface-page) 0,
-        var(--surface-page) calc(var(--site-header-row-height) - var(--spacing-dds-xs)),
-        transparent 100%
-    );
-}
-
 .site-header-main {
     position: relative;
     display: flex;

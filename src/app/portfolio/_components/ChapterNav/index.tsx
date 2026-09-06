@@ -89,7 +89,9 @@ function ChapterNavContent() {
                 const heading = section?.querySelector("h2");
                 return heading && heading.getBoundingClientRect().top <= headerHeight + navHeight + 32;
             });
-            setActive(current.at(-1)?.id ?? chapters[0].id);
+            const atBottom = window.scrollY > 0 &&
+                window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+            setActive((atBottom ? chapters.at(-1)?.id : current.at(-1)?.id) ?? chapters[0].id);
             frame = 0;
         };
         const schedule = () => {
