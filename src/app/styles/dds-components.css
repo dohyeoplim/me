@@ -138,7 +138,7 @@
 
 .dds-guide-header {
     display: grid;
-    gap: var(--spacing-dds-md);
+    gap: var(--spacing-dds-sm);
     padding-bottom: var(--spacing-dds-3xl);
 }
 
@@ -341,7 +341,7 @@
     }
 }
 .dds-guide-page {
-    padding-top: calc(var(--site-header-row-height) + var(--spacing-dds-2xl));
+    padding-top: var(--spacing-dds-page-top);
 }
 
 .dds-guide-page .ds-section {

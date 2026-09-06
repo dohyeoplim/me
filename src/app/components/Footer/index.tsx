@@ -17,6 +17,7 @@ export default function Footer() {
                 <small className="font-body04-light text-muted">&copy; 2026 Dohyeop Lim</small>
                 <Link
                     href="/design-system"
+                    transitionTypes={["nav-forward"]}
                     className="font-body03-regular text-muted hover:text-ink"
                     aria-label="DDS, DohyeopLim Design System"
                 >

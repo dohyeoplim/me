@@ -21,7 +21,7 @@ export default function DesignSystemPage() {
             <main id="main-content" className="dds-container dds-guide-page pb-dds-4xl">
                 <header className="dds-guide-header">
                     <h1 className="font-page-title">{designSystem.name}</h1>
-                    <p className="font-body">{designSystem.fullName}</p>
+                    <p className="font-body text-muted">{designSystem.fullName}</p>
                 </header>
                 <SectionNavigation sections={navigation} label="Design system sections" />
                 <section id="foundations" className="ds-section border-t border-line">
