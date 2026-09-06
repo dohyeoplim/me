@@ -36,7 +36,7 @@ export default function Background() {
                             <div>
                                 <p className="font-support">{community.description}</p>
                                 {community.href && (
-                                    <LinkButton href={community.href} label="Website" icon="external" />
+                                    <LinkButton href={community.href} label={community.linkLabel} icon="external" />
                                 )}
                             </div>
                         </article>
