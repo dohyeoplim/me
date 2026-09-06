@@ -154,15 +154,14 @@ export default function ButtonShowcase() {
                         </div>
                         <div>
                             <Button
-                                variant="text"
-                                size="small"
+                                variant="outline"
                                 onClick={() => {
                                     setSaved(false);
                                     setNotifications(false);
                                     setContinued(false);
                                 }}
                             >
-                                <RotateCcw size={14} aria-hidden="true" /> Reset examples
+                                <RotateCcw size={16} aria-hidden="true" /> Reset examples
                             </Button>
                         </div>
                     </Surface>

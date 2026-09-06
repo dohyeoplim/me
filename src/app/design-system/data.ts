@@ -5,30 +5,42 @@ export const navigation = [
     { id: "buttons", label: "Buttons" },
     { id: "components", label: "Components" },
     { id: "graphics", label: "Graphics" },
-    { id: "motion", label: "Motion" },
     { id: "loading", label: "Loading" },
 ];
 
 export const colors = [
-    { name: "Background", token: "--surface-page" },
-    { name: "Surface", token: "--surface-panel" },
-    { name: "Subtle fill", token: "--surface-muted" },
-    { name: "Divider", token: "--border-subtle" },
-    { name: "Text", token: "--text-primary" },
-    { name: "Diagram", token: "--diagram-accent" },
-    { name: "Illustration background", token: "--surface-illustration" },
+    { name: "Background", token: "--surface-page", hex: "#FAFAFC" },
+    { name: "Surface", token: "--surface-panel", hex: "#FFFFFF" },
+    { name: "Subtle fill", token: "--surface-muted", hex: "#F3F3F6" },
+    { name: "Divider", token: "--border-subtle", hex: "#DCDCE3" },
+    { name: "Text", token: "--text-primary", hex: "#0F0F10" },
+    { name: "Diagram", token: "--diagram-accent", hex: "#547A9F" },
+    { name: "Illustration background", token: "--surface-illustration", hex: "#F3F6F8" },
 ];
 
 export const typography = [
-    { name: "Page title", className: "font-page-title", sample: "Portfolio" },
-    { name: "Section title", className: "font-section-title", sample: "Research" },
-    { name: "Project title", className: "font-work-title", sample: "Industrial OCR" },
+    {
+        name: "Page title", className: "font-page-title", sample: "Portfolio",
+        size: "36 to 44px", weight: "Medium 500", tracking: "-0.025em", leading: "115%",
+    },
+    {
+        name: "Section title", className: "font-section-title", sample: "Research",
+        size: "24 to 28px", weight: "Medium 500", tracking: "-0.025em", leading: "125%",
+    },
+    {
+        name: "Project title", className: "font-work-title", sample: "Industrial OCR",
+        size: "20 to 22px", weight: "Medium 500", tracking: "-0.025em", leading: "135%",
+    },
     {
         name: "Body",
         className: "font-body",
         sample: "I study document understanding and structured identifier recognition.",
+        size: "16 to 17px", weight: "Regular 400", tracking: "0em", leading: "165%",
     },
-    { name: "Supporting text", className: "font-support", sample: "First author, under review" },
+    {
+        name: "Supporting text", className: "font-support", sample: "First author, under review",
+        size: "15px", weight: "Regular 400", tracking: "0em", leading: "150%",
+    },
 ];
 
 export const spacing = [
@@ -40,9 +52,9 @@ export const spacing = [
 ];
 
 export const corners = [
-    { name: "Control", value: "control" },
-    { name: "Surface", value: "surface" },
-    { name: "Pill", value: "pill" },
+    { name: "Control", value: "control", radius: "8px" },
+    { name: "Surface", value: "surface", radius: "12px" },
+    { name: "Pill", value: "pill", radius: "999px" },
 ] as const;
 
 export const buttonSizes = [

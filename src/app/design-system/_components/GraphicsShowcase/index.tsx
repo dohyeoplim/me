@@ -1,8 +1,7 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
-import LottieGraphic from "@/app/components/DDS/LottieGraphic";
-import ProjectVisual from "@/app/portfolio/_components/ProjectVisual";
-import { projectAnimationSrc, projectScenes } from "@/app/portfolio/_data/project-scenes";
-import { graphicColors, graphicExamples, graphicRules, graphicSpecs } from "./data";
+import Illustration from "@/app/components/DDS/Illustration";
+import { graphicColors, graphicElements, graphicRules, graphicSpecs } from "./data";
+import MotionShowcase from "../MotionShowcase";
 
 export default function GraphicsShowcase() {
     return (
@@ -23,6 +22,7 @@ export default function GraphicsShowcase() {
                             <div className="dds-graphics-swatch"
                                 style={{ backgroundColor: color }} aria-hidden="true" />
                             <p className="font-support">{name}</p>
+                            <p className="font-support text-muted">{color.toUpperCase()}</p>
                         </div>
                     ))}
                 </div>
@@ -34,29 +34,25 @@ export default function GraphicsShowcase() {
                         <div key={name}><dt>{name}</dt><dd>{value}</dd></div>
                     ))}
                 </dl>
-                <p className="font-support text-muted">
-                    Drawing measurements use canvas units. Custom silhouettes can use intermediate sizes.
-                    Graphics scale to fit their container without cropping.
-                </p>
             </div>
             <div>
-                <SectionHeading title="In use" variant="subsection"
-                    description="Loops pause outside the viewport. Reduced motion uses a still frame." />
-                <div className="dds-graphics-examples">
-                    {graphicExamples.map(({ kind, name, detail }) => (
-                        <figure key={kind}>
-                            <div className="dds-graphics-stage" role="img" aria-label={projectScenes[kind].label}>
-                                <LottieGraphic src={projectAnimationSrc(kind)}>
-                                    <ProjectVisual kind={kind} />
-                                </LottieGraphic>
+                <SectionHeading title="Elements" variant="subsection" />
+                <div className="dds-graphics-elements">
+                    {graphicElements.map(({ scene, name, frame }) => (
+                        <figure key={name}>
+                            <div className="dds-graphics-element" data-element={name.toLowerCase()}>
+                                <Illustration scene={scene} frame={frame} />
                             </div>
                             <figcaption>
-                                <h3 className="font-work-title">{name}</h3>
-                                <p className="font-support text-muted">{detail}</p>
+                                <p className="font-support">{name}</p>
                             </figcaption>
                         </figure>
                     ))}
                 </div>
+            </div>
+            <div>
+                <SectionHeading title="Motion" variant="subsection" />
+                <MotionShowcase />
             </div>
         </div>
     );

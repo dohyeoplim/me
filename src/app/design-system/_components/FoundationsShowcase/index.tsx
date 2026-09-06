@@ -7,7 +7,7 @@ export default function FoundationsShowcase() {
             <div className="dds-guide-group">
                 <SectionHeading title="Color" variant="subsection" />
                 <div className="dds-color-grid">
-                    {colors.map(({ name, token }) => (
+                    {colors.map(({ name, token, hex }) => (
                         <div key={token}>
                             <div
                                 className="dds-color-swatch"
@@ -15,16 +15,25 @@ export default function FoundationsShowcase() {
                                 aria-hidden="true"
                             />
                             <p className="font-support">{name}</p>
+                            <p className="font-support text-muted">{hex}</p>
                         </div>
                     ))}
                 </div>
             </div>
             <div className="dds-guide-group">
-                <SectionHeading title="Typography" variant="subsection" description="Pretendard, regular and medium." />
+                <SectionHeading title="Typography" variant="subsection" />
                 <dl>
-                    {typography.map(({ name, className, sample }) => (
+                    {typography.map(({ name, className, sample, size, weight, tracking, leading }) => (
                         <div key={name} className="dds-type-sample">
-                            <dt className="font-support text-muted">{name}</dt>
+                            <dt className="font-support">
+                                {name}
+                                <div className="dds-type-spec">
+                                    <p>Pretendard</p>
+                                    <p>{size}, {weight}</p>
+                                    <p>Letter spacing {tracking}</p>
+                                    <p>Line height {leading}</p>
+                                </div>
+                            </dt>
                             <dd className={className}>{sample}</dd>
                         </div>
                     ))}
@@ -52,13 +61,13 @@ export default function FoundationsShowcase() {
                 <SectionHeading
                     title="Corners"
                     variant="subsection"
-                    description="Squircle corners with a rounded fallback. Pills are reserved for compact choices."
                 />
                 <div className="dds-corner-grid">
-                    {corners.map(({ name, value }) => (
+                    {corners.map(({ name, value, radius }) => (
                         <div key={value}>
                             <div className="dds-corner-sample" data-corner={value} aria-hidden="true" />
                             <p className="font-support">{name}</p>
+                            <p className="font-support text-muted">{radius}</p>
                         </div>
                     ))}
                 </div>

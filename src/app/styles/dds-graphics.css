@@ -1,9 +1,9 @@
 .dds-graphics-guide { display: grid; gap: var(--spacing-dds-3xl); }
 .dds-graphics-rules,
-.dds-graphics-examples { display: grid; gap: var(--spacing-dds-xl); }
+.dds-graphics-elements { display: grid; gap: var(--spacing-dds-xl); }
 .dds-graphics-rules > div,
 .dds-graphics-palette > div,
-.dds-graphics-examples figcaption { display: grid; gap: var(--spacing-dds-xs); }
+.dds-graphics-elements figcaption { display: grid; gap: var(--spacing-dds-xs); }
 .dds-graphics-palette { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-md); }
 .dds-graphics-swatch {
     height: var(--spacing-dds-3xl);
@@ -13,16 +13,51 @@
 .dds-graphics-specs { display: grid; gap: var(--spacing-dds-sm); margin-bottom: var(--spacing-dds-lg); }
 .dds-graphics-specs > div { display: flex; justify-content: space-between; gap: var(--spacing-dds-lg); }
 .dds-graphics-specs dd { flex-shrink: 0; }
-.dds-graphics-examples figure { display: grid; align-content: start; gap: var(--spacing-dds-md); }
-.dds-graphics-stage {
-    aspect-ratio: 12 / 5;
+.dds-graphics-elements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dds-graphics-elements figure { display: grid; gap: var(--spacing-dds-sm); text-align: center; }
+.dds-graphics-element {
+    height: var(--spacing-dds-5xl);
     border-radius: var(--radius-panel);
     corner-shape: squircle;
     background: var(--surface-gallery);
     overflow: hidden;
 }
 @media (min-width: 768px) {
-    .dds-graphics-rules,
-    .dds-graphics-examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dds-graphics-rules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .dds-graphics-elements { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .dds-graphics-palette { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
+.dds-graphics-element svg > g {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: dds-element-lift 4s var(--ease-feedback) infinite;
+}
+.dds-graphics-element[data-element="vehicle"] svg > g { animation-name: dds-element-travel; }
+.dds-graphics-element[data-element="plant"] svg > g,
+.dds-graphics-element[data-element="chair"] svg > g {
+    transform-origin: center bottom;
+    animation-name: dds-element-sway;
+}
+.dds-graphics-element[data-element="waveform"] svg > g { animation-name: dds-element-pulse; }
+.dds-graphics-element[data-element="waveform"] svg > g:nth-child(2n) { animation-delay: -0.4s; }
+.dds-graphics-element[data-element="waveform"] svg > g:nth-child(3n) { animation-delay: -0.8s; }
+@keyframes dds-element-lift {
+    0%, 75%, 100% { transform: translateY(0); }
+    35%, 50% { transform: translateY(-3px); }
+}
+@keyframes dds-element-travel {
+    0%, 100% { transform: translateX(-4px); }
+    45%, 70% { transform: translateX(4px); }
+}
+@keyframes dds-element-sway {
+    0%, 100% { transform: rotate(-2deg); }
+    45%, 70% { transform: rotate(2deg); }
+}
+@keyframes dds-element-pulse {
+    0%, 100% { transform: scaleY(0.7); }
+    35%, 60% { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .dds-graphics-element svg > g { animation: none; }
 }

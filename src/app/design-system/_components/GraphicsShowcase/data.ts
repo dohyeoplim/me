@@ -1,5 +1,6 @@
 import palette from "@/app/components/DDS/Illustration/palette.json";
 import { illustrationTokens } from "@/app/components/DDS/Illustration/primitives";
+import { projectScenes } from "@/app/portfolio/_data/project-scenes";
 
 export const graphicColors = [
     { name: "Primary shape", color: palette.ink },
@@ -11,30 +12,16 @@ export const graphicColors = [
 
 export const graphicRules = [
     {
-        title: "One idea per scene",
-        description: "Show the task or method. Keep detailed architecture and results in the accompanying text.",
+        title: "Shapes",
+        description: "Simple filled forms, with lines for connections and scanning.",
     },
     {
-        title: "Filled shapes first",
-        description: "Use a few recognizable silhouettes. Reserve outlines for connections, detection, and boundaries.",
+        title: "Color",
+        description: "Neutral objects, blue for active information.",
     },
     {
-        title: "Color carries meaning",
-        description:
-            "Use blue for active fields and verification. Use neutral tones for objects and supporting details.",
-    },
-    {
-        title: "Direct connections",
-        description:
-            "Connect related objects with straight lines. Add bends only to explain a route or avoid overlap.",
-    },
-    {
-        title: "Fit the visible frame",
-        description: "Balance left and right margins across the whole animation. Keep moving objects inside the frame.",
-    },
-    {
-        title: "Quiet repetition",
-        description: "Use a short action, a pause, and a return. Hide position resets with a fade when needed.",
+        title: "Motion",
+        description: "Small movements, a brief pause, then repeat.",
     },
 ];
 
@@ -48,10 +35,22 @@ export const graphicSpecs = [
     },
 ];
 
-export const graphicExamples = [
-    { kind: "speech", name: "Transportation", detail: "Appear, travel to the destination, then fade out." },
-    { kind: "calls", name: "Conversation", detail: "Connect speech with a health record." },
-    { kind: "vision", name: "Verification", detail: "Scan each object in sequence." },
-    { kind: "graph", name: "Retrieval", detail: "Select fields, connect documents, and assemble a response." },
-    { kind: "driving", name: "Depth grouping", detail: "Separate depth groups and pool their features independently." },
+const elementDefinitions = [
+    { kind: "speech", name: "Hospital", layer: "Hospital", frame: [296, 97, 116, 160] },
+    { kind: "speech", name: "Vehicle", layer: "Transportation", frame: [210, 154, 124, 89] },
+    { kind: "speech", name: "Waveform", layer: "Voice", frame: [44, 108, 103, 92] },
+    { kind: "vision", name: "Chair", layer: "Chair", frame: [116, 107, 122, 147] },
+    { kind: "vision", name: "Plant", layer: "Plant", frame: [265, 88, 103, 166] },
+    { kind: "graph", name: "Document", layer: "Text document", frame: [30, 56, 112, 144] },
 ] as const;
+
+export const graphicElements = elementDefinitions.map(({ kind, name, layer, frame }) => ({
+    name,
+    frame,
+    scene: {
+        ...projectScenes[kind],
+        layers: projectScenes[kind].layers
+            .filter((item) => layer === "Voice" ? item.name.startsWith("Voice ") : item.name === layer)
+            .map((item) => ({ ...item, motion: undefined })),
+    },
+}));

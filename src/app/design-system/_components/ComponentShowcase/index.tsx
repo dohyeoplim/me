@@ -1,5 +1,4 @@
 import { ArrowUpRight } from "lucide-react";
-import Badge from "@/app/components/DDS/Badge";
 import { ButtonLink } from "@/app/components/DDS/Button";
 import Metric from "@/app/components/DDS/Metric";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
@@ -14,7 +13,7 @@ export default function ComponentShowcase() {
         <>
             <div className="dds-guide-group">
                 <SectionHeading title="Headings" variant="subsection" />
-                <Surface padding="comfortable" className="dds-specimen-stack">
+                <Surface padding="compact" className="dds-specimen-stack">
                     <SectionHeading title="Research" description="Document understanding and recognition." />
                     <SectionHeading
                         title="Industrial OCR"
@@ -53,7 +52,6 @@ export default function ComponentShowcase() {
                 <SectionHeading
                     title="Fields"
                     variant="subsection"
-                    description="Labels and guidance stay close to the input."
                 />
                 <div className="dds-specimen-grid">
                     <Surface padding="compact" className="dds-specimen-stack">
@@ -80,14 +78,6 @@ export default function ComponentShowcase() {
                             <p className="font-support text-muted">{detail}</p>
                         </Surface>
                     ))}
-                </div>
-            </div>
-            <div className="dds-guide-group">
-                <SectionHeading title="Status text" variant="subsection" />
-                <div className="dds-example-actions">
-                    <Badge>In progress</Badge>
-                    <Badge tone="accent">Under review</Badge>
-                    <Badge tone="success">Complete</Badge>
                 </div>
             </div>
             <div className="dds-guide-group">

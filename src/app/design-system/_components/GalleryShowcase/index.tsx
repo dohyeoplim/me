@@ -1,22 +1,21 @@
 import Carousel from "@/app/components/DDS/Carousel";
-import DetailDialog from "@/app/components/DDS/DetailDialog";
+import GalleryCard from "@/app/components/DDS/GalleryCard";
 
 const examples = ["Image preview", "Content preview", "Detail preview"];
 
 export default function GalleryShowcase() {
     return (
-        <Carousel label="Gallery examples">
+        <Carousel label="Gallery examples" variant="full-bleed">
             {examples.map((title) => (
-                <div key={title} className="ds-panel p-dds-lg dds-gallery-example">
+                <GalleryCard key={title} title={title} description="A short description of the selected item."
+                    detailsLabel="View details" mediaLabel="Image placeholder" media={
                     <div className="dds-gallery-placeholder" aria-hidden="true">
                         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M0 0L100 100M100 0L0 100" vectorEffect="non-scaling-stroke" />
                         </svg>
-                    </div>
-                    <DetailDialog title={title} label="View details">
+                    </div>}>
                         <p>Browse the collection, then inspect one item without leaving the page.</p>
-                    </DetailDialog>
-                </div>
+                </GalleryCard>
             ))}
         </Carousel>
     );
