@@ -63,7 +63,7 @@ export const projects: Project[] = [
         contribution:
             "Developed depth-map-based gated projection. Global image features control a gate over " +
             "depth-grouped features before projection and feature interaction.",
-        outcome: "The training pipeline also maintains an EMA teacher using moving averages of model parameters.",
+        outcome: "Implemented the EMA teacher training pipeline using moving averages of model parameters.",
         href: "https://github.com/DriverNet-Project/DriverNet",
         visual: "driving",
     },

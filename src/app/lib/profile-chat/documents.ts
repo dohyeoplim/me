@@ -158,6 +158,7 @@ export const profileDocuments: ProfileDocument[] = [
             "Industrial OCR data and evaluation and Kraftbox are both part of this industrial AI project",
             `${research.programs.computing.title} with IITP. ` +
                 `Project: ${research.programs.computing.projectTitle}. ${research.programs.computing.details}`,
+            research.programs.computing.infrastructure,
         ]),
         keywords: ["과제", "산업AI", "교육", "VLA", "요구사항", "개발보조", "gpu", "research", "education"],
         kind: "research",
