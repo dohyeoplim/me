@@ -1,0 +1,28 @@
+.dds-graphics-guide { display: grid; gap: var(--spacing-dds-3xl); }
+.dds-graphics-rules,
+.dds-graphics-examples { display: grid; gap: var(--spacing-dds-xl); }
+.dds-graphics-rules > div,
+.dds-graphics-palette > div,
+.dds-graphics-examples figcaption { display: grid; gap: var(--spacing-dds-xs); }
+.dds-graphics-palette { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-md); }
+.dds-graphics-swatch {
+    height: var(--spacing-dds-3xl);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-control);
+}
+.dds-graphics-specs { display: grid; gap: var(--spacing-dds-sm); margin-bottom: var(--spacing-dds-lg); }
+.dds-graphics-specs > div { display: flex; justify-content: space-between; gap: var(--spacing-dds-lg); }
+.dds-graphics-specs dd { flex-shrink: 0; }
+.dds-graphics-examples figure { display: grid; align-content: start; gap: var(--spacing-dds-md); }
+.dds-graphics-stage {
+    aspect-ratio: 12 / 5;
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background: var(--surface-gallery);
+    overflow: hidden;
+}
+@media (min-width: 768px) {
+    .dds-graphics-rules,
+    .dds-graphics-examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dds-graphics-palette { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

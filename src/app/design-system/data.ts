@@ -4,6 +4,7 @@ export const navigation = [
     { id: "foundations", label: "Foundations" },
     { id: "buttons", label: "Buttons" },
     { id: "components", label: "Components" },
+    { id: "graphics", label: "Graphics" },
     { id: "motion", label: "Motion" },
     { id: "loading", label: "Loading" },
 ];
