@@ -3,6 +3,7 @@
 import { useState } from "react";
 import NextImage from "next/image";
 import { upload } from "@vercel/blob/client";
+import { imageUploadError, imageUploadTypes } from "@/app/lib/uploads";
 import { TextInput } from "../Field";
 
 type Props = {
@@ -19,10 +20,14 @@ export default function ImageField({
     previewClassName = "h-auto w-full",
 }: Props) {
     const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        const validationError = imageUploadError(file);
+        setError(validationError);
+        if (validationError) return;
         setUploading(true);
         try {
             const blob = await upload(file.name, file, {
@@ -30,6 +35,8 @@ export default function ImageField({
                 handleUploadUrl: "/api/blob/upload",
             });
             onChange({ url: blob.url });
+        } catch {
+            setError("The image could not be uploaded. Try again.");
         } finally {
             setUploading(false);
         }
@@ -50,7 +57,8 @@ export default function ImageField({
             <label className="flex cursor-pointer items-center justify-center rounded-md border border-dashed border-grey-300 py-3 font-body04-light text-grey-500 hover:border-grey-400">
                 <input
                     type="file"
-                    accept="image/*"
+                    accept={imageUploadTypes.join(",")}
+                    disabled={uploading}
                     onChange={onFile}
                     className="hidden"
                 />
@@ -60,6 +68,7 @@ export default function ImageField({
                       ? "Replace image"
                       : "Upload image"}
             </label>
+            {error && <p className="font-support text-ink" role="alert">{error}</p>}
             <TextInput
                 label="alt"
                 value={alt}

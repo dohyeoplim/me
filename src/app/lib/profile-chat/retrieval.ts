@@ -81,7 +81,7 @@ function projectLinkWeight(repository: NonNullable<ProfileDocument["repository"]
         : null;
     if (![source.kind, card?.type].some((kind) => kind === "research" || kind === "project")) return 0;
     const compact = (value: string) => normalize(value).replace(/[^\p{L}\p{N}]/gu, "");
-    return compact(repository.fullName.split("/")[1]) === compact(source.title) ? 8 : 0;
+    return compact(repository.fullName.split("/")[1] ?? "") === compact(source.title) ? 8 : 0;
 }
 
 function repositoryPriority(
@@ -93,7 +93,7 @@ function repositoryPriority(
 ) {
     const repository = document.repository;
     if (!repository) return 0;
-    const name = normalize(repository.fullName.split("/")[1]);
+    const name = normalize(repository.fullName.split("/")[1] ?? "");
     const support = name === ".github" || /(?:^|[-_])(privacy|policy|terms|admin)(?:$|[-_])/.test(name);
     const explicit = query.includes(name) || /\b(privacy|policy|terms|admin)\b|개인정보|관리자/.test(query);
     const penalty = support && !explicit ? -30 : 0;

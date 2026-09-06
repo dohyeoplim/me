@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "../schema";
 import { profileCardRegistry } from "./types";
 
 export const documentIdSchema = z.string().regex(/^[a-z0-9][a-z0-9._-]{0,119}$/);

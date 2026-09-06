@@ -2,15 +2,15 @@ import SlideTransition from "@/app/components/SlideTransition";
 import { loadPosts } from "@/app/lib/contentLoader";
 import BlogList, { type BlogListItem } from "./BlogList";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata = {
     title: "Writing :: Dohyeop",
     description: "Paper reviews and research notes.",
 };
 
-export default async function BlogIndex() {
-    const posts = await loadPosts(true);
+async function PublishedPosts() {
+    const posts = await loadPosts();
     const items: BlogListItem[] = posts.map((post) => ({
         slug: post.slug,
         title: post.title,
@@ -19,7 +19,10 @@ export default async function BlogIndex() {
         description: post.doc.description,
         tags: post.doc.tags,
     }));
+    return <BlogList items={items} />;
+}
 
+export default function BlogIndex() {
     return (
         <SlideTransition>
             <div className="w-full max-w-4xl mx-auto px-6 pt-28 md:pt-40 pb-30">
@@ -33,9 +36,12 @@ export default async function BlogIndex() {
                         </p>
                     </header>
 
-                    <BlogList items={items} />
+                    <Suspense fallback={<p className="font-support text-muted" role="status">Loading writing…</p>}>
+                        <PublishedPosts />
+                    </Suspense>
                 </div>
             </div>
         </SlideTransition>
     );
 }
+import { Suspense } from "react";

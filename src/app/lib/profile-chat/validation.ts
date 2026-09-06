@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "../schema";
 import { cardIdSchema, documentIdSchema } from "./answer-content";
 
 export const maxBodyBytes = 48 * 1024;
@@ -46,7 +46,7 @@ export function validateOrigin(request: Request) {
 }
 
 export async function readQuestion(request: Request) {
-    if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
+    if (request.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() !== "application/json") {
         throw new ChatError("Send a JSON request.", 415, "invalid_content_type");
     }
 

@@ -17,9 +17,11 @@ export default function SectionNodeFields({ nodes, onChange }: Props) {
     const remove = (i: number) => onChange(nodes.filter((_, idx) => idx !== i));
     const move = (i: number, dir: -1 | 1) => {
         const j = i + dir;
-        if (j < 0 || j >= nodes.length) return;
+        const current = nodes[i];
+        const target = nodes[j];
+        if (!current || !target) return;
         const next = [...nodes];
-        [next[i], next[j]] = [next[j], next[i]];
+        [next[i], next[j]] = [target, current];
         onChange(next);
     };
 

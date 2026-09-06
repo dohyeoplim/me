@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from "../schema";
 import { includeRepository, plainReadme, repositoryKnowledgeSource } from "./github-content";
-import { listKnowledgeSources, saveGitHubKnowledgeSource } from "./repository";
+import { listKnowledgeSources, saveGitHubKnowledgeSources } from "./repository";
 import type { RepositoryMetadata } from "./schema";
 
 const githubLogin = "dohyeoplim";
@@ -43,7 +43,8 @@ async function mapConcurrent<T, R>(items: T[], operation: (item: T, index: numbe
     await Promise.all(Array.from({ length: Math.min(4, items.length) }, async () => {
         while (next < items.length) {
             const index = next++;
-            results[index] = await operation(items[index], index);
+            const item = items[index];
+            if (item !== undefined) results[index] = await operation(item, index);
         }
     }));
     return results;
@@ -65,6 +66,7 @@ function metadata(value: z.infer<typeof GitHubRepositorySchema>): RepositoryMeta
 }
 
 export async function collectGitHubKnowledge() {
+    const deadline = AbortSignal.timeout(45_000);
     let requests = 0;
     const errors: string[] = [];
     const token = process.env.GITHUB_TOKEN;
@@ -77,7 +79,7 @@ export async function collectGitHubKnowledge() {
                 ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             cache: "no-store",
-            signal: AbortSignal.timeout(12_000),
+            signal: AbortSignal.any([deadline, AbortSignal.timeout(12_000)]),
         });
         if (!response.ok) throw new GitHubRequestError(response.status);
         if (Number(response.headers.get("content-length")) > 1_000_000) throw new GitHubRequestError(413);
@@ -161,7 +163,7 @@ export async function collectGitHubKnowledge() {
 export async function syncGitHubKnowledge(): Promise<GitHubSyncReport> {
     const [{ sources, report }, existing] = await Promise.all([collectGitHubKnowledge(), listKnowledgeSources()]);
     const existingIds = new Set(existing.map(({ id }) => id));
-    await mapConcurrent(sources, async (source) => saveGitHubKnowledgeSource(source));
+    await saveGitHubKnowledgeSources(sources);
     return {
         ...report,
         added: sources.filter(({ id }) => !existingIds.has(id)).length,

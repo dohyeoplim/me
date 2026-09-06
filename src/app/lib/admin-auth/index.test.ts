@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import * as OTPAuth from "otpauth";
+import { secretDigest, verifySecretDigest } from "./secrets";
 import {
     hashAdminPassword,
     hashRecoveryCode,
@@ -42,17 +43,17 @@ test.after(() => {
     restoreEnv("AUTH_ADMIN_PASSWORD_HASH", previousPasswordHash);
 });
 
-test("accepts the RFC 6238 SHA1 token with the configured six digits", () => {
+test("accepts the RFC 6238 SHA1 token with the configured six digits", async () => {
     configureTotp();
-    assert.deepEqual(matchAdminCredential("287082", 59_000), {
+    assert.deepEqual(await matchAdminCredential("287082", 59_000), {
         kind: "totp",
         counter: 1,
         recoveryHash: null,
     });
-    assert.equal(matchAdminCredential("287083", 59_000), null);
+    assert.equal(await matchAdminCredential("287083", 59_000), null);
 });
 
-test("accepts the previous, current, and future TOTP intervals", () => {
+test("accepts the previous, current, and future TOTP intervals", async () => {
     configureTotp();
     const timestamp = 1_800_000;
     const cases = [
@@ -69,7 +70,7 @@ test("accepts the previous, current, and future TOTP intervals", () => {
             period: 30,
             timestamp: timestamp + offset * 30_000,
         });
-        assert.deepEqual(matchAdminCredential(token, timestamp), {
+        assert.deepEqual(await matchAdminCredential(token, timestamp), {
             kind: "totp",
             counter,
             recoveryHash: null,
@@ -77,7 +78,7 @@ test("accepts the previous, current, and future TOTP intervals", () => {
     }
 });
 
-test("rejects TOTP codes outside the adjacent interval window", () => {
+test("rejects TOTP codes outside the adjacent interval window", async () => {
     configureTotp();
     const timestamp = 1_800_000;
 
@@ -89,18 +90,18 @@ test("rejects TOTP codes outside the adjacent interval window", () => {
             period: 30,
             timestamp: timestamp + offset * 30_000,
         });
-        assert.equal(matchAdminCredential(token, timestamp), null);
+        assert.equal(await matchAdminCredential(token, timestamp), null);
     }
 });
 
-test("rejects malformed credential values", () => {
+test("rejects malformed credential values", async () => {
     configureTotp();
     for (const value of [undefined, null, 123456, {}, "", "12345", "1234567", "12345a", "x".repeat(81)]) {
-        assert.equal(matchAdminCredential(value, 1_800_000), null);
+        assert.equal(await matchAdminCredential(value, 1_800_000), null);
     }
 });
 
-test("rejects malformed and shorter-than-20-byte TOTP secrets without throwing", () => {
+test("rejects malformed and shorter-than-20-byte TOTP secrets without throwing", async () => {
     const token = "864257";
     process.env.DATABASE_URL = "postgres://unit-test.invalid/admin-auth";
     process.env.AUTH_SECRET = "unit-test-auth-secret";
@@ -111,29 +112,53 @@ test("rejects malformed and shorter-than-20-byte TOTP secrets without throwing",
 
     for (const secret of invalidSecrets) {
         configureTotp(secret);
-        assert.equal(matchAdminCredential(token, 1_800_000), null);
+        assert.equal(await matchAdminCredential(token, 1_800_000), null);
         assert.equal(isAdminAuthConfigured(), false);
     }
 });
 
-test("normalizes and matches a configured recovery code hash", () => {
+test("normalizes and matches a configured recovery code hash", async () => {
     process.env.AUTH_TOTP_SECRET = new OTPAuth.Secret({ size: 20 }).base32;
     const recoveryCode = "ABCD-EFGH-JKLM-NPQR";
     const hash = hashRecoveryCode(recoveryCode);
     process.env.AUTH_TOTP_RECOVERY_HASHES = hash;
     assert.equal(normalizeRecoveryCode("abcd efgh-jklm npqr"), "ABCDEFGHJKLMNPQR");
-    assert.deepEqual(matchAdminCredential("abcd efgh-jklm npqr"), {
+    assert.deepEqual(await matchAdminCredential("abcd efgh-jklm npqr"), {
         kind: "recovery",
         counter: null,
-        recoveryHash: hash,
+        recoveryHash: secretDigest("ABCDEFGHJKLMNPQR"),
     });
-    assert.equal(matchAdminCredential("ABCD-EFGH-JKLM-NPQS"), null);
+    assert.equal(await matchAdminCredential("ABCD-EFGH-JKLM-NPQS"), null);
 });
 
-test("accepts only the configured admin password hash", () => {
+test("accepts only the configured admin password hash", async () => {
     process.env.AUTH_ADMIN_PASSWORD_HASH = hashAdminPassword("correct-password");
-    assert.equal(matchesAdminPassword("correct-password"), true);
-    assert.equal(matchesAdminPassword("  correct-password  "), true);
-    assert.equal(matchesAdminPassword("wrong-password"), false);
-    assert.equal(matchesAdminPassword(undefined), false);
+    assert.equal(await matchesAdminPassword("correct-password"), true);
+    assert.equal(await matchesAdminPassword("  correct-password  "), true);
+    assert.equal(await matchesAdminPassword("wrong-password"), false);
+    assert.equal(await matchesAdminPassword(undefined), false);
+});
+
+test("uses independent salts and rejects malformed scrypt hashes", async () => {
+    const first = hashAdminPassword("same-password");
+    const second = hashAdminPassword("same-password");
+    assert.notEqual(first, second);
+    assert.equal(await verifySecretDigest(secretDigest("same-password"), first), true);
+    assert.equal(await verifySecretDigest(secretDigest("same-password"), second), true);
+    assert.equal(await verifySecretDigest(secretDigest("same-password"), "scrypt-sha256$bad$bad"), false);
+});
+
+test("preserves recovery replay identifiers when stored hashes are upgraded", async () => {
+    configureTotp();
+    const code = "ABCD-EFGH-JKLM-NPQR";
+    process.env.AUTH_TOTP_RECOVERY_HASHES = secretDigest(normalizeRecoveryCode(code));
+    const previous = await matchAdminCredential(code);
+    process.env.AUTH_TOTP_RECOVERY_HASHES = hashRecoveryCode(code);
+    assert.deepEqual(await matchAdminCredential(code), previous);
+});
+
+test("accepts the old password format during deployment migration", async () => {
+    process.env.AUTH_ADMIN_PASSWORD_HASH = secretDigest("existing-password");
+    assert.equal(await matchesAdminPassword("existing-password"), true);
+    assert.equal(await matchesAdminPassword("incorrect-password"), false);
 });

@@ -1,70 +1,54 @@
 import { createHmac } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
+import { consumeLocalBudget, type Counter, type RateLimitResult } from "../rate-limit";
+
+export { consumeLocalBudget } from "../rate-limit";
 
 export const clientLimit = 50;
 export const dailyLimit = 1_000;
 const clientWindow = 10 * 60 * 1000;
 const dayWindow = 24 * 60 * 60 * 1000;
 
-type Budget = { key: string; expiresAt: number; limit: number };
-type Counter = { expiresAt: number; count: number };
-type RateLimitResult = { allowed: boolean; retryAfter: number };
-
 const localCounters = new Map<string, Counter>();
 
 export function isChatConfigured() {
     return (
         Boolean(process.env.OPENAI_API_KEY?.trim()) &&
-        Boolean(process.env.DATABASE_URL || process.env.NODE_ENV !== "production")
+        Boolean(process.env.DATABASE_URL || process.env.NODE_ENV !== "production") &&
+        Boolean(
+            process.env.PROFILE_CHAT_RATE_LIMIT_SECRET || process.env.AUTH_SECRET
+            || process.env.NODE_ENV !== "production",
+        )
     );
 }
 
 function clientKey(request: Request) {
     const address =
         process.env.VERCEL === "1"
-            ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0].trim() || "shared"
+            ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || "shared"
             : "shared";
-    const hash = createHmac("sha256", process.env.OPENAI_API_KEY || "local-profile-chat")
+    const secret = process.env.PROFILE_CHAT_RATE_LIMIT_SECRET || process.env.AUTH_SECRET;
+    if (!secret && process.env.NODE_ENV === "production") throw new Error("Chat rate limit is unavailable");
+    const hash = createHmac("sha256", secret || "local-profile-chat")
         .update(`profile-chat:${address}`)
         .digest("hex");
 
     return `client:${hash}`;
 }
 
-export function consumeLocalBudget(budgets: Budget[], now: number, counters = localCounters): RateLimitResult {
-    for (const [key, counter] of counters) {
-        if (counter.expiresAt <= now) counters.delete(key);
-    }
-
-    const blocked = budgets.filter(({ key, limit }) => (counters.get(key)?.count ?? 0) >= limit);
-    if (blocked.length) {
-        return {
-            allowed: false,
-            retryAfter: Math.max(1, Math.ceil((Math.max(...blocked.map(({ expiresAt }) => expiresAt)) - now) / 1000)),
-        };
-    }
-
-    for (const { key, expiresAt } of budgets) {
-        counters.set(key, { expiresAt, count: (counters.get(key)?.count ?? 0) + 1 });
-    }
-
-    return { allowed: true, retryAfter: 0 };
-}
-
 export async function consumeChatBudget(request: Request): Promise<RateLimitResult> {
     const key = clientKey(request);
     const databaseUrl = process.env.DATABASE_URL;
+    const now = Date.now();
+    const prefilter = consumeLocalBudget([
+        { key, expiresAt: (Math.floor(now / clientWindow) + 1) * clientWindow, limit: clientLimit },
+        { key: "site", expiresAt: (Math.floor(now / dayWindow) + 1) * dayWindow, limit: dailyLimit },
+    ], now, localCounters);
+    if (!prefilter.allowed) return prefilter;
 
     if (!databaseUrl) {
         if (process.env.NODE_ENV === "production") throw new Error("Chat rate limit is unavailable");
-        const now = Date.now();
-        return consumeLocalBudget(
-            [
-                { key, expiresAt: (Math.floor(now / clientWindow) + 1) * clientWindow, limit: clientLimit },
-                { key: "site", expiresAt: (Math.floor(now / dayWindow) + 1) * dayWindow, limit: dailyLimit },
-            ],
-            now,
-        );
+        return prefilter;
     }
 
     const sql = neon(databaseUrl);

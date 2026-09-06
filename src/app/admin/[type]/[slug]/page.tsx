@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { requireAdminPage } from "@/app/lib/admin-session";
 import { getEntry, getPost } from "@/app/lib/content/repository";
 import Editor from "@/app/admin/_components/Editor";
 import PostEditor from "@/app/admin/_components/PostEditor";
@@ -8,6 +9,7 @@ export const dynamic = "force-dynamic";
 type Params = Promise<{ type: string; slug: string }>;
 
 export default async function EditEntry({ params }: { params: Params }) {
+    await requireAdminPage();
     const { type, slug } = await params;
 
     if (type === "post") {

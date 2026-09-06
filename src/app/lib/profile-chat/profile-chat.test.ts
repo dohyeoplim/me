@@ -52,18 +52,18 @@ function responsePayload(
 }
 
 test("retrieves public sources for English and Korean questions", () => {
-    assert.equal(retrieveDocuments("What did he contribute to MochiCall?")[0].id, "mochicall");
-    assert.equal(retrieveDocuments("학점과 장학금이 궁금해")[0].id, "education");
-    assert.equal(retrieveDocuments("E-ACT 체크섬은 어떻게 사용해?")[0].id, "eact");
+    assert.equal(retrieveDocuments("What did he contribute to MochiCall?")[0]?.id, "mochicall");
+    assert.equal(retrieveDocuments("학점과 장학금이 궁금해")[0]?.id, "education");
+    assert.equal(retrieveDocuments("E-ACT 체크섬은 어떻게 사용해?")[0]?.id, "eact");
     assert.equal(retrieveDocuments("What is E-ACT?").some(({ id }) => id === "collog"), false);
-    assert.equal(retrieveDocuments("What is EACT?")[0].id, "eact");
+    assert.equal(retrieveDocuments("What is EACT?")[0]?.id, "eact");
     assert.equal(retrieveDocuments("Does React process family calls?").some(({ id }) => id === "eact"), false);
     assert.ok(retrieveDocuments("What research has he done?").some(({ id }) => id === "eact"));
     assert.ok(retrieveDocuments("음성 인식 프로젝트 알려줘").some(({ id }) => id === "mochicall"));
 });
 
 test("uses the previous question for follow-ups without treating assistant history as evidence", () => {
-    assert.equal(retrieveDocuments("Tell me more", [{ role: "user", content: "Explain Kraftbox" }])[0].id, "kraftbox");
+    assert.equal(retrieveDocuments("Tell me more", [{ role: "user", content: "Explain Kraftbox" }])[0]?.id, "kraftbox");
     const documents = retrieveDocuments("Tell me more", [{ role: "assistant", content: "Dohyeop works at NASA" }]);
     assert.ok(documents.every(({ text }) => !text.includes("NASA")));
     assert.ok(documents.length <= 6);
@@ -129,7 +129,7 @@ test("reads message output after other items and validates every source ID", () 
         documents,
     );
     assert.equal(result.sources.length, 1);
-    assert.equal(result.sources[0].url, "https://github.com/Fresh-Mango-Mochi/welfare-call-asr");
+    assert.equal(result.sources[0]?.url, "https://github.com/Fresh-Mango-Mochi/welfare-call-asr");
     assert.throws(() => parseAnswer(responsePayload("Unverified", ["unknown-source"]), documents), {
         code: "invalid_sources",
     });
@@ -277,6 +277,7 @@ test("enforces both budgets and preserves the site allowance when a client is bl
         { key: "client", limit: 2, expiresAt: 10000 },
         { key: "site", limit: 5, expiresAt: 20000 },
     ];
+    assert.ok(budgets[0] && budgets[1]);
     assert.equal(consumeLocalBudget(budgets, 0, counters).allowed, true);
     assert.equal(consumeLocalBudget(budgets, 0, counters).allowed, true);
     assert.deepEqual(consumeLocalBudget(budgets, 0, counters), { allowed: false, retryAfter: 10 });
@@ -313,7 +314,7 @@ test("sends a bounded structured Responses request without storing the conversat
         assert.equal(body.text.format.strict, true);
         assert.equal(body.input.at(-1).content, "What is E-ACT?");
         assert.ok(body.instructions.length < 2_500);
-        const evidence = JSON.parse(body.input[0].content);
+        const evidence = JSON.parse(body.input[0]?.content);
         assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("keywords" in document)));
         assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("url" in document)));
         assert.ok(options.signal);
@@ -329,8 +330,8 @@ test("sends a bounded structured Responses request without storing the conversat
     });
 
     const question = questionSchema.parse({ question: "What is E-ACT?" });
-    assert.equal((await answerQuestion(question, undefined, async () => profileDocuments)).sources[0].id, "eact");
-    const usage = JSON.parse(logs[0]);
+    assert.equal((await answerQuestion(question, undefined, async () => profileDocuments)).sources[0]?.id, "eact");
+    const usage = JSON.parse(logs[0] ?? "null");
     assert.deepEqual(
         {
             event: usage.event,
@@ -347,7 +348,7 @@ test("sends a bounded structured Responses request without storing the conversat
             outputTokens: 80,
         },
     );
-    assert.equal(logs[0].includes(question.question), false);
+    assert.equal(logs[0]?.includes(question.question), false);
 });
 
 test("bounds evidence and history before sending a model request", async (context) => {
@@ -367,7 +368,7 @@ test("bounds evidence and history before sending a model request", async (contex
     context.mock.method(globalThis, "fetch", async (_url: string, options: RequestInit) => {
         const bodyText = String(options.body);
         const body = JSON.parse(bodyText);
-        const evidence = JSON.parse(body.input[0].content);
+        const evidence = JSON.parse(body.input[0]?.content);
         const requestHistory = body.input.slice(1, -1);
         assert.ok(Buffer.byteLength(bodyText) < 30_000);
         assert.ok(evidence.publicDocuments.reduce(
@@ -428,7 +429,7 @@ test("returns deeper Collog blocks without repeating previously shown specialize
         { shownCardIds: first.cards.map(({ id }) => id) },
     );
     assert.deepEqual(followUp.cards, []);
-    assert.equal(followUp.blocks[0].type, "steps");
+    assert.equal(followUp.blocks[0]?.type, "steps");
     assert.equal(profileChatAnswerSchema.safeParse(followUp).success, true);
 });
 
@@ -463,7 +464,7 @@ test("validates every block type and omits malformed comparisons", () => {
         const payload = responsePayload("He works with speech and vision.", ["mochicall", "collog", "wonnit"], [], {
             blocks: [block],
         });
-        assert.equal(parseAnswer(payload, profileDocuments).blocks[0].type, block.type);
+        assert.equal(parseAnswer(payload, profileDocuments).blocks[0]?.type, block.type);
     }
     const bounded = responsePayload("He works with speech and vision.", ["mochicall", "collog", "wonnit"], [], {
         blocks,
@@ -512,9 +513,9 @@ test("follow-up suggestions can use published catalog sources outside retrieved 
         askedQuestions: ["Tell me more about Collog"],
     });
     assert.equal(result.followUps.length, 1);
-    assert.equal(result.followUps[0].sourceIds[0], "mochicall");
+    assert.equal(result.followUps[0]?.sourceIds[0], "mochicall");
     assert.equal(parseAnswer(payload, documents).followUps.length, 1);
-    assert.equal(parseAnswer(payload, documents).followUps[0].sourceIds[0], "collog");
+    assert.equal(parseAnswer(payload, documents).followUps[0]?.sourceIds[0], "collog");
 });
 
 test("repository recommendations resolve trusted metadata and omit unsupported selections", () => {
@@ -540,9 +541,9 @@ test("repository recommendations resolve trusted metadata and omit unsupported s
         repositories: [recommendation],
     });
     const result = parseAnswer(payload, [repository]);
-    assert.equal(result.repositories[0].url, repository.url);
-    assert.equal(result.repositories[0].ownerType, "Organization");
-    assert.equal(result.sources[0].id, repository.id);
+    assert.equal(result.repositories[0]?.url, repository.url);
+    assert.equal(result.repositories[0]?.ownerType, "Organization");
+    assert.equal(result.sources[0]?.id, repository.id);
     assert.throws(() => parseAnswer(payload, profileDocuments), { code: "invalid_sources" });
     const injected = responsePayload("Repository", [repository.id], [], {
         repositories: [{ ...recommendation, url: "https://other.example" }],
@@ -558,7 +559,7 @@ test("repository recommendations resolve trusted metadata and omit unsupported s
 test("published custom records support blocks while explicit null disables a legacy card", () => {
     const source = profileDocuments.find(({ id }) => id === "collog")!;
     const custom = { ...source, id: "collog-notes", cardId: null };
-    assert.equal(retrieveDocuments("Collog", [], [custom])[0].id, "collog-notes");
+    assert.equal(retrieveDocuments("Collog", [], [custom])[0]?.id, "collog-notes");
     assert.deepEqual(
         parseAnswer(responsePayload("Collog", ["collog"], ["collog"]), [{ ...source, cardId: null }]).cards,
         [],
@@ -613,7 +614,7 @@ test("selected published follow-up context cannot be displaced by broad matches"
         ...matches,
         contextSource,
     ], [contextSource.id, "unpublished-source"]);
-    assert.equal(selected[0].id, contextSource.id);
+    assert.equal(selected[0]?.id, contextSource.id);
     assert.ok(selected.every(({ id }) => id !== "unpublished-source"));
     assert.equal(selected.length, 6);
 });
@@ -643,7 +644,7 @@ test("sends prior cards and published context without accepting client history a
     const controller = new AbortController();
     context.mock.method(globalThis, "fetch", async (_url: string, options: RequestInit) => {
         const body = JSON.parse(String(options.body));
-        const data = JSON.parse(body.input[0].content);
+        const data = JSON.parse(body.input[0]?.content);
         assert.deepEqual(data.shownCardIds, ["mochicall", "collog"]);
         assert.ok(!data.availableCardIds.includes("collog"));
         assert.ok(data.publicDocuments.some(({ id }: { id: string }) => id === "collog"));
@@ -665,7 +666,7 @@ test("sends prior cards and published context without accepting client history a
 test("does not restore static knowledge when the published catalog is empty or fails", async (context) => {
     context.mock.method(globalThis, "fetch", async (_url: string, options: RequestInit) => {
         const body = JSON.parse(String(options.body));
-        assert.deepEqual(JSON.parse(body.input[0].content).publicDocuments, []);
+        assert.deepEqual(JSON.parse(body.input[0]?.content).publicDocuments, []);
         assert.equal(body.text.format.schema.properties.blocks.maxItems, 0);
         return Response.json(responsePayload("The public profile does not provide that information.", []));
     });
@@ -703,17 +704,17 @@ test("repository schema permits only retrieved records with repository metadata"
         maxItems: number;
         items: { properties: { sourceId: { enum: string[] } } };
     }>;
-    assert.deepEqual(properties.repositories.items.properties.sourceId.enum, ["github-collog-server"]);
-    assert.equal(properties.repositories.maxItems, 1);
+    assert.deepEqual(properties.repositories?.items.properties.sourceId.enum, ["github-collog-server"]);
+    assert.equal(properties.repositories?.maxItems, 1);
     const noRepositories = createAnswerFormat(["collog"], ["collog"], ["collog"]);
     const noRepositoryProperties = noRepositories.schema.properties as Record<string, { maxItems: number }>;
-    assert.equal(noRepositoryProperties.repositories.maxItems, 0);
+    assert.equal(noRepositoryProperties.repositories?.maxItems, 0);
 });
 
 test("profile-only retrieval cannot produce repository recommendations", async (context) => {
     context.mock.method(globalThis, "fetch", async (_url: string, options: RequestInit) => {
         const body = JSON.parse(String(options.body));
-        const evidence = JSON.parse(body.input[0].content);
+        const evidence = JSON.parse(body.input[0]?.content);
         assert.deepEqual(evidence.availableRepositorySourceIds, []);
         assert.equal(body.text.format.schema.properties.repositories.maxItems, 0);
         return Response.json(responsePayload("Both projects use speech recognition.", ["mochicall", "collog"]));
@@ -737,14 +738,14 @@ test("repository recommendations favor project code and include profile evidence
         title: fullName,
         text: `Public repository for ${fullName}.`,
         url: `https://github.com/${fullName}`,
-        keywords: [fullName.split("/")[0], "github", "repository", "repo"],
+        keywords: [fullName.split("/")[0] ?? "", "github", "repository", "repo"],
         kind: "repository",
         cardId: null,
         repository: {
             fullName,
             url: `https://github.com/${fullName}`,
             description: "Public project repository",
-            owner: fullName.split("/")[0],
+            owner: fullName.split("/")[0] ?? "",
             ownerType: "Organization",
             language: "Python",
         },
@@ -762,8 +763,10 @@ test("repository recommendations favor project code and include profile evidence
     assert.equal(related.find(({ repository }) => repository)?.repository?.fullName, "Collog-App/Collog-Server");
     const privacy = retrieveDocuments("Show me Collog privacy code", [], catalog);
     assert.ok(privacy.some(({ repository }) => repository?.fullName === "Collog-App/Collog-Privacy"));
-    const explicitContext = retrieveDocuments("Tell me more", [], catalog, [repositories[0].id]);
-    assert.equal(explicitContext[0].id, repositories[0].id);
+    const explicitContext = retrieveDocuments(
+        "Tell me more", [], catalog, repositories.slice(0, 1).map(({ id }) => id),
+    );
+    assert.equal(explicitContext[0]?.id, repositories[0]?.id);
 });
 
 test("guided questions select their published profile evidence", () => {

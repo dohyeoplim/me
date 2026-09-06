@@ -1,10 +1,10 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { auth } from "@/auth";
+import { imageUploadLimit, imageUploadTypes } from "@/app/lib/uploads";
 
 export async function POST(request: Request): Promise<Response> {
-    const body = (await request.json()) as HandleUploadBody;
-
     try {
+        const body = (await request.json()) as HandleUploadBody;
         const result = await handleUpload({
             body,
             request,
@@ -12,24 +12,17 @@ export async function POST(request: Request): Promise<Response> {
                 const session = await auth();
                 if (session?.user?.admin !== true) throw new Error("Unauthorized");
                 return {
-                    allowedContentTypes: [
-                        "image/png",
-                        "image/jpeg",
-                        "image/webp",
-                        "image/gif",
-                        "image/avif",
-                        "image/svg+xml",
-                    ],
+                    allowedContentTypes: imageUploadTypes,
+                    maximumSizeInBytes: imageUploadLimit,
                     addRandomSuffix: true,
                 };
             },
             onUploadCompleted: async () => {},
         });
         return Response.json(result);
-    } catch (error) {
-        console.error("blob upload token error:", error);
+    } catch {
         return Response.json(
-            { error: (error as Error).message },
+            { error: "The upload could not be authorized. Check the image and try again." },
             { status: 400 },
         );
     }

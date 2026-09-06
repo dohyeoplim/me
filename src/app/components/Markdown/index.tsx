@@ -6,6 +6,8 @@ import rehypeHighlight from "rehype-highlight";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/github.css";
 import ZoomableImage from "../ZoomableImage";
+import Caption from "./Caption";
+import { languages } from "./languages";
 
 function escapeMathInImageAlt(markdown: string) {
     return markdown.replace(
@@ -20,12 +22,16 @@ export default function Markdown({ children }: { children: string }) {
         <div className="prose">
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex, rehypeHighlight]}
+                rehypePlugins={[
+                    [rehypeKatex, { trust: false, strict: "warn" }],
+                    [rehypeHighlight, { languages, detect: false }],
+                ]}
                 components={{
                     img: ({ src, alt }) => (
                         <ZoomableImage
                             src={typeof src === "string" ? src : undefined}
                             alt={alt}
+                            caption={alt ? <Caption text={alt} /> : undefined}
                         />
                     ),
                 }}
@@ -35,3 +41,4 @@ export default function Markdown({ children }: { children: string }) {
         </div>
     );
 }
+import "server-only";

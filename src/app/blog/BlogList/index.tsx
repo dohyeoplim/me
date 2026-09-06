@@ -47,7 +47,7 @@ export default function BlogList({ items }: { items: BlogListItem[] }) {
         if (!el) return;
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting) {
+                if (entries[0]?.isIntersecting) {
                     setVisible((v) => v + PAGE);
                 }
             },
@@ -73,7 +73,11 @@ export default function BlogList({ items }: { items: BlogListItem[] }) {
                         setVisible(PAGE);
                     }}
                     placeholder="Search"
-                    className="w-full border-b border-grey-200 bg-transparent py-2 pl-6 font-body02-light text-grey-900 outline-none transition-colors placeholder:text-grey-300 focus:border-grey-400"
+                    className={
+                        "w-full border-b border-grey-200 bg-transparent py-2 pl-6 font-body02-light " +
+                        "text-grey-900 outline-none transition-colors placeholder:text-grey-300 " +
+                        "focus:border-grey-400"
+                    }
                 />
             </div>
 
@@ -111,7 +115,10 @@ export default function BlogList({ items }: { items: BlogListItem[] }) {
                                         {post.tags.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light text-grey-500"
+                                                className={
+                                                    "rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light " +
+                                                    "text-grey-500"
+                                                }
                                             >
                                                 {tag}
                                             </span>

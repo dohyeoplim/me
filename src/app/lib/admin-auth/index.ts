@@ -1,10 +1,14 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import * as OTPAuth from "otpauth";
+import { hashSecret, isStoredSecret, secretDigest, verifySecretDigest } from "./secrets";
+import { consumeLocalBudget } from "../rate-limit";
 
 const period = 30;
 const clientLimit = 5;
+const siteLimit = 60;
 const attemptWindowSeconds = 10 * 60;
+const localAttempts = new Map<string, { expiresAt: number; count: number }>();
 
 type CredentialMatch =
     | { kind: "totp"; counter: number; recoveryHash: null }
@@ -23,33 +27,27 @@ export function normalizeRecoveryCode(value: string) {
 }
 
 export function hashRecoveryCode(value: string) {
-    return createHash("sha256").update(normalizeRecoveryCode(value)).digest("hex");
+    return hashSecret(normalizeRecoveryCode(value));
 }
 
 export function hashAdminPassword(value: string) {
-    return createHash("sha256").update(value.trim()).digest("hex");
-}
-
-function safeEqual(first: string, second: string) {
-    const left = Buffer.from(first);
-    const right = Buffer.from(second);
-    return left.length === right.length && timingSafeEqual(left, right);
+    return hashSecret(value.trim());
 }
 
 function recoveryHashes() {
     return (process.env.AUTH_TOTP_RECOVERY_HASHES ?? "")
         .split(",")
         .map((value) => value.trim().toLowerCase())
-        .filter((value) => /^[a-f0-9]{64}$/.test(value))
+        .filter(isStoredSecret)
         .slice(0, 16);
 }
 
-export function matchesAdminPassword(value: unknown) {
+export async function matchesAdminPassword(value: unknown) {
     const expected = process.env.AUTH_ADMIN_PASSWORD_HASH?.trim().toLowerCase() ?? "";
     const candidate = typeof value === "string" && value.length <= 200
-        ? hashAdminPassword(value)
-        : hashAdminPassword("");
-    return /^[a-f0-9]{64}$/.test(expected) && safeEqual(expected, candidate);
+        ? secretDigest(value.trim())
+        : secretDigest("");
+    return isStoredSecret(expected) && verifySecretDigest(candidate, expected);
 }
 
 function credentialId() {
@@ -71,7 +69,7 @@ function totp(secret: string) {
     });
 }
 
-export function matchAdminCredential(value: unknown, timestamp = Date.now()): CredentialMatch | null {
+export async function matchAdminCredential(value: unknown, timestamp = Date.now()): Promise<CredentialMatch | null> {
     if (typeof value !== "string" || value.length > 80) return null;
     const secret = process.env.AUTH_TOTP_SECRET?.replace(/\s/g, "").toUpperCase();
     if (!secret) return null;
@@ -92,9 +90,13 @@ export function matchAdminCredential(value: unknown, timestamp = Date.now()): Cr
         }
     }
 
-    const candidateHash = hashRecoveryCode(value);
-    const matchedHash = recoveryHashes().find((hash) => safeEqual(hash, candidateHash));
-    return matchedHash ? { kind: "recovery", counter: null, recoveryHash: matchedHash } : null;
+    const candidateHash = secretDigest(normalizeRecoveryCode(value));
+    for (const hash of recoveryHashes()) {
+        if (await verifySecretDigest(candidateHash, hash)) {
+            return { kind: "recovery", counter: null, recoveryHash: candidateHash };
+        }
+    }
+    return null;
 }
 
 export function isAdminAuthConfigured() {
@@ -103,7 +105,7 @@ export function isAdminAuthConfigured() {
     if (
         !process.env.DATABASE_URL?.trim()
         || !process.env.AUTH_SECRET?.trim()
-        || !/^[a-f0-9]{64}$/.test(passwordHash)
+        || !isStoredSecret(passwordHash)
         || !secret
     ) return false;
     try {
@@ -151,7 +153,7 @@ async function ensureAdminAuthSchema() {
 
 function clientKey(request: Request) {
     const address = process.env.VERCEL === "1"
-        ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0].trim() || "shared"
+        ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || "shared"
         : "shared";
     return createHmac("sha256", process.env.AUTH_SECRET ?? "missing-auth-secret")
         .update(`admin-auth:${credentialId()}:${address}`)
@@ -159,16 +161,24 @@ function clientKey(request: Request) {
 }
 
 async function consumeAttempt(request: Request): Promise<RateLimitResult> {
-    await ensureAdminAuthSchema();
-    const sql = neon(process.env.DATABASE_URL!);
+    const key = `client:${clientKey(request)}`;
     const currentSeconds = Math.floor(Date.now() / 1000);
     const clientExpiresAt = Math.floor(currentSeconds / attemptWindowSeconds + 1) * attemptWindowSeconds;
+    const prefilter = consumeLocalBudget([
+        { key, expiresAt: clientExpiresAt * 1000, limit: clientLimit },
+        { key: "site", expiresAt: clientExpiresAt * 1000, limit: siteLimit },
+    ], Date.now(), localAttempts);
+    if (!prefilter.allowed) return prefilter;
+    await ensureAdminAuthSchema();
+    const sql = neon(process.env.DATABASE_URL!);
     const result = await sql.transaction([
         sql`select pg_advisory_xact_lock(171309221)`,
         sql`delete from admin_auth_rate_limits where expires_at <= now()`,
         sql`
             with requested (key, expires_at, request_limit) as (
-                values (${`client:${clientKey(request)}`}, to_timestamp(${clientExpiresAt}), ${clientLimit}::integer)
+                values
+                    (${key}, to_timestamp(${clientExpiresAt}), ${clientLimit}::integer),
+                    ('site', to_timestamp(${clientExpiresAt}), ${siteLimit}::integer)
             ), blocked as (
                 select counters.expires_at
                 from requested
@@ -183,10 +193,10 @@ async function consumeAttempt(request: Request): Promise<RateLimitResult> {
                 returning key
             )
             select
-                (select count(*) from claimed) = 1 as allowed,
+                (select count(*) from claimed) = 2 as allowed,
                 coalesce(ceil(extract(epoch from (select max(expires_at) from blocked) - now())), 0) as retry_after
         `,
-    ]);
+    ], { fetchOptions: { signal: AbortSignal.timeout(5000) } });
     const row = result[2]?.[0];
     if (typeof row?.allowed !== "boolean") throw new Error("Admin authentication is unavailable.");
     return { allowed: row.allowed, retryAfter: Number(row.retry_after) || 0 };
@@ -235,6 +245,7 @@ export async function verifyAdminCredential(
     if (!isAdminAuthConfigured()) return "invalid";
     const budget = await consumeAttempt(request);
     if (!budget.allowed) return "rate-limited";
-    const match = matchAdminCredential(value);
-    return matchesAdminPassword(password) && match && await claimCredential(match) ? "valid" : "invalid";
+    if (!await matchesAdminPassword(password)) return "invalid";
+    const match = await matchAdminCredential(value);
+    return match && await claimCredential(match) ? "valid" : "invalid";
 }

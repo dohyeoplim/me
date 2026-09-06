@@ -37,8 +37,15 @@ export async function listKnowledgeSources(): Promise<KnowledgeSource[]> {
 }
 
 export async function listPublishedKnowledge() {
-    const sources = await listKnowledgeSources();
-    return sources.filter(({ status }) => status === "published").map(effectivePublishedSource);
+    await ensureSchema();
+    const rows = await sql`
+        select doc, status from content_entries
+        where type = 'profile_knowledge' and status = 'published'
+        order by order_index asc, title asc
+    ` as KnowledgeRow[];
+    return rows.map(({ doc, status }) => effectivePublishedSource(
+        KnowledgeSourceSchema.parse({ ...(doc as object), status }),
+    ));
 }
 
 export async function getKnowledgeSource(id: string): Promise<KnowledgeSource | null> {
@@ -48,7 +55,7 @@ export async function getKnowledgeSource(id: string): Promise<KnowledgeSource | 
         where type = 'profile_knowledge' and slug = ${id}
         limit 1
     ` as KnowledgeRow[];
-    if (!rows.length) return null;
+    if (!rows[0]) return null;
     return KnowledgeSourceSchema.parse({ ...(rows[0].doc as object), status: rows[0].status });
 }
 
@@ -79,19 +86,21 @@ export async function archiveKnowledgeSource(id: string) {
     `;
 }
 
-export async function saveGitHubKnowledgeSource(input: KnowledgeSource) {
-    const source = KnowledgeSourceSchema.parse(input);
-    if (source.origin !== "github" || !source.repository) throw new Error("Expected a GitHub repository.");
+export async function saveGitHubKnowledgeSources(input: KnowledgeSource[]) {
+    const sources = input.map((item) => KnowledgeSourceSchema.parse(item));
+    if (sources.some((source) => source.origin !== "github" || !source.repository)) {
+        throw new Error("Expected GitHub repositories.");
+    }
+    if (!sources.length) return;
     await ensureSchema();
-    await sql`
+    await sql.transaction([sql`
         insert into content_entries (id, type, slug, title, status, order_index, doc, updated_at)
-        values (
-            ${`profile-knowledge-${source.id}`}, 'profile_knowledge', ${source.id}, ${source.title},
-            ${source.status}, 2000, ${JSON.stringify(source)}, now()
-        )
+        select 'profile-knowledge-' || (source->>'id'), 'profile_knowledge', source->>'id', source->>'title',
+            source->>'status', 2000, source, now()
+        from jsonb_array_elements(${JSON.stringify(sources)}::jsonb) as source
         on conflict (type, slug) do update set
             doc = jsonb_set(content_entries.doc, '{repository}', excluded.doc->'repository'),
             updated_at = now()
         where content_entries.doc->>'origin' = 'github'
-    `;
+    `], { fetchOptions: { signal: AbortSignal.timeout(10_000) } });
 }

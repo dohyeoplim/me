@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "../schema";
 
 export function isPublicSourceUrl(value: string) {
     if (/^\/(?![\/\\])[^\u0000-\u0020]*$/.test(value)) return true;

@@ -17,7 +17,7 @@ try {
     ], { cwd: root, stdio: "inherit" });
     if (compile.status !== 0) process.exitCode = compile.status ?? 1;
     else {
-        const result = spawnSync(process.execPath, ["--test", join(output, "index.test.js")], {
+        const result = spawnSync(process.execPath, ["--test", join(output, "admin-auth/index.test.js")], {
             cwd: root,
             stdio: "inherit",
             env: { ...process.env, NODE_PATH: join(root, "node_modules") },

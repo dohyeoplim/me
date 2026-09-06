@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { upload } from "@vercel/blob/client";
 import {
     Bold,
@@ -14,7 +14,8 @@ import {
     Eye,
     PenLine,
 } from "lucide-react";
-import Markdown from "@/app/components/Markdown";
+import { imageUploadError, imageUploadTypes } from "@/app/lib/uploads";
+import { previewMarkdown } from "./actions";
 
 type Props = {
     value: string;
@@ -23,10 +24,35 @@ type Props = {
 
 type Mode = "write" | "preview";
 
+const tools = [
+    { icon: Heading, label: "Heading" },
+    { icon: Bold, label: "Bold" },
+    { icon: Italic, label: "Italic" },
+    { icon: Quote, label: "Quote" },
+    { icon: List, label: "List" },
+    { icon: Code, label: "Code" },
+    { icon: LinkIcon, label: "Link" },
+] as const;
+
 export default function MarkdownEditor({ value, onChange }: Props) {
     const ref = useRef<HTMLTextAreaElement>(null);
     const [mode, setMode] = useState<Mode>("write");
     const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [preview, setPreview] = useState<ReactNode>(null);
+    const [previewPending, startPreview] = useTransition();
+
+    function toggleMode() {
+        if (mode === "preview") return setMode("write");
+        setMode("preview");
+        startPreview(async () => {
+            try {
+                setPreview(await previewMarkdown(value));
+            } catch {
+                setPreview(<p role="alert">The preview could not be loaded. Return to writing and try again.</p>);
+            }
+        });
+    }
 
     const resize = useCallback(() => {
         const el = ref.current;
@@ -87,6 +113,9 @@ export default function MarkdownEditor({ value, onChange }: Props) {
     const uploadFiles = async (files: File[], at?: number) => {
         const images = files.filter((f) => f.type.startsWith("image/"));
         if (images.length === 0) return;
+        const validationError = images.map(imageUploadError).find(Boolean) ?? null;
+        setError(validationError);
+        if (validationError) return;
         setUploading(true);
         try {
             const uploaded = await Promise.all(
@@ -102,6 +131,8 @@ export default function MarkdownEditor({ value, onChange }: Props) {
             const el = ref.current;
             const pos = at ?? (el ? el.selectionStart : value.length);
             replaceRange(pos, pos, snippet, pos + snippet.length);
+        } catch {
+            setError("The images could not be uploaded. Try again.");
         } finally {
             setUploading(false);
         }
@@ -159,15 +190,15 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         const ordered = line.match(/^(\s*)(\d+)\. (.*)$/);
         if (!unordered && !ordered) return;
         e.preventDefault();
-        const indent = (unordered ?? ordered)![1];
-        const content = (unordered ?? ordered)![3];
+        const indent = (unordered ?? ordered)?.[1] ?? "";
+        const content = (unordered ?? ordered)?.[3] ?? "";
         if (content.trim() === "") {
             replaceRange(lineStart, s, "", lineStart);
             return;
         }
         const marker = unordered
             ? `${unordered[2]} `
-            : `${parseInt(ordered![2], 10) + 1}. `;
+            : `${parseInt(ordered?.[2] ?? "0", 10) + 1}. `;
         const insert = `\n${indent}${marker}`;
         replaceRange(s, s, insert, s + insert.length);
     };
@@ -196,15 +227,17 @@ export default function MarkdownEditor({ value, onChange }: Props) {
         }
     };
 
-    const tools = [
-        { icon: Heading, label: "Heading", run: () => prefixLine("## ") },
-        { icon: Bold, label: "Bold", run: () => surround("**") },
-        { icon: Italic, label: "Italic", run: () => surround("_") },
-        { icon: Quote, label: "Quote", run: () => prefixLine("> ") },
-        { icon: List, label: "List", run: () => prefixLine("- ") },
-        { icon: Code, label: "Code", run: () => surround("`") },
-        { icon: LinkIcon, label: "Link", run: insertLink },
-    ];
+    function runTool(label: (typeof tools)[number]["label"]) {
+        switch (label) {
+            case "Heading": return prefixLine("## ");
+            case "Bold": return surround("**");
+            case "Italic": return surround("_");
+            case "Quote": return prefixLine("> ");
+            case "List": return prefixLine("- ");
+            case "Code": return surround("`");
+            case "Link": return insertLink();
+        }
+    }
 
     return (
         <div className="flex flex-col">
@@ -220,20 +253,26 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                             key={t.label}
                             type="button"
                             title={t.label}
-                            onClick={t.run}
+                            onClick={() => runTool(t.label)}
                             disabled={mode === "preview"}
-                            className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900 disabled:opacity-30"
+                            className={
+                                "rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 " +
+                                "hover:text-grey-900 disabled:opacity-30"
+                            }
                         >
                             <t.icon size={16} strokeWidth={1.75} />
                         </button>
                     ))}
                     <label
                         title="Image"
-                        className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                        className={
+                            "rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 " +
+                            "hover:text-grey-900"
+                        }
                     >
                         <input
                             type="file"
-                            accept="image/*"
+                            accept={imageUploadTypes.join(",")}
                             multiple
                             onChange={onPick}
                             className="hidden"
@@ -244,10 +283,11 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                     <button
                         type="button"
                         title={mode === "write" ? "Preview" : "Write"}
-                        onClick={() =>
-                            setMode((m) => (m === "write" ? "preview" : "write"))
+                        onClick={toggleMode}
+                        className={
+                            "rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 " +
+                            "hover:text-grey-900"
                         }
-                        className="rounded-md p-1.5 text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
                     >
                         {mode === "write" ? (
                             <Eye size={16} strokeWidth={1.75} />
@@ -258,6 +298,7 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                 </div>
             </div>
 
+            {error && <p className="font-support text-ink" role="alert">{error}</p>}
             {mode === "write" ? (
                 <textarea
                     ref={ref}
@@ -269,11 +310,14 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={onDrop}
                     spellCheck={false}
-                    className="-mx-2 min-h-[60vh] w-full resize-none overflow-hidden bg-transparent px-2 font-body02-light leading-7 text-grey-800 outline-none placeholder:text-grey-300"
+                    className={
+                        "-mx-2 min-h-[60vh] w-full resize-none overflow-hidden bg-transparent px-2 " +
+                        "font-body02-light leading-7 text-grey-800 outline-none placeholder:text-grey-300"
+                    }
                 />
             ) : (
                 <div className="min-h-[60vh]">
-                    <Markdown>{value || "_Nothing yet._"}</Markdown>
+                    {previewPending ? <p className="font-support" role="status">Loading preview…</p> : preview}
                 </div>
             )}
         </div>

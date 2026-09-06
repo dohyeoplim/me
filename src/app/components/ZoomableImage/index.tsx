@@ -1,53 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
-import katex from "katex";
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-m";
+import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
 import { useOverlay } from "../useOverlay";
 
 type Props = {
     src?: string;
     alt?: string;
+    caption?: ReactNode;
 };
 
-function renderCaption(text: string) {
-    const parts = text.split(/(\$[^$]+\$)/g);
-    return parts.map((part, index) => {
-        if (part.startsWith("$") && part.endsWith("$") && part.length > 2) {
-            const html = katex.renderToString(part.slice(1, -1), {
-                throwOnError: false,
-                displayMode: false,
-            });
-            return (
-                <span key={index} dangerouslySetInnerHTML={{ __html: html }} />
-            );
-        }
-        return <span key={index}>{part}</span>;
-    });
+export default function ZoomableImage(props: Props) {
+    return <LayoutMotion><ZoomableImageContent {...props} /></LayoutMotion>;
 }
 
-export default function ZoomableImage({ src, alt }: Props) {
+function ZoomableImageContent({ src, alt = "", caption }: Props) {
     const [open, setOpen] = useState(false);
+    const trigger = useRef<HTMLButtonElement>(null);
+    const layoutId = useId();
 
-    useOverlay(open, () => setOpen(false), true);
+    function close() {
+        setOpen(false);
+        trigger.current?.focus({ preventScroll: true });
+    }
+
+    useOverlay(open, close, true);
 
     if (!src) return null;
 
-    const layoutId = `zoom-${src}`;
-
     return (
         <span className="my-2 flex flex-col items-center gap-2">
-            <motion.img
+            <motion.button
+                ref={trigger}
+                type="button"
                 layoutId={layoutId}
-                src={src}
-                alt={alt}
                 onClick={() => setOpen(true)}
+                aria-label={alt ? `Enlarge image, ${alt}` : "Enlarge image"}
                 className="m-0 h-auto max-w-full cursor-zoom-in rounded-md"
-            />
+            >
+                <Image
+                    src={src}
+                    alt={alt}
+                    width={1200}
+                    height={800}
+                    sizes="(max-width: 896px) calc(100vw - 48px), 848px"
+                    className="m-0 h-auto max-w-full rounded-md"
+                />
+            </motion.button>
             {alt && (
                 <span className="text-center font-body04-light text-grey-400">
-                    {renderCaption(alt)}
+                    {caption ?? alt}
                 </span>
             )}
 
@@ -55,22 +61,32 @@ export default function ZoomableImage({ src, alt }: Props) {
                 createPortal(
                     <AnimatePresence>
                         {open && (
-                            <motion.div
+                            <motion.button
+                                type="button"
+                                aria-label="Close enlarged image"
+                                ref={(element) => element?.focus({ preventScroll: true })}
                                 key="backdrop"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.2 }}
-                                onClick={() => setOpen(false)}
+                                onClick={close}
                                 className="fixed inset-0 z-200 flex items-center justify-center bg-grey-900/80 p-6"
                             >
-                                <motion.img
+                                <motion.span
                                     layoutId={layoutId}
-                                    src={src}
-                                    alt={alt}
-                                    className="max-h-[90vh] max-w-[90vw] cursor-zoom-out rounded-md object-contain"
-                                />
-                            </motion.div>
+                                    className="flex max-h-[90vh] max-w-[90vw]"
+                                >
+                                    <Image
+                                        src={src}
+                                        alt={alt}
+                                        width={2000}
+                                        height={1333}
+                                        sizes="90vw"
+                                        className="max-h-[90vh] w-auto cursor-zoom-out rounded-md object-contain"
+                                    />
+                                </motion.span>
+                            </motion.button>
                         )}
                     </AnimatePresence>,
                     document.body,

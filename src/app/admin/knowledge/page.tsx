@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdminPage } from "@/app/lib/admin-session";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import { ensureKnowledgeSeeded, listKnowledgeSources } from "@/app/lib/knowledge/repository";
 import ExitLink from "../_components/shared/ExitLink";
@@ -13,8 +12,7 @@ export const maxDuration = 120;
 type Props = { searchParams: Promise<{ source?: string }> };
 
 export default async function KnowledgePage({ searchParams }: Props) {
-    const session = await auth();
-    if (session?.user?.admin !== true) redirect("/admin/signin");
+    await requireAdminPage();
     const { source } = await searchParams;
     await ensureKnowledgeSeeded();
     const sources = await listKnowledgeSources();

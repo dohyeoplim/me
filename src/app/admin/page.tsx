@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireAdminPage } from "@/app/lib/admin-session";
 import { listEntries, listPosts } from "@/app/lib/content/repository";
 import { HeaderActions } from "@/app/components/Header/HeaderSlot";
 import SignOutButton from "./_components/shared/SignOutButton";
@@ -9,8 +10,8 @@ import { createEntry, createPost } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-    const entries = await listEntries("home_section");
-    const posts = await listPosts();
+    await requireAdminPage();
+    const [entries, posts] = await Promise.all([listEntries("home_section"), listPosts()]);
 
     return (
         <div className="flex flex-col gap-8">
@@ -21,7 +22,10 @@ export default async function AdminDashboard() {
 
             <Link
                 href="/admin/intro"
-                className="flex items-center justify-between border-b border-grey-200 pb-3 font-body02-light text-grey-900"
+                className={
+                    "flex items-center justify-between border-b border-grey-200 pb-3 font-body02-light " +
+                    "text-grey-900"
+                }
             >
                 Intro
                 <span className="font-body05-light text-grey-400">edit</span>
@@ -49,7 +53,10 @@ export default async function AdminDashboard() {
                     <input
                         name="title"
                         placeholder="New section"
-                        className="rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light text-grey-900 outline-none focus:border-grey-400"
+                        className={
+                            "rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light " +
+                            "text-grey-900 outline-none focus:border-grey-400"
+                        }
                     />
                 </label>
                 <button
@@ -96,7 +103,10 @@ export default async function AdminDashboard() {
                     <input
                         name="title"
                         placeholder="New post"
-                        className="rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light text-grey-900 outline-none focus:border-grey-400"
+                        className={
+                            "rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light " +
+                            "text-grey-900 outline-none focus:border-grey-400"
+                        }
                     />
                 </label>
                 <button
@@ -110,7 +120,10 @@ export default async function AdminDashboard() {
             <a
                 href="/admin/export"
                 download
-                className="mt-4 w-fit border-t border-grey-200 pt-4 font-body05-light text-grey-400 transition-colors hover:text-grey-700"
+                className={
+                    "mt-4 w-fit border-t border-grey-200 pt-4 font-body05-light text-grey-400 transition-colors " +
+                    "hover:text-grey-700"
+                }
             >
                 Export all entries (CSV)
             </a>

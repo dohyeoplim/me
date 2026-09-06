@@ -1,29 +1,18 @@
-import { createHash, randomBytes } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { chmodSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import * as OTPAuth from "otpauth";
+import { hashSecret, readEnvValue, setEnvValue as setEnv } from "./lib/admin-secrets.mjs";
 
 const envPath = resolve(".env.local");
 const rotate = process.argv.includes("--rotate");
 const source = existsSync(envPath) ? readFileSync(envPath, "utf8") : "";
 
-function envValue(name) {
-    const match = source.match(new RegExp(`^${name}=(.*)$`, "m"));
-    return match?.[1].trim().replace(/^['"]|['"]$/g, "") ?? "";
-}
-
-function setEnv(input, name, value) {
-    const line = `${name}=${value}`;
-    const pattern = new RegExp(`^${name}=.*$`, "m");
-    if (pattern.test(input)) return input.replace(pattern, line);
-    return `${input.trimEnd()}${input.trim() ? "\n" : ""}${line}\n`;
-}
-
 function removeEnv(input, name) {
     return input.replace(new RegExp(`^${name}=.*\\n?`, "m"), "");
 }
 
-if (envValue("AUTH_TOTP_SECRET") && !rotate) {
+if (readEnvValue(source, "AUTH_TOTP_SECRET") && !rotate) {
     console.error("Admin TOTP is already configured. Use --rotate to replace it and its recovery codes.");
     process.exit(1);
 }
@@ -34,14 +23,14 @@ const recoveryCodes = Array.from({ length: 8 }, () => {
     const raw = Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join("");
     return raw.match(/.{4}/g).join("-");
 });
-const hashes = recoveryCodes.map((code) => createHash("sha256").update(code.replace(/-/g, "")).digest("hex"));
+const hashes = recoveryCodes.map((code) => hashSecret(code.replace(/-/g, "")));
 const secret = new OTPAuth.Secret({ size: 20 }).base32;
 const authSecret = randomBytes(32).toString("base64url");
 const password = randomBytes(24).toString("base64url");
 let next = setEnv(source, "AUTH_SECRET", authSecret);
 next = setEnv(next, "AUTH_TOTP_SECRET", secret);
 next = setEnv(next, "AUTH_TOTP_RECOVERY_HASHES", hashes.join(","));
-next = setEnv(next, "AUTH_ADMIN_PASSWORD_HASH", createHash("sha256").update(password).digest("hex"));
+next = setEnv(next, "AUTH_ADMIN_PASSWORD_HASH", hashSecret(password));
 next = removeEnv(next, "AUTH_ADMIN_ACCESS_HASH");
 
 const temporaryPath = `${envPath}.${process.pid}.tmp`;

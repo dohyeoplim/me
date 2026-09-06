@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { motion } from "motion/react";
+import * as motion from "motion/react-m";
 
 type Props = {
     children: ReactNode;

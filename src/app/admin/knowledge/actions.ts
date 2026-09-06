@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireAdmin } from "@/app/lib/admin-session";
 import {
     archiveKnowledgeSource,
     getKnowledgeSource,
@@ -11,11 +11,6 @@ import { syncGitHubKnowledge, type GitHubSyncReport } from "@/app/lib/knowledge/
 import { KnowledgeEditSchema, type KnowledgeSource } from "@/app/lib/knowledge/schema";
 
 type ActionResult<T> = { ok: true; value: T } | { ok: false; error: string };
-
-async function requireAdmin() {
-    const session = await auth();
-    if (session?.user?.admin !== true) throw new Error("Unauthorized");
-}
 
 function refreshKnowledge() {
     revalidatePath("/admin/knowledge");

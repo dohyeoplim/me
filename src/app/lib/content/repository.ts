@@ -1,9 +1,12 @@
+import "server-only";
+import { requireAdmin } from "@/app/lib/admin-session";
 import { sql, ensureSchema } from "@/app/lib/db";
-import { toEntry, type Row } from "./row";
-import { ContentDocSchema, IntroDocSchema, PostDocSchema, PostSchema } from "./schema";
+import { toEntry, toPost, type Row } from "./row";
+import { ContentDocSchema, IntroDocSchema, PostDocSchema } from "./schema";
 import type { ContentDoc, Entry, IntroDoc, Post, PostDoc } from "./schema";
 
 export async function listEntries(type: string): Promise<Entry[]> {
+    await requireAdmin();
     await ensureSchema();
     const rows = (await sql`
         select * from content_entries
@@ -14,6 +17,7 @@ export async function listEntries(type: string): Promise<Entry[]> {
 }
 
 export async function listAllRows(): Promise<Row[]> {
+    await requireAdmin();
     await ensureSchema();
     return (await sql`
         select * from content_entries
@@ -25,13 +29,14 @@ export async function getEntry(
     type: string,
     slug: string,
 ): Promise<Entry | null> {
+    await requireAdmin();
     await ensureSchema();
     const rows = (await sql`
         select * from content_entries
         where type = ${type} and slug = ${slug}
         limit 1
     `) as Row[];
-    return rows.length ? toEntry(rows[0]) : null;
+    return rows[0] ? toEntry(rows[0]) : null;
 }
 
 export type UpsertInput = {
@@ -45,6 +50,7 @@ export type UpsertInput = {
 };
 
 export async function upsertEntry(input: UpsertInput) {
+    await requireAdmin();
     await ensureSchema();
     const doc = ContentDocSchema.parse(input.doc);
     await sql`
@@ -64,6 +70,7 @@ export async function upsertEntry(input: UpsertInput) {
 }
 
 export async function deleteEntry(type: string, slug: string) {
+    await requireAdmin();
     await ensureSchema();
     await sql`
         delete from content_entries where type = ${type} and slug = ${slug}
@@ -71,15 +78,17 @@ export async function deleteEntry(type: string, slug: string) {
 }
 
 export async function getIntro(): Promise<IntroDoc | null> {
+    await requireAdmin();
     await ensureSchema();
     const rows = (await sql`
         select doc from content_entries
         where type = 'intro' and slug = 'main' limit 1
     `) as { doc: unknown }[];
-    return rows.length ? IntroDocSchema.parse(rows[0].doc) : null;
+    return rows[0] ? IntroDocSchema.parse(rows[0].doc) : null;
 }
 
 export async function upsertIntro(doc: IntroDoc) {
+    await requireAdmin();
     await ensureSchema();
     const parsed = IntroDocSchema.parse(doc);
     await sql`
@@ -94,18 +103,8 @@ export async function upsertIntro(doc: IntroDoc) {
     `;
 }
 
-function toPost(row: Row): Post {
-    return PostSchema.parse({
-        id: row.id,
-        slug: row.slug,
-        title: row.title,
-        status: row.status,
-        doc: row.doc,
-        updatedAt: new Date(row.updated_at).toISOString(),
-    });
-}
-
 export async function listPosts(): Promise<Post[]> {
+    await requireAdmin();
     await ensureSchema();
     const rows = (await sql`
         select * from content_entries
@@ -116,13 +115,14 @@ export async function listPosts(): Promise<Post[]> {
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
+    await requireAdmin();
     await ensureSchema();
     const rows = (await sql`
         select * from content_entries
         where type = 'post' and slug = ${slug}
         limit 1
     `) as Row[];
-    return rows.length ? toPost(rows[0]) : null;
+    return rows[0] ? toPost(rows[0]) : null;
 }
 
 export type UpsertPostInput = {
@@ -134,6 +134,7 @@ export type UpsertPostInput = {
 };
 
 export async function upsertPost(input: UpsertPostInput) {
+    await requireAdmin();
     await ensureSchema();
     const doc = PostDocSchema.parse(input.doc);
     await sql`
@@ -152,6 +153,7 @@ export async function upsertPost(input: UpsertPostInput) {
 }
 
 export async function reorderEntries(type: string, ids: string[]) {
+    await requireAdmin();
     await ensureSchema();
     const orders = ids.map((_, i) => i);
     await sql`

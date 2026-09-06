@@ -10,7 +10,11 @@ import SlideTransition from "@/app/components/SlideTransition";
 import { formatDate, readingTime } from "@/app/lib/format";
 import { KIND_LABEL } from "@/app/lib/content/schema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+    return (await loadPosts()).map(({ slug }) => ({ slug }));
+}
 
 type Params = Promise<{ slug: string }>;
 
@@ -36,7 +40,7 @@ export default async function PostPage({ params }: { params: Params }) {
     const { doc } = post;
 
     const tags = new Set(doc.tags);
-    const related = (await loadPosts(true))
+    const related = (await loadPosts())
         .filter((p) => p.slug !== post.slug)
         .map((p) => ({
             slug: p.slug,
@@ -82,7 +86,10 @@ export default async function PostPage({ params }: { params: Params }) {
                                     {doc.tags.map((tag) => (
                                         <span
                                             key={tag}
-                                            className="rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light text-grey-500"
+                                            className={
+                                                "rounded-full bg-grey-100 px-2.5 py-0.5 font-body05-light " +
+                                                "text-grey-500"
+                                            }
                                         >
                                             {tag}
                                         </span>
@@ -99,7 +106,10 @@ export default async function PostPage({ params }: { params: Params }) {
                                             href={doc.paper.url}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="w-fit font-body02-regular text-grey-900 decoration-grey-300 underline-offset-2 hover:underline"
+                                            className={
+                                                "w-fit font-body02-regular text-grey-900 decoration-grey-300 " +
+                                                "underline-offset-2 hover:underline"
+                                            }
                                         >
                                             {doc.paper.title}
                                         </a>
@@ -128,7 +138,10 @@ export default async function PostPage({ params }: { params: Params }) {
                                                 href={doc.paper.url}
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                className="text-grey-700 underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500"
+                                                className={
+                                                    "text-grey-700 underline decoration-grey-300 " +
+                                                    "underline-offset-2 hover:decoration-grey-500"
+                                                }
                                             >
                                                 {doc.paper.url.includes(
                                                     "arxiv.org",

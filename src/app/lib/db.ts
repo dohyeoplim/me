@@ -20,7 +20,10 @@ export function ensureSchema() {
                     unique (type, slug)
                 )
             `;
-        })();
+        })().catch((error) => {
+            schemaReady = null;
+            throw error;
+        });
     }
     return schemaReady;
 }
