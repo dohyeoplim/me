@@ -43,7 +43,7 @@
     --surface-overlay: rgb(15 15 16 / 0.4);
     --surface-gallery: #dfe8f0;
     --surface-portrait: #e9e9eb;
-    --size-profile-portrait: clamp(5rem, 14vw, 11rem);
+    --size-profile-portrait: clamp(4rem, 11vw, 8.5rem);
     --shadow-floating: 0 4px 16px rgb(15 15 16 / 0.08);
     --radius-navigation: var(--radius-pill);
     --radius-composer: var(--radius-pill);

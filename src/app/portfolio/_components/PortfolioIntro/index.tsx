@@ -13,7 +13,7 @@ export default function PortfolioIntro() {
                         src={hero.image.src}
                         alt={hero.image.alt}
                         fill
-                        sizes="(max-width: 571px) 80px, (max-width: 1257px) 14vw, 176px"
+                        sizes="(max-width: 582px) 64px, (max-width: 1236px) 11vw, 136px"
                         priority
                     />
                 </div>
