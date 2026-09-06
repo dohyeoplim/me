@@ -87,9 +87,9 @@ export const projectScenes = {
         {
             name: "Hospital",
             shapes: [
-                rect(346, 88, 76, 149, "paper", 10),
-                rect(369, 114, 30, 9, "accent", 2),
-                rect(380, 103, 9, 31, "accent", 2),
+                rect(346, 117, 76, 120, "paper", 10),
+                rect(369, 143, 30, 9, "accent", 2),
+                rect(380, 132, 9, 31, "accent", 2),
                 rect(373, 210, 22, 27, "soft", 3),
                 rect(368, 205, 32, 5, "accent", 2),
             ],
