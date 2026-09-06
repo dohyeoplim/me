@@ -6,7 +6,7 @@ export type Project = {
     outcome: string;
     recognition?: string;
     href: string;
-    visual: "speech" | "calls" | "vision" | "graph";
+    visual: "speech" | "calls" | "vision" | "graph" | "driving";
     image?: { src: string; alt: string };
     placement?: "selected" | "additional";
 };
@@ -54,6 +54,17 @@ export const projects: Project[] = [
         outcome: "",
         href: "https://github.com/DocFusionX/server",
         visual: "graph",
+    },
+    {
+        name: "DriverNet",
+        period: "",
+        title: "Detecting driver distraction from images",
+        contribution:
+            "Developed depth-map-based gated projection. Global image features control a gate over " +
+            "depth-grouped features before projection and feature interaction.",
+        outcome: "The training pipeline also maintains an EMA teacher using moving averages of model parameters.",
+        href: "https://github.com/DriverNet-Project/DriverNet",
+        visual: "driving",
     },
 ];
 

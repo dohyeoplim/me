@@ -223,10 +223,17 @@
 .portfolio-project-card .portfolio-project-heading {
     align-self: stretch;
     padding: var(--spacing-dds-lg);
-    min-height: calc(var(--spacing-dds-3xl) + var(--spacing-dds-2xl));
+    grid-template-rows: auto 4.5em;
 }
 
-.portfolio-project-card .portfolio-project-media { aspect-ratio: 3 / 2; border-radius: 0; }
+.portfolio-project-card .portfolio-project-purpose { @apply font-support; color: var(--text-primary); }
+.portfolio-project-card .portfolio-project-media {
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+    background: var(--surface-gallery);
+}
+.portfolio-project-detail-visual { background: var(--surface-gallery); border-radius: var(--radius-panel); }
+.portfolio-project-detail-visual > svg { display: block; width: 100%; max-height: 18rem; }
 .portfolio-project-card-action { margin-top: auto; padding: var(--spacing-dds-lg); }
 
 .portfolio-project-media {

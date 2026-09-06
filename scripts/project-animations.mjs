@@ -94,5 +94,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href &
         const target = new URL(`../public/animations/${name}.json`, import.meta.url);
         writeFileSync(target, JSON.stringify(animation, null, 2) + "\n");
     }
-    console.log("Updated four project animations.");
+    console.log("Updated project animations.");
 }

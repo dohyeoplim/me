@@ -44,6 +44,26 @@ const scene = (label: string, layers: IllustrationLayer[]): IllustrationScene =>
 });
 
 export const projectScenes = {
+    driving: scene("Global features gate depth-grouped features before projection", [
+        {
+            name: "Feature paths",
+            shapes: [
+                path([[166, 83], [262, 83], [262, 201], [376, 201], [376, 122]]),
+                path([[95, 83], [95, 30], [376, 30], [376, 122]]),
+                path([[166, 201], [206, 201]]),
+            ],
+            motion: { draw: [{ at: 0, value: 0 }, { at: 48, value: 1 }] },
+        },
+        {
+            name: "Gated projection",
+            shapes: [
+                rect(24, 58, 142, 50, "paper", 10), rect(24, 176, 142, 50, "paper", 10),
+                rect(206, 58, 112, 50, "accent", 10), rect(206, 176, 112, 50, "paper", 10),
+                ellipse(376, 122, 40, 40, "ink"),
+                path([[370, 116], [382, 128]], "paper"), path([[382, 116], [370, 128]], "paper"),
+            ],
+        },
+    ]),
     speech: scene("A spoken request becomes a hospital transportation trip", [
         { name: "Trip route", shapes: [path([[122, 222], [396, 222]], "line", 3)] },
         {

@@ -5,6 +5,7 @@ import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import DetailDialog from "@/app/components/DDS/DetailDialog";
 import Carousel from "@/app/components/DDS/Carousel";
 import ProjectVisual from "../ProjectVisual";
+import { EmaTeacher } from "../DepthProjection";
 import { projects, projectSection } from "../../_data/projects";
 import { projectAnimationSrc, projectScenes } from "../../_data/project-scenes";
 
@@ -12,9 +13,9 @@ export default function Projects() {
     return (
         <section id="projects" className="portfolio-section">
             <SectionHeading title={projectSection.title} />
-            <Carousel label={projectSection.title}>
-                {projects.filter((project) => project.placement !== "additional").map((project) => (
-                    <article key={project.name} className="portfolio-project-card">
+            <Carousel label={projectSection.title} variant="full-bleed">
+                {projects.map((project) => (
+                    <article key={project.name} className="portfolio-project-card" data-dialog-origin>
                         <header className="portfolio-project-heading">
                             <h3 className="font-work-title">{project.name}</h3>
                             <p className="portfolio-project-purpose">{project.title}</p>
@@ -31,14 +32,18 @@ export default function Projects() {
                                     sizes="(max-width: 767px) calc(100vw - 48px), 420px"
                                     className="object-cover"
                                 />
-                            ) : (
+                            ) : project.visual === "driving" ? <ProjectVisual kind="driving" /> : (
                                 <LottieGraphic src={projectAnimationSrc(project.visual)}>
                                     <ProjectVisual kind={project.visual} />
                                 </LottieGraphic>
                             )}
                         </figure>
                         <div className="portfolio-project-card-action">
-                            <DetailDialog title={project.name} label={projectSection.detailsLabel}>
+                            <DetailDialog title={project.name} label={projectSection.detailsLabel} expandFromCard>
+                                <div className="portfolio-project-detail-visual">
+                                    <ProjectVisual kind={project.visual} />
+                                </div>
+                                <p className="font-work-title">{project.title}</p>
                                 <div className="portfolio-project-content">
                                     <p>{project.contribution}</p>
                                     {project.recognition && (
@@ -46,8 +51,9 @@ export default function Projects() {
                                     )}
                                 </div>
                                 {project.outcome && <p>{project.outcome}</p>}
+                                {project.visual === "driving" && <EmaTeacher />}
                                 <footer className="portfolio-project-footer">
-                                    <p className="portfolio-project-period">{project.period}</p>
+                                    {project.period && <p className="portfolio-project-period">{project.period}</p>}
                                     <LinkButton
                                         href={project.href}
                                         label={projectSection.repositoryLabel}
