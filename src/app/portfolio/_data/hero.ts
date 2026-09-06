@@ -1,5 +1,5 @@
 export const hero = {
-    title: "Undergraduate researcher",
+    title: "AI researcher & developer",
     name: "Dohyeop Lim",
     bio:
         "At SeoulTech's Visual Intelligence Lab, advised by Prof. Jongyoul Park. " +
@@ -9,7 +9,7 @@ export const hero = {
 };
 
 export const portfolioIntro = {
-    title: "AI researcher & developer",
+    title: hero.title,
     askLink: { label: "Ask anything about me", href: "/" },
     links: [
         { label: "CV", href: "https://cv.dohyeoplim.me/" },
