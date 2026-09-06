@@ -11,6 +11,7 @@ import { hero } from "@/app/portfolio/_data/hero";
 import { projects } from "@/app/portfolio/_data/projects";
 import { research } from "@/app/portfolio/_data/research";
 import ProjectVisual from "@/app/portfolio/_components/ProjectVisual";
+import { projectAnimationSrc } from "@/app/portfolio/_data/project-scenes";
 import RecognitionDemo from "@/app/portfolio/_components/RecognitionDemo";
 
 type CardProps = {
@@ -91,7 +92,7 @@ function ProjectCard({ name }: { name: string }) {
                             className="dds-answer-image"
                         />
                     ) : (
-                        <LottieGraphic src={`/animations/${project.visual}.json`}>
+                        <LottieGraphic src={projectAnimationSrc(project.visual)}>
                             <ProjectVisual kind={project.visual} />
                         </LottieGraphic>
                     )}
