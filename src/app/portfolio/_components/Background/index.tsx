@@ -2,49 +2,35 @@ import SectionHeading from "@/app/components/DDS/SectionHeading";
 import LinkButton from "@/app/components/LinkButton";
 import { background, beyondTheLab, experience } from "../../_data/background";
 
-const { infrastructure, communities } = beyondTheLab;
+const { communities } = beyondTheLab;
 
 export default function Background() {
     return (
         <>
             <section id="beyond-the-lab" className="portfolio-section">
                 <SectionHeading title={beyondTheLab.title} />
-                <div className="portfolio-experience">
-                    <article>
-                        <h3 className="font-work-title">{infrastructure.title}</h3>
-                        <p>{infrastructure.description}</p>
-                        <ul className="portfolio-responsibilities">
-                            {infrastructure.responsibilities.map(({ title, detail }) => (
-                                <li key={title}>
-                                    <h4 className="font-body" lang="ko">{title}</h4>
-                                    <p className="font-support text-muted">{detail}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </article>
-                    <div className="portfolio-community">
-                        <SectionHeading title={beyondTheLab.communityTitle} variant="subsection" />
-                        {communities.map(({ name, role, description }) => (
-                            <article key={name}>
-                                <h4 className="font-body portfolio-role-title">{name}</h4>
-                                <p>{role}</p>
-                                <p>{description}</p>
-                            </article>
-                        ))}
-                    </div>
-                </div>
                 <div className="portfolio-additional">
                     <SectionHeading title={beyondTheLab.additionalTitle} variant="subsection" />
                     {beyondTheLab.visits.map((visit) => (
                         <article key={visit.name}>
                             <div>
                                 <h4 className="font-body portfolio-role-title">{visit.name}</h4>
-                                <p className="font-support text-muted">{visit.role}, {visit.period}</p>
+                                <p className="font-support text-muted">{visit.period}</p>
                             </div>
                             <div>
                                 <p>{visit.description}</p>
                                 <LinkButton href={visit.href} label={visit.project} icon="external" />
                             </div>
+                        </article>
+                    ))}
+                </div>
+                <div className="portfolio-community">
+                    <SectionHeading title={beyondTheLab.communityTitle} variant="subsection" />
+                    {communities.map(({ name, role, description }) => (
+                        <article key={name}>
+                            <h4 className="font-body portfolio-role-title">{name}</h4>
+                            <p>{role}</p>
+                            <p>{description}</p>
                         </article>
                     ))}
                 </div>

@@ -89,10 +89,10 @@
     text-wrap: pretty;
 }
 
-.portfolio-feature-intro {
+.portfolio-publication-detail {
     display: grid;
-    gap: var(--spacing-dds-lg);
-    margin-bottom: var(--spacing-dds-lg);
+    gap: var(--spacing-dds-md);
+    margin-top: var(--spacing-dds-lg);
 }
 
 .portfolio-work-heading {
@@ -103,22 +103,31 @@
 
 .portfolio-research-intro { text-wrap: pretty; }
 
-.portfolio-feature > .dds-disclosure { margin-top: var(--spacing-dds-lg); }
-
-.portfolio-paper-title,
-.portfolio-publication h3,
 .portfolio-role-title { font-weight: 500; }
 
-.portfolio-paper {
-    display: grid;
-    gap: var(--spacing-dds-md);
+.portfolio-research-contribution {
+    margin-top: var(--spacing-dds-lg);
+    color: var(--text-tertiary);
+    max-width: var(--layout-reading-width);
 }
 
 .portfolio-research-list {
     display: grid;
     gap: var(--spacing-dds-xl);
-    margin-top: var(--spacing-dds-3xl);
 }
+
+.portfolio-supporting-research { margin-top: var(--spacing-dds-3xl); }
+.portfolio-supporting-research > .dds-section-heading { margin-bottom: var(--spacing-dds-lg); }
+.portfolio-rd-cards { display: grid; gap: var(--spacing-dds-lg); }
+.portfolio-rd-card {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--spacing-dds-sm);
+    padding: var(--spacing-dds-lg);
+}
+.portfolio-rd-action { display: contents; }
+.portfolio-rd-action > .dds-card-trigger { justify-self: end; margin-top: var(--spacing-dds-sm); }
 
 .portfolio-research-list article {
     display: grid;
@@ -129,11 +138,12 @@
 .portfolio-research-list article > p { @apply font-support; }
 .portfolio-research-list article > p:last-child { color: var(--text-secondary); }
 
+.portfolio-publications { margin-top: var(--spacing-dds-2xl); }
+.portfolio-publications > .dds-section-heading { margin-bottom: var(--spacing-dds-lg); }
 .portfolio-publication {
     display: grid;
     gap: var(--spacing-dds-xs);
-    margin-top: var(--spacing-dds-xl);
-    padding-top: var(--spacing-dds-xl);
+    padding-block: var(--spacing-dds-lg);
     border-top: 1px solid var(--border-subtle);
 }
 
@@ -156,21 +166,12 @@
 
 .portfolio-project-period { @apply font-support; color: var(--text-secondary); }
 
-.portfolio-experience,
-.portfolio-community,
-.portfolio-responsibilities { display: grid; gap: var(--spacing-dds-xl); }
-
-.portfolio-experience article > p { margin-top: var(--spacing-dds-sm); }
-.portfolio-responsibilities { margin-top: var(--spacing-dds-xl); }
-.portfolio-responsibilities li { display: grid; gap: var(--spacing-dds-xs); }
-.portfolio-responsibilities h4 { font-weight: 500; }
+.portfolio-community { display: grid; gap: var(--spacing-dds-xl); margin-top: var(--spacing-dds-2xl); }
+.portfolio-community article > p { margin-top: var(--spacing-dds-sm); }
 
 .portfolio-additional {
     display: grid;
     gap: var(--spacing-dds-lg);
-    margin-top: var(--spacing-dds-2xl);
-    padding-top: var(--spacing-dds-xl);
-    border-top: 1px solid var(--border-subtle);
 }
 
 .portfolio-additional article { display: grid; gap: var(--spacing-dds-md); }
@@ -181,6 +182,7 @@
 .portfolio-education article p { margin-top: var(--spacing-dds-xs); }
 
 .portfolio-achievement {
+    white-space: pre-line;
     align-self: start;
     padding: var(--spacing-dds-lg);
     border-radius: var(--radius-panel);
@@ -197,13 +199,13 @@
 .portfolio-skills dd { color: var(--text-secondary); }
 
 @media (min-width: 768px) {
-    .portfolio-feature-intro { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--spacing-dds-2xl); }
-
+    .portfolio-rd-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .portfolio-research-list,
-    .portfolio-experience,
+    .portfolio-community,
     .portfolio-additional article { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-2xl); }
 
     .portfolio-research-list { row-gap: var(--spacing-dds-sm); }
+    .portfolio-community > .dds-section-heading { grid-column: 1 / -1; }
     .portfolio-research-list article { grid-template-rows: subgrid; grid-row: span 3; }
     .portfolio-skills dl > div {
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
