@@ -1,4 +1,5 @@
 @import "./dds-skeleton.css";
+@import "./dds-gallery.css";
 @reference "../globals.css";
 
 .dds-section-heading {

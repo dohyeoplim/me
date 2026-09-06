@@ -6,6 +6,7 @@ import ComponentShowcase from "./_components/ComponentShowcase";
 import FoundationsShowcase from "./_components/FoundationsShowcase";
 import MotionShowcase from "./_components/MotionShowcase";
 import LoadingShowcase from "./_components/LoadingShowcase";
+import GalleryShowcase from "./_components/GalleryShowcase";
 import { designSystem, navigation } from "./data";
 
 export const metadata: Metadata = {
@@ -38,6 +39,8 @@ export default function DesignSystemPage() {
                 <section id="components" className="ds-section border-t border-line">
                     <SectionHeading title="Components" />
                     <ComponentShowcase />
+                    <SectionHeading title="Gallery and details" variant="subsection" />
+                    <GalleryShowcase />
                 </section>
                 <section id="motion" className="ds-section border-t border-line">
                     <SectionHeading title="Motion" description="A brief entrance, with reduced motion support." />

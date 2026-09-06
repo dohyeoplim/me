@@ -38,6 +38,7 @@
     --duration-feedback: 200ms;
     --ease-feedback: cubic-bezier(0.2, 0, 0, 1);
     --surface-floating: rgb(255 255 255 / 0.96);
+    --surface-overlay: rgb(15 15 16 / 0.4);
     --surface-portrait: #e9e9eb;
     --size-profile-portrait: clamp(5rem, 14vw, 11rem);
     --shadow-floating: 0 4px 16px rgb(15 15 16 / 0.08);
