@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import LinkButton from "@/app/components/LinkButton";
 import { hero, portfolioIntro } from "../../_data/hero";
 
@@ -18,7 +18,6 @@ export default function PortfolioIntro() {
                     </div>
                     <Link href={portfolioIntro.askLink.href} transitionTypes={["nav-back"]}
                         className="dds-search-link portfolio-ask-link">
-                        <Search size={18} aria-hidden="true" />
                         <span>{portfolioIntro.askLink.label}</span>
                         <ArrowRight size={18} aria-hidden="true" />
                     </Link>

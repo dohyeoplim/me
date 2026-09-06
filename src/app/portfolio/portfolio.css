@@ -30,9 +30,10 @@
 
 .portfolio-ask-link {
     grid-column: 1 / -1;
-    width: 100%;
-    max-width: var(--layout-reading-width);
+    width: fit-content;
+    max-width: 100%;
     margin-top: var(--spacing-dds-md);
+    box-shadow: none;
 }
 
 .portfolio-portrait {
