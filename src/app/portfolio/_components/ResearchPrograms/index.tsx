@@ -13,7 +13,7 @@ export default function ResearchPrograms() {
                     <h4 className="font-body portfolio-role-title" lang="ko">{program.title.replaceAll(" ", "")}</h4>
                     <p className="font-support text-muted">{program.description}</p>
                     <div className="portfolio-rd-action">
-                        <DetailDialog title={program.title} label="Project details"
+                        <DetailDialog title={program.title.replaceAll(" ", "")} label="Project details"
                             expandFromCard triggerStyle="card" density="compact">
                             {index === 0 ? <div className="portfolio-research-list">
                                 <article>

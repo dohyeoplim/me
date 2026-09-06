@@ -5,7 +5,7 @@ export const research = {
         title: "R&D participation",
         industrial: {
             title: "산업 AI용 데이터 전처리 자동화 기술개발",
-            description: "OCR evaluation and synthetic document data with KETI.",
+            description: "Industrial OCR research with KETI & KOSPO.",
         },
         computing: {
             title: "컴퓨팅자원집중형 인공지능 응용 기술 개발",
