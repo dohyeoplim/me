@@ -6,7 +6,6 @@ import { LayoutGroup, useReducedMotion } from "motion/react";
 import * as motion from "motion/react-m";
 import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
 import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
-import { useHeaderSecondaryNode } from "@/app/components/Header/HeaderSlot";
 import { chapters } from "../../_data/navigation";
 
 export default function ChapterNav() {
@@ -14,15 +13,12 @@ export default function ChapterNav() {
 }
 
 function ChapterNavContent() {
-    const secondary = useHeaderSecondaryNode();
-    const anchor = useRef<HTMLDivElement>(null);
     const nav = useRef<HTMLElement>(null);
     const docked = useRef(false);
     const previousFocus = useRef<string | null>(null);
     const previousScroll = useRef(0);
     const [active, setActive] = useState<string>(chapters[0].id);
     const [stuck, setStuck] = useState(false);
-    const [height, setHeight] = useState(64);
     const reducedMotion = useReducedMotion();
     const indicatorTransition = getDdsMotionTransition(reducedMotion);
 
@@ -53,27 +49,12 @@ function ChapterNavContent() {
     }, [active, reducedMotion, stuck]);
 
     useEffect(() => {
-        const element = nav.current;
-        if (!element) return;
-        const measure = () => {
-            const measured = element.getBoundingClientRect().height;
-            setHeight(measured);
-            document.documentElement.style.setProperty("--section-navigation-height", `${measured}px`);
-        };
-        const observer = new ResizeObserver(measure);
-        observer.observe(element);
-        measure();
-        return () => observer.disconnect();
-    }, [stuck]);
-
-    useEffect(() => {
         let frame = 0;
         const update = () => {
             const header = document.querySelector(".site-header-main");
             const headerHeight = header?.getBoundingClientRect().height ?? 0;
-            const navHeight = nav.current?.getBoundingClientRect().height ?? 0;
-            const top = anchor.current?.getBoundingClientRect().top ?? Infinity;
-            const next = Boolean(secondary) && top <= headerHeight;
+            const top = document.querySelector("#research h2")?.getBoundingClientRect().top ?? Infinity;
+            const next = top <= headerHeight + window.innerHeight * 0.25;
             if (next !== docked.current) {
                 const focused = document.activeElement;
                 previousFocus.current =
@@ -87,7 +68,7 @@ function ChapterNavContent() {
             const current = chapters.filter(({ id }) => {
                 const section = document.getElementById(id);
                 const heading = section?.querySelector("h2");
-                return heading && heading.getBoundingClientRect().top <= headerHeight + navHeight + 32;
+                return heading && heading.getBoundingClientRect().top <= headerHeight + 32;
             });
             const atBottom = window.scrollY > 0 &&
                 window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
@@ -109,16 +90,28 @@ function ChapterNavContent() {
             window.removeEventListener("scroll", schedule);
             window.removeEventListener("resize", schedule);
         };
-    }, [secondary]);
+    }, []);
 
     const navigation = (
-        <nav ref={nav} aria-label="Portfolio sections" className="portfolio-section-nav">
+        <nav ref={nav} aria-label="Portfolio sections" className="portfolio-section-nav" data-floating={stuck}>
             <div className="dds-container">
                 <LayoutGroup id="portfolio-section-navigation">
                     <motion.ul layoutScroll>
                         {chapters.map(({ id, label }) => (
                             <li key={id}>
-                                <a href={`#${id}`} aria-current={active === id ? "location" : undefined}>
+                                <a
+                                    href={`#${id}`}
+                                    aria-current={active === id ? "location" : undefined}
+                                    onClick={(event) => {
+                                        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                                        event.preventDefault();
+                                        document.getElementById(id)?.scrollIntoView({
+                                            behavior: reducedMotion ? "instant" : "smooth",
+                                            block: "start",
+                                        });
+                                        history.replaceState(null, "", `#${id}`);
+                                    }}
+                                >
                                     {active === id && (
                                         <motion.span
                                             layoutId="portfolio-section-indicator"
@@ -138,9 +131,5 @@ function ChapterNavContent() {
         </nav>
     );
 
-    return (
-        <div ref={anchor} className="portfolio-nav-anchor" style={stuck ? { height } : undefined}>
-            {stuck && secondary ? createPortal(navigation, secondary) : navigation}
-        </div>
-    );
+    return stuck ? createPortal(navigation, document.body) : null;
 }

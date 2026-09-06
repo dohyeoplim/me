@@ -9,7 +9,7 @@ export const hero = {
 };
 
 export const portfolioIntro = {
-    description: "I study Applied Artificial Intelligence at SeoulTech and work in the Visual Intelligence Lab.",
+    title: "AI researcher & developer",
     links: [
         { label: "CV", href: "https://cv.dohyeoplim.me/" },
         { label: "GitHub", href: "https://github.com/dohyeoplim" },
