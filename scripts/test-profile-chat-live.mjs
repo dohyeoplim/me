@@ -24,6 +24,7 @@ if (process.env.PROFILE_CHAT_LIVE !== "1") {
             "src/app/lib/profile-chat/answer.ts",
             "src/app/lib/profile-chat/documents.ts",
             "src/app/lib/knowledge/github-content.ts",
+            "src/app/components/ProfileChat/_data/questions.ts",
             "--outDir", output, "--module", "commonjs", "--target", "es2022",
             "--esModuleInterop", "--skipLibCheck", "--types", "node",
         ], { cwd: root, stdio: "inherit" });
@@ -128,20 +129,81 @@ function assertBlock(answer, type) {
     assert.equal(answer.cards.length, 0, "A shown reserved card was repeated.");
 }
 
+function assertFocusedOverview(answer, type) {
+    assertBlock(answer, type);
+    assert.equal(answer.blocks.length, 1, "The overview added unnecessary blocks.");
+    assert.match(answer.answer.trim(), /[.!?]$/, "The overview lead ends mid-sentence.");
+    assert.doesNotMatch(answer.answer.trim(), /\b(?:and|or|to|of|the|with)[.!?]?$/i,
+        "The overview lead ends with an incomplete phrase.");
+    assert.ok(answer.answer.trim().split(/\s+/).length <= 50, "The overview repeats too much detail in prose.");
+    const content = textValues([answer.answer, answer.blocks]).join("\n");
+    assert.doesNotMatch(content, /\b(?:visionary|groundbreaking|game[- ]changing|world[- ]class)\b/i,
+        "The overview used promotional language.");
+    const normalize = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    const prose = normalize(answer.answer);
+    for (const value of textValues(answer.blocks)) {
+        const normalized = normalize(value);
+        if (normalized.split(" ").length < 8) continue;
+        assert.ok(!prose.includes(normalized), "The prose repeats a complete block detail.");
+    }
+}
+
+function assertCommunityOverview(answer) {
+    assertFocusedOverview(answer, "comparison");
+    const content = textValues(answer.blocks).join("\n");
+    assert.match(content, /LIKELION/i, "The LIKELION activity is missing from the table.");
+    assert.match(content, /Google Developer Groups|GDG/i, "The GDG activity is missing from the table.");
+    assert.match(content, /vice president/i, "The LIKELION role is missing from the table.");
+    assert.match(content, /core team/i, "The GDG role is missing from the table.");
+    assert.match(content, /30/, "The chapter size is missing from the table.");
+    assert.match(content, /13/, "The GDG session count is missing from the table.");
+    assert.ok(answer.sources.some(({ id }) => id === "community"), "The community source is missing.");
+    assert.ok(!answer.sources.some(({ id }) => id === "infrastructure"), "Lab work entered the community overview.");
+    for (const value of textValues([answer.answer, answer.blocks])) {
+        assert.doesNotMatch(value, /vice president[^.!?\n]{0,100}(?:since|from|starting in)\s+2025/i,
+            "The chapter participation period became a Vice President start date.");
+        assert.doesNotMatch(value, /(?:since|from)\s+2025[^.!?\n]{0,100}vice president/i,
+            "The chapter participation period became a Vice President start date.");
+    }
+}
+
+function captureLiveResponse(fetchResponse) {
+    return async (input, init) => {
+        const response = await fetchResponse(input, init);
+        if (input !== "https://api.openai.com/v1/responses") return response;
+        const request = JSON.parse(init.body);
+        const reference = JSON.parse(request.input[0].content);
+        const payload = await response.clone().json();
+        console.info(JSON.stringify({
+            event: "profile_chat_live_raw",
+            documentIds: reference.publicDocuments.map(({ id }) => id),
+            responseSchema: request.text.format.schema,
+            output: payload.output,
+        }));
+        return response;
+    };
+}
+
 async function runLiveTests(output) {
     const envFile = join(root, ".env.local");
     if (existsSync(envFile)) process.loadEnvFile(envFile);
     assert.ok(process.env.OPENAI_API_KEY, "OPENAI_API_KEY is required for the opt-in live tests.");
+    if (process.env.PROFILE_CHAT_LIVE_RAW === "1") globalThis.fetch = captureLiveResponse(globalThis.fetch);
 
     const { answerQuestion } = require(join(output, "lib/profile-chat/answer.js"));
     const { profileDocuments } = require(join(output, "lib/profile-chat/documents.js"));
     const { profileCardRegistry } = require(join(output, "lib/profile-chat/types.js"));
     const { questionSchema } = require(join(output, "lib/profile-chat/validation.js"));
     const { plainReadme, repositoryKnowledgeSource } = require(join(output, "lib/knowledge/github-content.js"));
+    const { suggestedQuestions } = require(join(output, "components/ProfileChat/_data/questions.js"));
     const allCards = Object.keys(profileCardRegistry);
     const select = (...ids) => profileDocuments.filter(({ id }) => ids.includes(id));
     const driver = select("drivernet");
     const profile = select("profile")[0];
+    const outsideLabQuestion = suggestedQuestions.find(({ question }) =>
+        question === "What do you do outside the lab?");
+    assert.ok(outsideLabQuestion, "The outside-the-lab suggestion is missing.");
+    assert.deepEqual(outsideLabQuestion.sourceIds, ["community"], "The community suggestion includes unrelated work.");
     const fakeAward = "Dohyeop Lim won the IEEE Best Paper Award for DriverNet.";
     const readme = [
         "# DriverNet",
@@ -194,6 +256,44 @@ async function runLiveTests(output) {
             },
         },
         {
+            name: "community_natural_overview",
+            question: "What do you do outside the lab?",
+            documents: profileDocuments,
+            verify: assertCommunityOverview,
+        },
+        {
+            name: "community_suggested_overview",
+            question: outsideLabQuestion.question,
+            contextSourceIds: outsideLabQuestion.sourceIds,
+            documents: profileDocuments,
+            verify: assertCommunityOverview,
+        },
+        {
+            name: "education_natural_overview",
+            question: "What is your education and academic background?",
+            documents: profileDocuments,
+            verify(answer) {
+                assertFocusedOverview(answer, "facts");
+                const content = textValues(answer.blocks).join("\n");
+                assert.match(content, /4\.34/, "The GPA is missing from the academic facts.");
+                assert.match(content, /first|1st|rank.{0,8}1/i, "The department rank is missing.");
+                assert.match(content, /Applied Artificial Intelligence/i, "The degree subject is missing.");
+                assert.ok(answer.sources.some(({ id }) => id === "education"), "The education source is missing.");
+            },
+        },
+        {
+            name: "gpa_natural_single_fact",
+            question: "What is your GPA?",
+            documents: profileDocuments,
+            verify(answer) {
+                assert.match(answer.answer, /4\.34/, "The GPA is missing.");
+                assert.equal(answer.cards.length + answer.blocks.length, 0,
+                    "A single score added unnecessary visuals.");
+                assert.ok(answer.answer.trim().split(/\s+/).length <= 50,
+                    "The single score answer became an overview.");
+            },
+        },
+        {
             name: "education_dynamic_facts",
             question: "Show his degree, GPA, and current department rank in a facts block.",
             documents: select("education"),
@@ -201,6 +301,27 @@ async function runLiveTests(output) {
             verify(answer) {
                 assertBlock(answer, "facts");
                 assert.match(answerText(answer), /4\.34/, "The GPA is missing.");
+            },
+        },
+        {
+            name: "collog_natural_followup",
+            question: "Tell me more about Collog.",
+            documents: select("collog", "mochicall"),
+            history: [
+                { role: "user", content: "Which projects use speech recognition?" },
+                { role: "assistant", content: "Collog and MochiCall use speech recognition." },
+            ],
+            shownCardIds: ["collog", "mochicall"],
+            contextSourceIds: ["collog"],
+            verify(answer) {
+                assertFocusedOverview(answer, "facts");
+                const content = textValues([answer.answer, answer.blocks]).join("\n");
+                assert.match(content, /health/i, "The Collog use case is missing.");
+                assert.doesNotMatch(content, /14th\s+(?:place\s+)?overall|overall.{0,20}14th/i,
+                    "The hackathon edition became an overall placement.");
+                assert.ok(answer.sources.some(({ id }) => id === "collog"), "The Collog source is missing.");
+                assert.ok(answer.blocks.every(({ sourceIds }) => sourceIds.includes("collog")),
+                    "The follow-up visual did not use Collog evidence.");
             },
         },
         {
