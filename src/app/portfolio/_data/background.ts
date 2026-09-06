@@ -13,10 +13,10 @@ export const beyondTheLab = {
     title: "Additional experience",
     communities: [
         {
-            name: "LIKELION University",
+            name: "LIKELION University SeoulTech Chapter",
             href: "https://www.seoultech-likelion.com/",
             period: "2025 to present",
-            role: "Vice President, 14th cohort. Member, 13th cohort. SeoulTech.",
+            role: "Vice President, 14th cohort. Member, 13th cohort.",
             description:
                 "Coordinate a 30-member chapter. Organized four technical sessions, invited talks, and hackathons.",
         },
