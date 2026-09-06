@@ -55,7 +55,7 @@ export const listPublishedKnowledge = unstable_cache(async () => {
     return rows.map(({ doc, status }) => effectivePublishedSource(
         KnowledgeSourceSchema.parse({ ...(doc as object), status }),
     ));
-}, ["published-profile-knowledge-v1"], { tags: ["profile-knowledge"], revalidate: 300 });
+}, ["published-profile-knowledge-v2"], { tags: ["profile-knowledge"], revalidate: 300 });
 
 export async function getKnowledgeSource(id: string): Promise<KnowledgeSource | null> {
     await ensureSchema();

@@ -7,9 +7,28 @@ import { createPortfolioSources, effectivePublishedSource } from "./sources";
 import { parseRepositoryUrl } from "./github";
 import { retrieveHybridDocuments, fuseRankings } from "../profile-chat/hybrid-retrieval";
 import type { ProfileDocument } from "../profile-chat/documents";
+import { curatePortfolioSources, portfolioRepositories } from "./curation";
+import { repositoryKnowledgeSource } from "./github-content";
 
 const source = createPortfolioSources()[0]!;
 const vector = (axis: number) => Array.from({ length: embeddingDimensions }, (_, index) => Number(index === axis));
+
+test("portfolio curation keeps primary repositories and excludes unrelated material without deleting it", () => {
+    const repositories = portfolioRepositories.map(({ name, description }) => repositoryKnowledgeSource({
+        fullName: name, url: `https://github.com/${name}`, description, owner: name.split("/")[0]!,
+        ownerType: "Organization", language: null, topics: [], archived: false, fork: false,
+    }, "Repository information."));
+    const unrelated = { ...source, id: "classroom-notes", title: "Classroom exercise" };
+    const existing = [...createPortfolioSources(), ...repositories, unrelated];
+    const result = curatePortfolioSources(existing);
+    assert.equal(result.published.length, 26);
+    assert.deepEqual(result.excluded.map(({ id }) => id), [unrelated.id]);
+    assert.equal(existing.at(-1)?.status, "published");
+    assert.equal(result.published.find(({ id }) => id === "drivernet")?.kind, "project");
+    assert.ok(result.published.find(({ id }) => id === "drivernet")?.text.includes("March to July 2025"));
+    assert.ok(!/InfiniBand|\bMIG\b|bastion/.test(result.published.find(({ id }) => id === "infrastructure")?.text ?? ""));
+    assert.ok(result.published.some(({ id }) => id === "personal-website"));
+});
 
 test("CSV preserves commas, quotes, multiline text and formula-like values", () => {
     for (const title of ["Normal, title", 'A "quoted" title', "=SUM(A1)", "'=SUM(A1)", "+note", "@name"]) {

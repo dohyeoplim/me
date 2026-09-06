@@ -34,7 +34,13 @@ const projectKeywords: Record<string, string[]> = {
         "워닛", "공간", "대여", "모바일", "온디바이스", "아이폰", "iphone", "ios", "core ml", "vision",
     ],
     DocFusionX: ["독퓨전", "독일", "울름", "문서", "검색", "graphrag", "retrieval", "ulm"],
+    DriverNet: ["드라이버넷", "운전자", "깊이", "뎁스", "driver", "depth", "gated", "projection", "distraction"],
 };
+
+const joinSentences = (values: Array<string | undefined>) => values
+    .filter((value): value is string => Boolean(value?.trim()))
+    .map((value) => value.trim().replace(/\.+$/, ""))
+    .join(". ") + ".";
 
 export const profileDocuments: ProfileDocument[] = [
     {
@@ -48,7 +54,7 @@ export const profileDocuments: ProfileDocument[] = [
         id: "eact",
         title: research.eact.name,
         url: "/portfolio#research",
-        text: [
+        text: joinSentences([
             research.eact.paper,
             research.eact.authors,
             research.eact.role,
@@ -57,7 +63,7 @@ export const profileDocuments: ProfileDocument[] = [
             research.eact.contributions,
             research.eact.result,
             research.eact.errorResult,
-        ].join(". "),
+        ]),
         keywords: [
             "이액트", "연구", "논문", "체크섬", "식별", "인식",
             "eact", "ctc", "checksum", "wacv", "research",
@@ -76,12 +82,12 @@ export const profileDocuments: ProfileDocument[] = [
         id: "table-recognition",
         title: "Table recognition paper",
         url: research.additionalPublications[0].url,
-        text: [
+        text: joinSentences([
             research.additionalPublications[0].title,
             research.additionalPublications[0].authors,
             research.additionalPublications[0].status,
             "Dohyeop Lim is the second author. Individual contributions are not listed in the CV.",
-        ].join(". "),
+        ]),
         keywords: [
             "논문", "표", "공동저자", "연구", "table", "recognition", "wacv", "publication", "research",
         ],
@@ -92,11 +98,11 @@ export const profileDocuments: ProfileDocument[] = [
         id: "industrial-ocr",
         title: research.industrial.name,
         url: "/portfolio#research",
-        text: [
+        text: joinSentences([
             research.industrial.description,
             `${research.industrial.count} ${research.industrial.countLabel}`,
             research.industrial.insight,
-        ].join(". "),
+        ]),
         keywords: [
             "연구",
             "산업",
@@ -134,23 +140,22 @@ export const profileDocuments: ProfileDocument[] = [
         cardId: null,
     },
     ...projects.map((project) => ({
-        id: project.name.toLowerCase() as ProfileCardId,
+        id: project.name.toLowerCase(),
+        kind: "project",
         title: project.name,
         url: project.href,
-        text: [project.title, project.period, project.contribution, project.outcome, project.recognition]
-            .filter(Boolean)
-            .join(". "),
+        text: joinSentences([project.title, project.period, project.contribution, project.outcome, project.recognition]),
         keywords: [...(projectKeywords[project.name] ?? []), "프로젝트", "수상", "project", "award"],
     })),
     {
         id: "infrastructure",
         title: beyondTheLab.infrastructure.title,
         url: "/portfolio#beyond-the-lab",
-        text: [
+        text: joinSentences([
             beyondTheLab.infrastructure.description,
             ...beyondTheLab.infrastructure.responsibilities.map(({ title, detail }) => `${title}, ${detail}`),
-        ].join(". "),
-        keywords: ["인프라", "서버", "클러스터", "분산", "도커", "gpu", "mig", "docker", "infiniband"],
+        ]),
+        keywords: ["인프라", "연구환경", "컴퓨팅", "학습데이터", "gpu", "infrastructure", "computing"],
         kind: "experience",
         cardId: null,
     },
@@ -159,7 +164,7 @@ export const profileDocuments: ProfileDocument[] = [
         title: "Community experience",
         url: "/portfolio#beyond-the-lab",
         text: beyondTheLab.communities
-            .map(({ name, period, role, description }) => `${name}. ${period}. ${role}. ${description}`)
+            .map(({ name, period, role, description }) => joinSentences([name, period, role, description]))
             .join("\n"),
         keywords: [
             "동아리", "멋사", "멋쟁이사자", "운영", "부회장", "세션", "likelion", "gdg", "community",

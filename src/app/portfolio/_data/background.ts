@@ -17,9 +17,7 @@ export const beyondTheLab = {
         responsibilities: [
             {
                 title: "컴퓨팅자원집중형 인공지능 응용 기술개발",
-                detail:
-                    "Support LLM data processing and shared GPU environments through NVIDIA MIG, Docker, " +
-                    "bastion access, servers, and InfiniBand.",
+                detail: "Support training data preparation and shared research computing environments.",
             },
             {
                 title: "산업 AI용 데이터 전처리 자동화 기술개발",
