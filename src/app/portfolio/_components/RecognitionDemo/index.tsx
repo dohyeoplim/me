@@ -1,7 +1,8 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
 
 const unconstrainedPath = [2, 1, 0, 1, 2];
 const constrainedPath = [2, 1, 0, 1, 1];

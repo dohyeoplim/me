@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-m";
 import { ArrowLeft, Layers } from "lucide-react";
 import { useBackNav } from "../PreviousPath";
 import { useOverlay } from "../useOverlay";
@@ -53,7 +54,10 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),0.75rem)] md:bottom-6 z-50 flex flex-col items-center gap-2 px-6"
+                        className={
+                            "fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),0.75rem)] md:bottom-6 z-50 " +
+                            "flex flex-col items-center gap-2 px-6"
+                        }
                     >
                         <AnimatePresence>
                             {open && related.length > 0 && (
@@ -69,7 +73,10 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                     }}
                                     style={{ transformOrigin: "bottom center" }}
                                     onClick={() => setOpen(false)}
-                                    className="w-full max-w-md overflow-hidden rounded-2xl border border-grey-200 bg-grey-50/90 shadow-lg backdrop-blur"
+                                    className={
+                                        "w-full max-w-md overflow-hidden rounded-2xl border border-grey-200 " +
+                                        "bg-grey-50/90 shadow-lg backdrop-blur"
+                                    }
                                 >
                                     <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-4 py-2">
                                         {related.map((post) => (
@@ -105,7 +112,10 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                 href={previous ?? "/blog"}
                                 onClick={markBack}
                                 transitionTypes={["nav-back"]}
-                                className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                                className={
+                                    "flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light " +
+                                    "text-grey-500 transition-colors hover:bg-grey-100 hover:text-grey-900"
+                                }
                             >
                                 <ArrowLeft size={15} strokeWidth={1.75} />
                                 Go back

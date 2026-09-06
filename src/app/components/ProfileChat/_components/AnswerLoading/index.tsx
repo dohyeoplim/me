@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
 import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 
 const lineLengths = ["full", "long", "short"] as const;

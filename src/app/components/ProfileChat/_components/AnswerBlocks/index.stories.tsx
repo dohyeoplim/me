@@ -83,7 +83,7 @@ export const LongValues: Story = {
                 value: "Speech transcription, health information extraction, and acoustic analysis support " +
                     "records that can be compared across calls. Earlier conversation records also inform " +
                     "questions for the next family call.",
-            }, facts.items[2]],
+            }, ...facts.items.slice(2, 3)],
         }],
     },
 };

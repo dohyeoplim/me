@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
+import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
 import { ArrowUp, Square } from "lucide-react";
 import Button from "@/app/components/DDS/Button";
 import IconButton from "@/app/components/DDS/IconButton";
@@ -17,6 +19,10 @@ import useProfileConversation, { chatCopy } from "./_hooks/useProfileConversatio
 const initialQuestionCount = 8;
 
 export default function ProfileChat() {
+    return <LayoutMotion><ProfileChatContent /></LayoutMotion>;
+}
+
+function ProfileChatContent() {
     const id = useId();
     const input = useRef<HTMLTextAreaElement>(null);
     const conversation = useRef<HTMLDivElement>(null);
@@ -42,6 +48,7 @@ export default function ProfileChat() {
     }, []);
 
     useEffect(() => {
+        if (CSS.supports("field-sizing", "content")) return;
         if (!input.current) return;
         input.current.style.height = "auto";
         input.current.style.height = `${input.current.scrollHeight}px`;

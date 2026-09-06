@@ -67,7 +67,7 @@ export default function LottieGraphic({ src, children }: Props) {
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                visible = entry.isIntersecting;
+                visible = entry?.isIntersecting ?? false;
                 if (visible) void start();
                 sync();
             },

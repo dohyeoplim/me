@@ -13,7 +13,7 @@ export default function Reveal({ className, ...props }: ComponentProps<"div">) {
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (!entry.isIntersecting) return;
+                if (!entry?.isIntersecting) return;
                 setVisible(true);
                 observer.disconnect();
             },

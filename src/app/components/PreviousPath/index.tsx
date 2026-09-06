@@ -63,8 +63,7 @@ export function PreviousPathProvider({
         traverseRef.current = null;
         if (isBack && stack.length > 1) stack.pop();
         else stack.push(pathname);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPrevious(stack.length > 1 ? stack[stack.length - 2] : null);
+        setPrevious(stack.at(-2) ?? null);
     }, [pathname]);
 
     const markBack = () => {
@@ -72,8 +71,8 @@ export function PreviousPathProvider({
     };
 
     return (
-        <BackNavContext.Provider value={{ previous, markBack }}>
+        <BackNavContext value={{ previous, markBack }}>
             {children}
-        </BackNavContext.Provider>
+        </BackNavContext>
     );
 }

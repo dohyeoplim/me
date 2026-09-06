@@ -1,7 +1,7 @@
 "use client";
 
 import {
-    createContext, useContext, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction,
+    createContext, useContext, useState, type Dispatch, type ReactNode, type SetStateAction,
 } from "react";
 import type { ProfileChatAnswer } from "@/app/lib/profile-chat/types";
 
@@ -10,18 +10,13 @@ export type ProfileExchange = ProfileChatAnswer & { id: string; question: string
 type ChatContext = {
     exchanges: ProfileExchange[];
     setExchanges: Dispatch<SetStateAction<ProfileExchange[]>>;
-    question: string;
-    setQuestion: Dispatch<SetStateAction<string>>;
 };
 
 const ProfileChatContext = createContext<ChatContext | null>(null);
 
 export function ProfileChatProvider({ children }: { children: ReactNode }) {
     const [exchanges, setExchanges] = useState<ProfileExchange[]>([]);
-    const [question, setQuestion] = useState("");
-    const value = useMemo(() => ({ exchanges, setExchanges, question, setQuestion }), [exchanges, question]);
-
-    return <ProfileChatContext value={value}>{children}</ProfileChatContext>;
+    return <ProfileChatContext value={{ exchanges, setExchanges }}>{children}</ProfileChatContext>;
 }
 
 export function useProfileChatContext() {

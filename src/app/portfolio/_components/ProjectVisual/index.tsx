@@ -89,13 +89,13 @@ export default function ProjectVisual({ kind }: { kind: Project["visual"] }) {
                     <path d="M 45 40 L 150 75 L 250 30 M 45 115 L 150 75 L 250 120 M 150 75 L 150 15" />
                     <path d="M 45 40 L 45 115 M 250 30 L 250 120" strokeDasharray="3 4" />
                 </g>
-                {[
+                {([
                     [45, 40],
                     [45, 115],
                     [250, 30],
                     [250, 120],
                     [150, 15],
-                ].map(([cx, cy]) => (
+                ] as const).map(([cx, cy]) => (
                     <g key={`${cx}-${cy}`}>
                         <rect
                             x={cx - 12}

@@ -67,7 +67,7 @@ export function followUpQuestions(answer: ProfileChatAnswer, previousQuestions: 
         return name ? [{ name, id }] : [];
     });
     const coveredProjects = new Set(answer.followUps.flatMap(({ sourceIds }) => (
-        sourceIds.length === 1 && projectNames.has(sourceIds[0]) ? sourceIds : []
+        sourceIds.length === 1 && projectNames.has(sourceIds[0] ?? "") ? sourceIds : []
     )));
     const contextual = projects
         .filter(({ id }) => !coveredProjects.has(id))

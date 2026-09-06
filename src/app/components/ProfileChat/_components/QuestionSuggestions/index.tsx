@@ -1,7 +1,8 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
 import { ddsMotionTransition, getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import type { ProfileFollowUp } from "@/app/lib/profile-chat/types";
 

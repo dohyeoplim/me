@@ -14,7 +14,7 @@ export const research = {
             role: "Co-author",
             url: "https://cv.dohyeoplim.me/Dohyeop_Lim.pdf",
         },
-    ],
+    ] as const,
     eact: {
         name: "E-ACT",
         role: "First author",

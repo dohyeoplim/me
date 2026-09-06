@@ -1,7 +1,8 @@
 "use client";
 
 import { useLayoutEffect, useRef, type RefObject } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
 import Button from "@/app/components/DDS/Button";
 import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import type { ProfileExchange } from "../../Context";

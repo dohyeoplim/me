@@ -113,6 +113,7 @@
 
 .dds-chat-composer textarea {
     @apply font-body;
+    field-sizing: content;
     display: block;
     min-width: 0;
     width: 100%;

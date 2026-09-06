@@ -18,7 +18,8 @@ export const chatCopy = {
 };
 
 export default function useProfileConversation() {
-    const { exchanges, setExchanges, question, setQuestion } = useProfileChatContext();
+    const { exchanges, setExchanges } = useProfileChatContext();
+    const [question, setQuestion] = useState("");
     const request = useRef<{ controller: AbortController; question: string } | null>(null);
     const [availability, setAvailability] = useState<Availability>("checking");
     const [availabilityAttempt, setAvailabilityAttempt] = useState(0);
@@ -52,7 +53,6 @@ export default function useProfileConversation() {
         if (!active) return;
         active.controller.abort();
         request.current = null;
-        setQuestion(active.question);
     }, [setQuestion]);
 
     async function ask(value: string, selectedSourceIds?: string[]) {

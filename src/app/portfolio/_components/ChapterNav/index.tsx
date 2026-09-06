@@ -2,12 +2,18 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { LayoutGroup, useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
+import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
 import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import { useHeaderSecondaryNode } from "@/app/components/Header/HeaderSlot";
 import { chapters } from "../../_data/navigation";
 
 export default function ChapterNav() {
+    return <LayoutMotion><ChapterNavContent /></LayoutMotion>;
+}
+
+function ChapterNavContent() {
     const secondary = useHeaderSecondaryNode();
     const anchor = useRef<HTMLDivElement>(null);
     const nav = useRef<HTMLElement>(null);
