@@ -54,7 +54,12 @@ export default function ImageField({
                     className={`rounded-md border border-grey-200 ${previewClassName}`}
                 />
             ) : null}
-            <label className="flex cursor-pointer items-center justify-center rounded-md border border-dashed border-grey-300 py-3 font-body04-light text-grey-500 hover:border-grey-400">
+            <label
+                className={
+                    "flex cursor-pointer items-center justify-center rounded-md border border-dashed " +
+                    "border-grey-300 py-3 font-body04-light text-grey-500 hover:border-grey-400"
+                }
+            >
                 <input
                     type="file"
                     accept={imageUploadTypes.join(",")}

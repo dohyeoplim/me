@@ -102,7 +102,12 @@ export default function BlogList({ items }: { items: BlogListItem[] }) {
                                         <span>{formatDate(post.date)}</span>
                                     )}
                                 </div>
-                                <h2 className="font-head01-medium text-grey-900 transition-colors group-hover:text-grey-600">
+                                <h2
+                                    className={
+                                        "font-head01-medium text-grey-900 transition-colors " +
+                                        "group-hover:text-grey-600"
+                                    }
+                                >
                                     {post.title}
                                 </h2>
                                 {post.description && (

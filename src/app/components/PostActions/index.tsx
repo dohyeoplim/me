@@ -78,7 +78,12 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                         "bg-grey-50/90 shadow-lg backdrop-blur"
                                     }
                                 >
-                                    <ul className="flex max-h-[55vh] flex-col divide-y divide-grey-200 overflow-y-auto px-4 py-2">
+                                    <ul
+                                        className={
+                                            "flex max-h-[55vh] flex-col divide-y divide-grey-200 " +
+                                            "overflow-y-auto px-4 py-2"
+                                        }
+                                    >
                                         {related.map((post) => (
                                             <li key={post.slug}>
                                                 <Link
@@ -91,7 +96,12 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                                     }
                                                     className="group flex flex-col gap-1 py-3"
                                                 >
-                                                    <span className="font-body02-light text-grey-900 transition-colors group-hover:text-grey-600">
+                                                    <span
+                                                        className={
+                                                            "font-body02-light text-grey-900 transition-colors " +
+                                                            "group-hover:text-grey-600"
+                                                        }
+                                                    >
                                                         {post.title}
                                                     </span>
                                                     {post.description && (
@@ -107,7 +117,12 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                             )}
                         </AnimatePresence>
 
-                        <div className="flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/60 p-1 shadow-sm backdrop-blur">
+                        <div
+                            className={
+                                "flex items-center gap-1 rounded-full border border-grey-200 bg-grey-50/60 p-1 " +
+                                "shadow-sm backdrop-blur"
+                            }
+                        >
                             <Link
                                 href={previous ?? "/blog"}
                                 onClick={markBack}
@@ -126,11 +141,13 @@ export default function PostActions({ related }: { related: RelatedPost[] }) {
                                     <button
                                         type="button"
                                         onClick={() => setOpen((o) => !o)}
-                                        className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body04-light transition-colors hover:bg-grey-100 hover:text-grey-900 ${
-                                            open
+                                        className={
+                                            "flex items-center gap-1.5 rounded-full px-3.5 py-1.5 " +
+                                            "font-body04-light transition-colors hover:bg-grey-100 " +
+                                            "hover:text-grey-900 " + (open
                                                 ? "bg-grey-100 text-grey-900"
-                                                : "text-grey-500"
-                                        }`}
+                                                : "text-grey-500")
+                                        }
                                     >
                                         <Layers size={15} strokeWidth={1.75} />
                                         Related

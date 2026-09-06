@@ -124,7 +124,12 @@ export default async function PostPage({ params }: { params: Params }) {
                                     </span>
                                 )}
                                 {(doc.paper.venue || doc.paper.url) && (
-                                    <div className="flex flex-wrap items-center gap-x-2 font-body04-light text-grey-500">
+                                    <div
+                                        className={
+                                            "flex flex-wrap items-center gap-x-2 font-body04-light " +
+                                            "text-grey-500"
+                                        }
+                                    >
                                         {doc.paper.venue && (
                                             <span>{doc.paper.venue}</span>
                                         )}

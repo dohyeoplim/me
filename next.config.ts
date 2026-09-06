@@ -4,6 +4,7 @@ import { securityHeaders } from "./src/app/lib/security/headers";
 const nextConfig: NextConfig = {
     allowedDevOrigins: ["192.168.45.105"],
     reactCompiler: true,
+    agentRules: false,
     poweredByHeader: false,
     async headers() {
         return [{ source: "/:path*", headers: securityHeaders(process.env.NODE_ENV === "development") }];
