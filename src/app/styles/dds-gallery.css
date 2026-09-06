@@ -13,10 +13,18 @@
 .dds-carousel-track:focus-visible { outline-offset: 0; }
 
 .dds-carousel[data-variant="full-bleed"] .dds-carousel-track {
+    --carousel-edge-fade: var(--spacing-dds-md);
     width: var(--carousel-viewport, 100%);
     margin-inline-start: calc(-1 * var(--carousel-inset-start, 0px));
     padding-inline: var(--carousel-inset-start, 0px) var(--carousel-inset-end, 0px);
     scroll-padding-inline-start: var(--carousel-inset-start, 0px);
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 var(--carousel-edge-fade),
+        #000 calc(100% - var(--carousel-edge-fade)),
+        transparent
+    );
 }
 
 .dds-carousel[data-variant="full-bleed"] .dds-carousel-track > * {
@@ -80,6 +88,9 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 768px) {
+    .dds-carousel[data-variant="full-bleed"] .dds-carousel-track {
+        --carousel-edge-fade: var(--spacing-dds-2xl);
+    }
     .dds-carousel-track > * { flex-basis: 46%; }
     .dds-carousel[data-variant="full-bleed"] .dds-carousel-track > * {
         flex-basis: calc(var(--carousel-content, 100%) * 0.46);
