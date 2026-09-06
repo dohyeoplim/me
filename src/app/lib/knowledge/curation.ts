@@ -34,7 +34,7 @@ export const portfolioRepositories = [
     {
         name: "DocFusionX/server",
         description: "Python server for DocFusionX, a structure-aware GraphRAG project for retrieval " +
-            "and reasoning over long documents, developed during the TH Ulm visiting program.",
+            "and reasoning over long documents, developed during the Technische Hochschule Ulm visiting program.",
     },
     {
         name: "DriverNet-Project/DriverNet",

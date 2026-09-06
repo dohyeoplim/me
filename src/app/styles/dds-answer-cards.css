@@ -11,6 +11,9 @@
     min-width: 0;
 }
 
+.dds-answer-card { @apply font-body; }
+.dds-answer-card .dds-section-heading :is(h3, h4) { @apply font-body; font-weight: 500; }
+
 .dds-answer-card-surface {
     overflow-wrap: anywhere;
 }

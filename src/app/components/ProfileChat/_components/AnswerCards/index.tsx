@@ -12,6 +12,7 @@ import { research } from "@/app/portfolio/_data/research";
 import ProjectVisual from "@/app/portfolio/_components/ProjectVisual";
 import { projectAnimationSrc } from "@/app/portfolio/_data/project-scenes";
 import RecognitionDemo from "@/app/portfolio/_components/RecognitionDemo";
+import "@/app/styles/dds-answer-cards.css";
 
 type CardProps = {
     title: string;
@@ -63,10 +64,8 @@ function EactCard() {
                 {eact.role}, {eact.status}
             </p>
             <RecognitionDemo />
-            <p className="dds-answer-finding font-body">{eact.result}</p>
             <div className="dds-answer-copy">
                 <p>{eact.description}</p>
-                <p>{eact.errorResult}</p>
                 <p>{eact.paper}</p>
                 <p className="font-support text-muted">{eact.authors}</p>
             </div>
@@ -146,7 +145,7 @@ export default function ProfileChatCards({ cards }: Props) {
                     {presentation ? (
                         <AnswerCard title={presentation.title} description={presentation.description}>
                             {id === "profile" && <Image src={hero.image.src} alt={hero.image.alt}
-                                width={64} height={80} className="dds-answer-portrait" />}
+                                width={64} height={64} className="dds-answer-portrait" />}
                             {id === "eact" && <RecognitionDemo />}
                             {projects.filter((project) => project.name.toLowerCase() === id).map((project) => (
                                 <figure key={project.name} className="dds-answer-media" aria-label={project.title}>

@@ -3,6 +3,7 @@
 import { useReducedMotion } from "motion/react";
 import * as motion from "motion/react-m";
 import { recognitionExample } from "../../_data/recognition";
+import "./recognition.css";
 
 const columnX = (column: number) => 28 + column * 80;
 const rowY = (row: number) => 24 + row * 48;

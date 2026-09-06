@@ -11,9 +11,16 @@ import { curatePortfolioSources, portfolioRepositories } from "./curation";
 import { repositoryKnowledgeSource } from "./github-content";
 import { defaultReservedComponents } from "../reserved-components/schema";
 import { selectSourceRange } from "./selection";
+import { componentDefaults } from "../reserved-components/defaults";
 
 const source = createPortfolioSources()[0]!;
 const vector = (axis: number) => Array.from({ length: embeddingDimensions }, (_, index) => Number(index === axis));
+
+test("reserved component defaults use the full school name and omit E-ACT performance figures", () => {
+    assert.ok(componentDefaults("docfusionx").body.includes("Technische Hochschule Ulm"));
+    assert.ok(!componentDefaults("eact").body.includes("12.3"));
+    assert.ok(!componentDefaults("eact").body.includes("percentage points"));
+});
 
 test("portfolio curation keeps primary repositories and excludes unrelated material without deleting it", () => {
     const repositories = portfolioRepositories.map(({ name, description }) => repositoryKnowledgeSource({

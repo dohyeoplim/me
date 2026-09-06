@@ -50,7 +50,8 @@ export const projects: Project[] = [
         period: "January to February 2026, Ulm, Germany",
         title: "GraphRAG for long documents",
         contribution:
-            "Used document relationships for retrieval and reasoning during a visiting student program at TH Ulm.",
+            "Used document relationships for retrieval and reasoning during a visiting student program " +
+            "at Technische Hochschule Ulm.",
         outcome: "",
         href: "https://github.com/DocFusionX/server",
         visual: "graph",
