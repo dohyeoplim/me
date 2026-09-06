@@ -14,6 +14,7 @@ export const research = {
             role: "Participating researcher",
             details: "Assist with requirements and technical development for an education-focused " +
                 "vision-language-action (VLA) system.",
+            infrastructure: "Support GPU resource allocation and shared research environments with Docker.",
         },
     },
     portfolioSummary:

@@ -34,6 +34,7 @@ export default function ResearchPrograms() {
                                 </h4>
                                 <p className="font-support text-muted">{programs.computing.role}</p>
                                 <p className="font-support">{programs.computing.details}</p>
+                                <p className="font-support">{programs.computing.infrastructure}</p>
                             </>}
                         </DetailDialog>
                     </div>
