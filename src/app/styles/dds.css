@@ -21,7 +21,6 @@
     --duration-reveal: 480ms;
     --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
     --layout-content-width: 56rem;
-    --layout-admin-width: 76rem;
     --layout-reading-width: 42rem;
     --layout-chat-width: calc(var(--layout-content-width) - var(--spacing-dds-lg) * 2);
     --layout-copy-width: 34rem;

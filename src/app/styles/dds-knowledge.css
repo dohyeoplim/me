@@ -87,7 +87,6 @@
 .knowledge-repository-form { display: flex; align-items: end; gap: var(--spacing-dds-md); flex-wrap: wrap; }
 .knowledge-repository-form > label { flex: 1; min-width: 0; }
 
-.admin-shell:has(.knowledge-page) { max-width: var(--layout-admin-width); }
 .knowledge-library {
     padding: var(--spacing-dds-lg);
     border: 1px solid var(--border-subtle);
