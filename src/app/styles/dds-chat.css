@@ -247,16 +247,8 @@
     pointer-events: none;
 }
 
-.dds-chat[data-started="true"] .dds-chat-dock :is(.dds-chat-scroll-bridge, .dds-chat-composer, .ds-button) {
+.dds-chat[data-started="true"] .dds-chat-dock :is(.dds-chat-composer, .ds-button) {
     pointer-events: auto;
-}
-
-.dds-chat-scroll-bridge {
-    position: absolute;
-    inset: 0 calc(-1 * var(--spacing-dds-lg)) auto;
-    z-index: 1;
-    height: var(--spacing-dds-4xl);
-    touch-action: none;
 }
 
 .dds-chat[data-started="true"] .dds-chat-dock::before {

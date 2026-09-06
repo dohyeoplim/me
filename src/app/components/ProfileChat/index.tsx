@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { AnimatePresence, LayoutGroup, useReducedMotion } from "motion/react";
 import * as motion from "motion/react-m";
 import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
@@ -12,7 +12,6 @@ import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
 import { hero } from "@/app/portfolio/_data/hero";
 import Conversation from "./_components/Conversation";
 import QuestionSuggestions from "./_components/QuestionSuggestions";
-import ScrollBridge from "./_components/ScrollBridge";
 import { explorationQuestions, suggestedQuestions } from "./_data/questions";
 import useProfileConversation, { chatCopy } from "./_hooks/useProfileConversation";
 
@@ -43,9 +42,6 @@ function ProfileChatContent() {
         : notice;
     const status = pending ? chatCopy.pending : availabilityStatus;
     const showFeedback = Boolean(status) || (!started && availability === "unavailable") || (started && !pending);
-    const scrollConversation = useCallback((deltaY: number) => {
-        conversation.current?.scrollBy({ top: deltaY });
-    }, []);
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => input.current?.focus({ preventScroll: true }));
@@ -168,9 +164,6 @@ function ProfileChatContent() {
                             />
                         )}
                         <div className="dds-chat-dock">
-                            {started && (
-                                <ScrollBridge onScroll={scrollConversation} />
-                            )}
                             <form onSubmit={submit} className="dds-chat-form">
                                 <label htmlFor={`${id}-question`} className="sr-only">
                                     {started ? chatCopy.followUp : chatCopy.label}
