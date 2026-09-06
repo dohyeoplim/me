@@ -6,6 +6,7 @@ import { LayoutGroup, useReducedMotion } from "motion/react";
 import * as motion from "motion/react-m";
 import { LayoutMotion } from "@/app/components/DDS/Motion/Provider";
 import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
+import { sectionAtCenter, sectionScrollOffset } from "./position";
 type Props = { sections: readonly { id: string; label: string }[]; label: string };
 
 export default function SectionNavigation(props: Props) {
@@ -67,14 +68,19 @@ function SectionNavigationContent({ sections, label }: Props) {
                 docked.current = next;
                 setStuck(next);
             }
-            const current = sections.filter(({ id }) => {
+            const bounds = sections.flatMap(({ id }) => {
                 const section = document.getElementById(id);
-                const heading = section?.querySelector("h2");
-                return heading && heading.getBoundingClientRect().top <= headerHeight + 32;
+                if (!section) return [];
+                const { top, bottom, height } = section.getBoundingClientRect();
+                return height > 0 ? [{ id, top, bottom }] : [];
             });
             const atBottom = window.scrollY > 0 &&
                 window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
-            setActive((atBottom ? sections.at(-1)?.id : current.at(-1)?.id) ?? (sections[0]?.id ?? ""));
+            const viewport = {
+                top: headerHeight,
+                bottom: nav.current?.getBoundingClientRect().top ?? window.innerHeight,
+            };
+            setActive((previous) => sectionAtCenter(bounds, viewport, previous, atBottom) ?? previous);
             frame = 0;
         };
         const schedule = () => {
@@ -107,11 +113,18 @@ function SectionNavigationContent({ sections, label }: Props) {
                                     onClick={(event) => {
                                         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                                         event.preventDefault();
-                                        const heading = document.getElementById(id)?.querySelector("h2");
+                                        const section = document.getElementById(id);
+                                        const heading = section?.querySelector("h2");
                                         const header = document.querySelector(".site-header-main");
-                                        if (heading) window.scrollTo({
-                                            top: window.scrollY + heading.getBoundingClientRect().top -
-                                                (header?.getBoundingClientRect().height ?? 0) - 24,
+                                        if (heading && section) window.scrollTo({
+                                            top: window.scrollY + sectionScrollOffset(
+                                                section.getBoundingClientRect(), heading.getBoundingClientRect().top,
+                                                {
+                                                    top: (header?.getBoundingClientRect().height ?? 0) + 24,
+                                                    bottom: nav.current?.getBoundingClientRect().top ??
+                                                        window.innerHeight,
+                                                },
+                                            ),
                                             behavior: reducedMotion ? "instant" : "smooth",
                                         });
                                         history.replaceState(null, "", `#${id}`);

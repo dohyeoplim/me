@@ -15,6 +15,7 @@
         "test:profile-chat": "node scripts/test-profile-chat.mjs",
         "test:profile-chat:live": "node scripts/test-profile-chat-live.mjs",
         "test:graphics": "node --test scripts/test-project-animations.mjs",
+        "test:navigation": "node --test scripts/test-section-navigation.mjs",
         "auth:setup": "node scripts/setup-admin-auth.mjs",
         "auth:upgrade": "node scripts/upgrade-admin-auth.mjs",
         "test:auth": "node scripts/test-admin-auth.mjs",
