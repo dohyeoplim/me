@@ -171,7 +171,7 @@
     overflow-wrap: anywhere;
 }
 
-.dds-chat-suggestions .dds-question-card { background: var(--surface-muted); border-color: transparent; }
+.dds-chat-suggestions .dds-question-card { background: var(--surface-suggestion); border-color: transparent; }
 .dds-chat-suggestions .dds-question-card:is(:hover, :focus-visible):not(:disabled) {
     background: var(--surface-panel);
     border-color: var(--border-control);

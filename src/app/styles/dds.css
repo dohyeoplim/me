@@ -1,6 +1,7 @@
 :root {
     --surface-page: var(--color-grey-50);
     --surface-panel: #fff;
+    --surface-suggestion: color-mix(in srgb, var(--surface-panel) 75%, transparent);
     --surface-illustration: color-mix(in srgb, var(--diagram-accent) 7%, var(--surface-panel));
     --surface-muted: var(--color-grey-100);
     --selection-background: color-mix(in srgb, var(--diagram-accent) 32%, var(--surface-panel));
