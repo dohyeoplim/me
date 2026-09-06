@@ -127,6 +127,7 @@ const cardRenderers = {
     collog: () => <ProjectCard name="Collog" />,
     wonnit: () => <ProjectCard name="WONNIT" />,
     docfusionx: () => <ProjectCard name="DocFusionX" />,
+    drivernet: () => <ProjectCard name="DriverNet" />,
 } satisfies Record<ProfileCardId, () => ReactNode>;
 
 export default function ProfileChatCards({ cards }: Props) {

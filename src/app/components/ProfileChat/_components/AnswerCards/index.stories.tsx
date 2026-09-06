@@ -19,11 +19,13 @@ export const Research: Story = { args: { cards: [profileCardRegistry.eact] } };
 export const Projects: Story = {
     args: {
         cards: [
-            profileCardRegistry.mochicall,
             profileCardRegistry.collog,
-            profileCardRegistry.wonnit,
+            profileCardRegistry.mochicall,
             profileCardRegistry.docfusionx,
+            profileCardRegistry.wonnit,
+            profileCardRegistry.drivernet,
         ],
     },
 };
+export const DriverNet: Story = { args: { cards: [profileCardRegistry.drivernet] } };
 export const UnknownCard: Story = { args: { cards: [{ type: "project", id: "not-registered" }] } };

@@ -5,6 +5,7 @@ export const profileCardRegistry = {
     collog: { type: "project", id: "collog" },
     wonnit: { type: "project", id: "wonnit" },
     docfusionx: { type: "project", id: "docfusionx" },
+    drivernet: { type: "project", id: "drivernet" },
 } as const;
 
 export type ProfileCardId = keyof typeof profileCardRegistry;

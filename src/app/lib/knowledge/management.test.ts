@@ -12,6 +12,22 @@ import { repositoryKnowledgeSource } from "./github-content";
 import { defaultReservedComponents } from "../reserved-components/schema";
 import { selectSourceRange } from "./selection";
 import { componentDefaults } from "../reserved-components/defaults";
+import { profileCardRegistry } from "../profile-chat/types";
+
+test("DriverNet is available as a reserved project card with editable defaults and its own source", () => {
+    const component = defaultReservedComponents.find(({ id }) => id === "drivernet");
+    assert.ok(component);
+    assert.deepEqual(profileCardRegistry.drivernet, { type: "project", id: "drivernet" });
+    assert.deepEqual(component, { id: "drivernet", enabled: true, sourceIds: ["drivernet"], presentation: null });
+    const source = createPortfolioSources().find(({ id }) => id === "drivernet");
+    assert.ok(source);
+    assert.equal(effectivePublishedSource(source).cardId, "drivernet");
+    assert.equal(effectivePublishedSource(source, [{ ...component, enabled: false }]).cardId, null);
+    const defaults = componentDefaults("drivernet");
+    assert.equal(defaults.title, "DriverNet");
+    assert.ok(defaults.body.includes("depth-map-based gated projection"));
+    assert.ok(defaults.body.includes("EMA teacher"));
+});
 
 const source = createPortfolioSources()[0]!;
 const vector = (axis: number) => Array.from({ length: embeddingDimensions }, (_, index) => Number(index === axis));
