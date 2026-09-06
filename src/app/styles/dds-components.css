@@ -357,9 +357,13 @@
         gap: var(--spacing-dds-lg);
     }
 
-    .dds-type-sample {
+    .dds-type-sample,
+    .dds-spacing-sample {
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         gap: var(--spacing-dds-xl);
+    }
+
+    .dds-type-sample {
         align-items: start;
     }
 
