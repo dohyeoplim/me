@@ -5,7 +5,8 @@ import { Plus, X } from "lucide-react";
 import Button from "../Button";
 import IconButton from "../IconButton";
 import { useAnimate, useReducedMotion } from "motion/react";
-import { getDdsMotionTransition } from "../Motion";
+import { ddsModalStyle, getDdsMotionTransition } from "../Motion";
+import "../Motion/dialog.css";
 
 type Props = {
     title: string;
@@ -43,13 +44,18 @@ export default function DetailDialog({
     };
 
     const close = async () => {
-        if (closing.current || !dialog.current) return;
+        const element = dialog.current;
+        if (closing.current || !element?.open) return;
         closing.current = true;
         playback.current?.stop();
-        if (expandFromCard && !reducedMotion) {
-            await animate(dialog.current, { ...displacement(), opacity: 0 }, getDdsMotionTransition(false));
-        }
-        dialog.current.close();
+        element.dataset.closing = "true";
+        const animation = animate(element, {
+            ...(expandFromCard && !reducedMotion ? displacement() : {}), opacity: 0,
+        }, getDdsMotionTransition(reducedMotion));
+        playback.current = animation;
+        await animation;
+        if (dialog.current !== element) return;
+        element.close();
         trigger.current?.focus({ preventScroll: true });
         closing.current = false;
     };
@@ -63,6 +69,7 @@ export default function DetailDialog({
                 origin.current = expandFromCard ? event.currentTarget.closest("[data-dialog-origin]") : null;
                 const element = dialog.current;
                 if (!element) return;
+                delete element.dataset.closing;
                 element.style.transform = "none";
                 element.style.opacity = "1";
                 element.showModal();
@@ -77,7 +84,8 @@ export default function DetailDialog({
             }}>{triggerStyle === "card" ? <Plus size={20} aria-hidden="true" /> : label}</Button>
             <dialog
                 ref={dialog}
-                className="dds-detail-dialog"
+                className="dds-detail-dialog dds-modal-motion"
+                style={ddsModalStyle}
                 aria-labelledby={titleId}
                 data-expanding={expandFromCard}
                 data-media={Boolean(media)}
