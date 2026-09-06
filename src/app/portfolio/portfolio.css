@@ -30,7 +30,7 @@
 
 .portfolio-ask-link {
     grid-column: 1 / -1;
-    width: fit-content;
+    width: calc(var(--spacing-dds-5xl) * 3);
     max-width: 100%;
     margin-top: var(--spacing-dds-md);
     box-shadow: none;
