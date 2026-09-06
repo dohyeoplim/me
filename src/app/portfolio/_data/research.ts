@@ -9,7 +9,7 @@ export const research = {
         },
         computing: {
             title: "컴퓨팅자원집중형 인공지능 응용 기술 개발",
-            description: "Education-focused VLA research with IITP.",
+            description: "Vision-language-action model research with IITP.",
             projectTitle: "분산 GPU 기반 비전-언어-행동 모델 확장 핵심 기술 개발",
             role: "Participating researcher",
             details: "Assist with requirements and technical development for an education-focused " +
