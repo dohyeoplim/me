@@ -67,6 +67,12 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
 .dds-detail-dialog-content { display: grid; gap: var(--spacing-dds-lg); margin-top: var(--spacing-dds-xl); }
 .dds-detail-dialog[open] { animation: dds-dialog-enter var(--duration-feedback) var(--ease-feedback); }
 .dds-detail-dialog[data-expanding="true"] { animation: none; }
+.dds-detail-dialog[data-density="compact"]:not([data-media="true"]) { padding: var(--spacing-dds-lg); }
+.dds-detail-dialog[data-density="compact"] .dds-detail-dialog-header { gap: var(--spacing-dds-md); }
+.dds-detail-dialog[data-density="compact"] .dds-detail-dialog-content {
+    gap: var(--spacing-dds-sm);
+    margin-top: var(--spacing-dds-lg);
+}
 
 .dds-card-trigger::after { content: ""; position: absolute; inset: 0; cursor: pointer; }
 [data-dialog-origin]:has(.dds-card-trigger:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }

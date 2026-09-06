@@ -14,10 +14,11 @@ type Props = {
     expandFromCard?: boolean;
     triggerStyle?: "text" | "card";
     media?: ReactNode;
+    density?: "comfortable" | "compact";
 };
 
 export default function DetailDialog({
-    title, label, children, expandFromCard = false, triggerStyle = "text", media,
+    title, label, children, expandFromCard = false, triggerStyle = "text", media, density = "comfortable",
 }: Props) {
     const dialog = useRef<HTMLDialogElement>(null);
     const [, animate] = useAnimate();
@@ -80,6 +81,7 @@ export default function DetailDialog({
                 aria-labelledby={titleId}
                 data-expanding={expandFromCard}
                 data-media={Boolean(media)}
+                data-density={density}
                 onCancel={(event) => { event.preventDefault(); void close(); }}
                 onClick={(event) => {
                     if (event.target !== event.currentTarget) return;

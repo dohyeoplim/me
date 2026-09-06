@@ -10,6 +10,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const Compact: Story = { args: { density: "compact" } };
 export const ExpandingCard: Story = {
     args: { expandFromCard: true, triggerStyle: "card" },
     decorators: [(Story) => (
