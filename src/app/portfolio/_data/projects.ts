@@ -13,17 +13,6 @@ export type Project = {
 
 export const projects: Project[] = [
     {
-        name: "MochiCall",
-        period: "July 2026",
-        title: "Speech recognition for hospital transportation calls",
-        contribution: "Fine-tuned Korean ASR with LoRA and combined specialized and multi-domain adapters.",
-        outcome:
-            "Specialized ASR led on full calls, multi-domain ASR on streaming. Combining predictions improved both.",
-        recognition: "Grand Prize, AICOSS Summer AI SCI Bootcamp 2026",
-        href: "https://github.com/Fresh-Mango-Mochi/welfare-call-asr",
-        visual: "speech",
-    },
-    {
         name: "Collog",
         period: "July to August 2026",
         title: "Health records from family calls",
@@ -36,13 +25,15 @@ export const projects: Project[] = [
         visual: "calls",
     },
     {
-        name: "WONNIT",
-        period: "July to September 2025",
-        title: "On-device verification for shared spaces",
-        contribution: "Developed scene classification, object detection, and before-and-after change detection.",
-        outcome: "Deployed the models on iOS with Core ML.",
-        href: "https://github.com/GGUNGSIL-WONNIT",
-        visual: "vision",
+        name: "MochiCall",
+        period: "July 2026",
+        title: "Speech recognition for hospital transportation calls",
+        contribution: "Fine-tuned Korean ASR with LoRA and combined specialized and multi-domain adapters.",
+        outcome:
+            "Specialized ASR led on full calls, multi-domain ASR on streaming. Combining predictions improved both.",
+        recognition: "Grand Prize, AICOSS Summer AI SCI Bootcamp 2026",
+        href: "https://github.com/Fresh-Mango-Mochi/welfare-call-asr",
+        visual: "speech",
     },
     {
         name: "DocFusionX",
@@ -55,6 +46,15 @@ export const projects: Project[] = [
         outcome: "",
         href: "https://github.com/DocFusionX/server",
         visual: "graph",
+    },
+    {
+        name: "WONNIT",
+        period: "July to September 2025",
+        title: "On-device verification for shared spaces",
+        contribution: "Developed scene classification, object detection, and before-and-after change detection.",
+        outcome: "Deployed the models on iOS with Core ML.",
+        href: "https://github.com/GGUNGSIL-WONNIT",
+        visual: "vision",
     },
     {
         name: "DriverNet",
