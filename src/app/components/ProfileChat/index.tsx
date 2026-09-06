@@ -48,6 +48,11 @@ function ProfileChatContent() {
     }, []);
 
     useEffect(() => {
+        const frame = requestAnimationFrame(() => input.current?.focus({ preventScroll: true }));
+        return () => cancelAnimationFrame(frame);
+    }, []);
+
+    useEffect(() => {
         if (CSS.supports("field-sizing", "content")) return;
         if (!input.current) return;
         input.current.style.height = "auto";
@@ -87,29 +92,33 @@ function ProfileChatContent() {
         setAnswerFocusRequest(0);
         setShowAllQuestions(false);
         chat.clearConversation();
-        input.current?.focus();
-        requestAnimationFrame(() => setReturningHome(false));
     }
 
     return (
-        <section className={started ? "dds-chat" : "dds-chat dds-grid-backdrop"}
-            data-started={started} aria-label="Ask about Dohyeop Lim">
-            <div className="dds-chat-scene">
-                <LayoutGroup id={`${id}-home`}>
-                    <motion.div
-                        className="dds-chat-main"
-                        layout={!started && !reducedMotion && !returningHome ? "position" : false}
-                        transition={movement}
-                    >
-                        {!started && <div className="dds-chat-glow" aria-hidden="true" />}
-                        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false} mode="wait">
+            <motion.section key={started ? "conversation" : "welcome"}
+                className={started ? "dds-chat" : "dds-chat dds-grid-backdrop"}
+                data-started={started} aria-label="Ask about Dohyeop Lim"
+                initial={{ opacity: 0 }} animate={{ opacity: 1, pointerEvents: "auto" }}
+                exit={{ opacity: 0, pointerEvents: "none" }} transition={movement}
+                onAnimationComplete={() => {
+                    if (!started) setReturningHome(false);
+                    if (!started || answerFocusRequest === 0) input.current?.focus({ preventScroll: true });
+                }}>
+                <div className="dds-chat-scene">
+                    <LayoutGroup id={`${id}-home`}>
+                        <motion.div
+                            className="dds-chat-main"
+                            layout={!started && !reducedMotion && !returningHome ? "position" : false}
+                            transition={movement}
+                        >
+                            {!started && <div className="dds-chat-glow" aria-hidden="true" />}
                             {!started ? (
                                 <motion.div
                                     key="welcome"
                                     className="dds-chat-welcome"
-                                    initial={returningHome ? false : { opacity: 0, y: -8 }}
+                                    initial={false}
                                     animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
                                     transition={movement}
                                 >
                                     <div className="dds-chat-identity">
@@ -138,31 +147,30 @@ function ProfileChatContent() {
                                     focusRequest={answerFocusRequest}
                                     viewportRef={conversation}
                                     onRetry={retryPendingQuestion}
-                                />
-                            )}
-                        </AnimatePresence>
+                                    followUps={followUps.length > 0 && (
+                                        <motion.section
+                                            key={latestExchange?.id}
+                                            className="dds-chat-followups"
+                                            aria-label="Follow-up questions"
+                                            initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={movement}
+                                        >
+                                            <h2>Keep exploring</h2>
+                                            <QuestionSuggestions
+                                                questions={followUps}
+                                                onSelect={selectQuestion}
+                                                disabled={pending}
+                                                label="Follow-up questions"
+                                                layout="compact"
+                                            />
+                                        </motion.section>
+                                )}
+                            />
+                        )}
                         <div className="dds-chat-dock">
                             {started && (
                                 <ScrollBridge onScroll={scrollConversation} />
-                            )}
-                            {followUps.length > 0 && (
-                                <motion.section
-                                    key={latestExchange?.id}
-                                    className="dds-chat-followups"
-                                    aria-label="Follow-up questions"
-                                    initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={movement}
-                                >
-                                    <h2>Keep exploring</h2>
-                                    <QuestionSuggestions
-                                        questions={followUps}
-                                        onSelect={selectQuestion}
-                                        disabled={pending}
-                                        label="Follow-up questions"
-                                        layout="compact"
-                                    />
-                                </motion.section>
                             )}
                             <form onSubmit={submit} className="dds-chat-form">
                                 <label htmlFor={`${id}-question`} className="sr-only">
@@ -275,6 +283,7 @@ function ProfileChatContent() {
                     </motion.div>
                 </LayoutGroup>
             </div>
-        </section>
+        </motion.section>
+        </AnimatePresence>
     );
 }

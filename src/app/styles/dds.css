@@ -21,7 +21,7 @@
     --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
     --layout-content-width: 56rem;
     --layout-reading-width: 42rem;
-    --layout-chat-width: 48rem;
+    --layout-chat-width: calc(var(--layout-content-width) - var(--spacing-dds-lg) * 2);
     --layout-copy-width: 34rem;
     --site-header-min-height: 4.5rem;
     --site-header-row-height: 4.5rem;

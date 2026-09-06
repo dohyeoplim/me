@@ -187,7 +187,7 @@
     display: grid;
     justify-items: center;
     gap: var(--spacing-dds-xs);
-    margin-bottom: var(--spacing-dds-sm);
+    margin-block: var(--spacing-dds-lg) var(--spacing-dds-sm);
     text-align: center;
 }
 

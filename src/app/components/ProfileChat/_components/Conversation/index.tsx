@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { useReducedMotion } from "motion/react";
 import * as motion from "motion/react-m";
 import Button from "@/app/components/DDS/Button";
@@ -19,6 +19,7 @@ type Props = {
     focusRequest?: number;
     viewportRef?: RefObject<HTMLDivElement | null>;
     onRetry?: () => void;
+    followUps?: ReactNode;
 };
 
 export default function Conversation({
@@ -29,6 +30,7 @@ export default function Conversation({
     focusRequest = 0,
     viewportRef,
     onRetry,
+    followUps,
 }: Props) {
     const localConversation = useRef<HTMLDivElement>(null);
     const conversation = viewportRef ?? localConversation;
@@ -101,6 +103,7 @@ export default function Conversation({
                                 <AnswerBlocks blocks={exchange.blocks} />
                                 <RepositoryCards repositories={exchange.repositories} />
                             </motion.div>
+                            {latest && followUps}
                         </div>
                     );
                 })}
