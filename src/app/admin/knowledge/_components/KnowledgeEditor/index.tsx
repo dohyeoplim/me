@@ -100,7 +100,7 @@ export default function KnowledgeEditor({ source }: Props) {
     return (
         <form className="knowledge-editor" onSubmit={save} aria-busy={pending}>
             <div className="knowledge-editor-heading">
-                <h2 className="font-work-title">{source ? "Edit source" : "Add a source"}</h2>
+                <h2 className="font-work-title">{source?.title ?? "New source"}</h2>
                 <Button variant="text" onClick={() => setPreview(!preview)} aria-pressed={preview}>
                     {preview ? "Edit" : "Preview"}
                 </Button>

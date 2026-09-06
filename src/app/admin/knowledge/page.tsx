@@ -24,8 +24,8 @@ export default async function KnowledgePage({ searchParams }: Props) {
                 <SignOutButton />
             </HeaderActions>
             <header className="knowledge-heading">
-                <h1 className="font-section-title">AI knowledge</h1>
-                <p>Manage the information used to answer profile questions and suggest repositories.</p>
+                <h1 className="font-section-title">Knowledge</h1>
+                <p>Public profile sources and project repositories.</p>
             </header>
             <KnowledgeManager sources={sources} selectedId={source} />
         </main>

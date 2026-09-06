@@ -11,6 +11,7 @@ import {
     addRepositoryAction, buildSearchIndexAction, importKnowledgeCsvAction, setSourcesVisibilityAction,
 } from "../../actions";
 import KnowledgeEditor from "../KnowledgeEditor";
+import KnowledgeLibrary from "../KnowledgeLibrary";
 
 type Props = { sources: Array<KnowledgeSource & { searchStatus?: string }>; selectedId?: string };
 
@@ -21,23 +22,14 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
     const [indexing, setIndexing] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
-    const [filter, setFilter] = useState("all");
-    const [owner, setOwner] = useState("all");
-    const [search, setSearch] = useState("");
     const [repositoryUrl, setRepositoryUrl] = useState("");
+    const [repositoryOpen, setRepositoryOpen] = useState(false);
     const [checked, setChecked] = useState<string[]>([]);
     const [csv, setCsv] = useState<{ text: string; rows: KnowledgeEdit[] } | null>(null);
     const stopIndexing = useRef(false);
     const file = useRef<HTMLInputElement>(null);
     useEffect(() => () => { stopIndexing.current = true; }, []);
     const selected = sources.find(({ id }) => id === selectedId);
-    const owners = [...new Set(sources.flatMap((source) => source.repository ? [source.repository.owner] : []))].sort();
-    const visible = sources.filter((source) => {
-        const matches = filter === "all" || source.status === filter || source.origin === filter;
-        return matches && (owner === "all" || source.repository?.owner === owner) &&
-            `${source.title} ${source.keywords.join(" ")}`.toLowerCase().includes(search.toLowerCase());
-    });
-    const allSelected = visible.length > 0 && visible.every(({ id }) => checked.includes(id));
     const mayChange = () => !dirty || window.confirm("Discard unsaved changes?");
     const run = (task: () => Promise<void>) => {
         if (!mayChange()) return;
@@ -85,9 +77,11 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
                 <Link className="dds-link" href="/admin"
                     onClick={(event) => { if (!mayChange()) event.preventDefault(); }}>Back to admin</Link>
                 <div className="knowledge-actions">
-                    <Link className="ds-button" data-variant="outline" data-size="medium"
+                    <Link className="ds-button" data-variant="solid" data-size="medium"
                         href="/admin/knowledge?source=new"
                         onClick={(event) => { if (!mayChange()) event.preventDefault(); }}>Add source</Link>
+                    <Button variant="outline" aria-expanded={repositoryOpen}
+                        onClick={() => setRepositoryOpen(!repositoryOpen)}>Add repository</Button>
                     <Button variant="outline" onClick={download}>
                         {checked.length ? "Export selected" : "Export CSV"}
                     </Button>
@@ -111,7 +105,7 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
                     setCsv({ text, rows: parseKnowledgeCsv(text) });
                 } catch (reason) { setError(reason instanceof Error ? reason.message : "Invalid CSV."); }
             }} />
-            <form className="knowledge-repository-form" onSubmit={(event) => {
+            {repositoryOpen && <form className="knowledge-repository-form" onSubmit={(event) => {
                 event.preventDefault();
                 run(async () => {
                     const result = await addRepositoryAction(repositoryUrl);
@@ -125,8 +119,8 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
                         placeholder="https://github.com/owner/repository"
                         onChange={(event) => setRepositoryUrl(event.target.value)} />
                 </label>
-                <Button variant="outline" type="submit" disabled={pending}>Add repository</Button>
-            </form>
+                <Button variant="outline" type="submit" disabled={pending}>Import repository</Button>
+            </form>}
             {csv && <section className="knowledge-report" aria-label="CSV import preview">
                 <h2 className="font-work-title">Import {csv.rows.length} sources</h2>
                 <p>Existing IDs will be updated. Empty IDs create new sources. Other sources are unchanged.</p>
@@ -146,65 +140,13 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
             </section>}
             {error && <p role="alert">{error}</p>}
             {message && <p role="status">{message}</p>}
-            <div className="knowledge-workspace">
-                <aside className="knowledge-library" aria-label="Knowledge sources">
-                    <label className="knowledge-field">Find a source
-                        <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" />
-                    </label>
-                    <div className="knowledge-field-pair">
-                        <label className="knowledge-field">Show
-                            <select value={filter} onChange={(event) => setFilter(event.target.value)}>
-                                <option value="all">All sources</option><option value="published">Published</option>
-                                <option value="draft">Excluded</option><option value="portfolio">Portfolio</option>
-                                <option value="manual">Manual</option><option value="github">GitHub</option>
-                            </select>
-                        </label>
-                        <label className="knowledge-field">Owner
-                            <select value={owner} onChange={(event) => setOwner(event.target.value)}>
-                                <option value="all">All owners</option>
-                                {owners.map((item) => <option key={item}>{item}</option>)}
-                            </select>
-                        </label>
-                    </div>
-                    <label className="knowledge-selection">
-                        <input type="checkbox" checked={allSelected} onChange={() => setChecked((current) => allSelected
-                            ? current.filter((id) => !visible.some((source) => source.id === id))
-                            : [...new Set([...current, ...visible.map(({ id }) => id)])])} />
-                        Select filtered sources ({visible.length})
-                    </label>
-                    {checked.length > 0 && <div className="knowledge-actions">
-                        <span>{checked.length} selected</span>
-                        <Button variant="outline" disabled={pending} onClick={() => setVisibility("published")}>
-                            Publish
-                        </Button>
-                        <Button variant="outline" disabled={pending} onClick={() => setVisibility("draft")}>
-                            Exclude
-                        </Button>
-                    </div>}
-                    <div className="knowledge-source-list">
-                        {visible.map((source) => <div className="knowledge-source-row" key={source.id}>
-                            <input type="checkbox" aria-label={`Select ${source.title}`}
-                                checked={checked.includes(source.id)}
-                                onChange={(event) => setChecked((current) => event.target.checked
-                                    ? [...current, source.id] : current.filter((id) => id !== source.id))} />
-                            <Link href={`/admin/knowledge?source=${encodeURIComponent(source.id)}`}
-                                onClick={(event) => { if (!mayChange()) event.preventDefault(); }}
-                                aria-current={source.id === selectedId ? "page" : undefined}>
-                                <span>{source.title}</span>
-                                <span className="knowledge-help">
-                                    {source.searchStatus ?? (source.status === "draft" ? "Excluded" : "Published")}
-                                </span>
-                            </Link>
-                        </div>)}
-                        {!visible.length && <p>No matching sources.</p>}
-                    </div>
-                </aside>
-                {selected || selectedId === "new" ? (
-                    <KnowledgeEditor key={selected?.id ?? "new"} source={selected ?? null} />)
-                    : <div className="knowledge-empty"><h2 className="font-work-title">Select a source</h2>
-                        <p>Only published sources are used in answers. New repositories start excluded.</p>
-                        <p>CSV edits do not remove sources. Build the index after importing or publishing a batch.</p>
-                    </div>}
+            <div className="knowledge-workspace" data-editing={Boolean(selected || selectedId === "new")}>
+                <KnowledgeLibrary sources={sources} selectedId={selectedId} checked={checked}
+                    setChecked={setChecked} pending={pending} onVisibility={setVisibility}
+                    onNavigate={(event) => { if (!mayChange()) event.preventDefault(); }} />
+                {(selected || selectedId === "new") && <div className="knowledge-editor-panel">
+                    <KnowledgeEditor key={selected?.id ?? "new"} source={selected ?? null} />
+                </div>}
             </div>
         </div>
     );
