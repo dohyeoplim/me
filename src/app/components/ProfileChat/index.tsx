@@ -92,7 +92,8 @@ function ProfileChatContent() {
     }
 
     return (
-        <section className="dds-chat" data-started={started} aria-label="Ask about Dohyeop Lim">
+        <section className={started ? "dds-chat" : "dds-chat dds-grid-backdrop"}
+            data-started={started} aria-label="Ask about Dohyeop Lim">
             <div className="dds-chat-scene">
                 <LayoutGroup id={`${id}-home`}>
                     <motion.div
