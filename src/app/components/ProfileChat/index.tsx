@@ -109,7 +109,6 @@ function ProfileChatContent() {
                     <LayoutGroup id={`${id}-home`}>
                         <motion.div
                             className="dds-chat-main"
-                            layout={!started && !reducedMotion && !returningHome ? "position" : false}
                             transition={movement}
                         >
                             {!started && <div className="dds-chat-glow" aria-hidden="true" />}
@@ -252,23 +251,33 @@ function ProfileChatContent() {
                             <motion.section
                                 className="dds-chat-suggestions"
                                 aria-label="Explore my profile"
-                                layout={reducedMotion || returningHome ? false : "position"}
                                 transition={movement}
                             >
                                 <QuestionSuggestions
-                                    questions={suggestedQuestions.slice(
-                                        0,
-                                        showAllQuestions ? undefined : initialQuestionCount,
-                                    )}
+                                    questions={suggestedQuestions.slice(0, initialQuestionCount)}
                                     onSelect={selectQuestion}
                                     animateEntrance={!returningHome}
-                                    animateLayout={!returningHome}
+                                    animateLayout={false}
                                     staggerCount={initialQuestionCount}
                                 />
                                 <motion.div
-                                    layout={reducedMotion || returningHome ? false : "position"}
+                                    className="dds-chat-more-viewport"
+                                    initial={false}
+                                    animate={{ height: showAllQuestions ? "auto" : 0, opacity: showAllQuestions ? 1 : 0 }}
                                     transition={movement}
+                                    inert={!showAllQuestions}
+                                    aria-hidden={!showAllQuestions}
                                 >
+                                    <div className="dds-chat-more-questions">
+                                        <QuestionSuggestions
+                                            questions={suggestedQuestions.slice(initialQuestionCount)}
+                                            onSelect={selectQuestion}
+                                            animateLayout={false}
+                                            label="More suggested questions"
+                                        />
+                                    </div>
+                                </motion.div>
+                                <div className="dds-chat-more-control">
                                     <Button
                                         variant="text"
                                         size="small"
@@ -277,7 +286,7 @@ function ProfileChatContent() {
                                     >
                                         {showAllQuestions ? "Fewer questions" : "More questions"}
                                     </Button>
-                                </motion.div>
+                                </div>
                             </motion.section>
                         )}
                     </motion.div>
