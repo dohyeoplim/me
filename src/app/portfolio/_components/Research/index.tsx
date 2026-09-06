@@ -21,8 +21,12 @@ export default function Research() {
                         <p className="font-support">{publication.role}, {publication.status}</p>
                         {publication.title === eact.paper && (
                             <div className="portfolio-publication-detail">
-                                <p className="portfolio-research-intro">{eact.description}</p>
-                                <p className="portfolio-research-contribution font-support">{eact.contributions}</p>
+                                <div className="portfolio-research-summary">
+                                    <p className="portfolio-research-intro">{eact.description}</p>
+                                    <p className="portfolio-research-contribution font-support">
+                                        {eact.contributions}
+                                    </p>
+                                </div>
                                 <RecognitionDemo />
                             </div>
                         )}

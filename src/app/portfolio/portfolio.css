@@ -102,6 +102,15 @@
 
 .portfolio-research-intro { text-wrap: pretty; }
 
+.portfolio-research-summary {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+    padding: var(--spacing-dds-lg);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background: var(--surface-muted);
+}
+
 .portfolio-role-title { font-weight: 500; }
 
 .portfolio-research-contribution {
