@@ -23,7 +23,7 @@ export const beyondTheLab = {
         {
             name: "Google Developer Groups on Campus",
             period: "2025 to present",
-            role: "Core team member, 5th and 6th cohorts. SeoulTech.",
+            role: "Core team member, 5th and 6th cohorts.",
             description: "Organized 13 technical sessions in the 5th cohort.",
         },
     ],
