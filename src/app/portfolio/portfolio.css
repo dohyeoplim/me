@@ -106,14 +106,13 @@
 .portfolio-role-title { font-weight: 500; }
 
 .portfolio-research-contribution {
-    margin-top: var(--spacing-dds-lg);
     color: var(--text-tertiary);
     max-width: var(--layout-reading-width);
 }
 
 .portfolio-research-list {
     display: grid;
-    gap: var(--spacing-dds-xl);
+    gap: var(--spacing-dds-lg);
 }
 
 .portfolio-supporting-research { margin-top: var(--spacing-dds-3xl); }
@@ -167,15 +166,18 @@
 .portfolio-project-period { @apply font-support; color: var(--text-secondary); }
 
 .portfolio-community { display: grid; gap: var(--spacing-dds-xl); margin-top: var(--spacing-dds-2xl); }
-.portfolio-community article > p { margin-top: var(--spacing-dds-sm); }
+.portfolio-community article > div:first-child p { margin-top: var(--spacing-dds-xs); }
+.portfolio-community article > div:last-child p + p { margin-top: var(--spacing-dds-sm); }
 
 .portfolio-additional {
     display: grid;
     gap: var(--spacing-dds-lg);
 }
 
+.portfolio-community article,
 .portfolio-additional article { display: grid; gap: var(--spacing-dds-md); }
 .portfolio-additional article p { margin-top: var(--spacing-dds-xs); }
+.portfolio-community .dds-link,
 .portfolio-additional .dds-link { margin-top: var(--spacing-dds-sm); }
 
 .portfolio-education { display: grid; gap: var(--spacing-dds-lg); }
@@ -200,13 +202,9 @@
 
 @media (min-width: 768px) {
     .portfolio-rd-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .portfolio-research-list,
-    .portfolio-community,
+    .portfolio-community article,
     .portfolio-additional article { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-2xl); }
 
-    .portfolio-research-list { row-gap: var(--spacing-dds-sm); }
-    .portfolio-community > .dds-section-heading { grid-column: 1 / -1; }
-    .portfolio-research-list article { grid-template-rows: subgrid; grid-row: span 3; }
     .portfolio-skills dl > div {
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         gap: var(--spacing-dds-2xl);

@@ -14,6 +14,7 @@ export const beyondTheLab = {
     communities: [
         {
             name: "LIKELION University",
+            href: "https://www.seoultech-likelion.com/",
             period: "2025 to present",
             role: "SeoulTech, Vice President, 14th cohort. Member, 13th cohort.",
             description:

@@ -26,11 +26,19 @@ export default function Background() {
                 </div>
                 <div className="portfolio-community">
                     <SectionHeading title={beyondTheLab.communityTitle} variant="subsection" />
-                    {communities.map(({ name, role, description }) => (
-                        <article key={name}>
-                            <h4 className="font-body portfolio-role-title">{name}</h4>
-                            <p>{role}</p>
-                            <p>{description}</p>
+                    {communities.map((community) => (
+                        <article key={community.name}>
+                            <div>
+                                <h4 className="font-body portfolio-role-title">{community.name}</h4>
+                                <p className="font-support text-muted">{community.period}</p>
+                            </div>
+                            <div>
+                                <p>{community.role}</p>
+                                <p>{community.description}</p>
+                                {community.href && (
+                                    <LinkButton href={community.href} label="Website" icon="external" />
+                                )}
+                            </div>
                         </article>
                     ))}
                 </div>
