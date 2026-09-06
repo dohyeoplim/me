@@ -180,6 +180,7 @@
     gap: var(--spacing-dds-sm);
 }
 
+.portfolio-research-list article > p { @apply font-support; }
 .portfolio-research-list article > p:last-child { color: var(--text-secondary); }
 
 .portfolio-publication {
