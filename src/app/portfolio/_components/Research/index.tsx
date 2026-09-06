@@ -22,13 +22,9 @@ export default function Research() {
                     <p className="portfolio-research-intro">{eact.description}</p>
                 </div>
                 <RecognitionDemo />
-                <div className="portfolio-findings">
-                    <p className="font-body">{eact.result}</p>
-                </div>
                 <Disclosure label={eact.detailsLabel} contentTone="subtle">
                     <div className="portfolio-paper">
                         <p>{eact.contributions}</p>
-                        <p>{eact.errorResult}</p>
                         <p className="portfolio-paper-title">{eact.paper}</p>
                         <p className="font-support text-muted">{eact.authors}</p>
                     </div>

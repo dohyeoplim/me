@@ -1,9 +1,16 @@
 export const recognitionExample = {
-    title: "One trellis, two possible readings",
-    rule: "(8 + 2) mod 10 = 0",
-    caption: "Illustrative example. E-ACT selects a valid reading even when its posterior is lower.",
-    candidates: [
-        { code: "827", posterior: "0.42", label: "Invalid checksum", valid: false, path: [2, 1, 0, 1, 2] },
-        { code: "820", posterior: "0.31", label: "Selected by E-ACT", valid: true, path: [2, 1, 0, 1, 1] },
+    description: "Standard OCR and E-ACT use the same recognizer predictions. " +
+        "E-ACT changes a choice to satisfy identifier rules.",
+    paths: [
+        {
+            name: "Standard OCR", constrained: false, rows: [0, 1, 0, 1, 0, 1],
+            action: "Read text, then check the rules.",
+            detail: "Validation can reject the reading, but cannot revise it.",
+        },
+        {
+            name: "E-ACT", constrained: true, rows: [0, 1, 0, 2, 0, 1],
+            action: "Apply the rules during decoding.",
+            detail: "Select a reading that satisfies the identifier rules.",
+        },
     ],
 };

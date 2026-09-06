@@ -111,10 +111,6 @@
     background: var(--surface-illustration);
 }
 
-.portfolio-decoder-heading {
-    padding: var(--spacing-dds-lg) var(--spacing-dds-lg) 0;
-}
-
 .portfolio-decoder-body {
     display: grid;
     gap: var(--spacing-dds-lg);
@@ -128,51 +124,22 @@
     margin-inline: auto;
 }
 
-.portfolio-decoder-readings {
+.portfolio-decoder-comparison {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--spacing-dds-lg);
-}
-
-.portfolio-decoder-reading {
-    display: grid;
-    align-content: center;
-    gap: var(--spacing-dds-xs);
-}
-
-.portfolio-decoder-value {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--spacing-dds-sm);
-}
-
-.portfolio-decoder-reading > p {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-dds-xs);
-}
-
-.portfolio-decoder-reading[data-selected="true"] > p { color: var(--diagram-accent); }
-.portfolio-decoder-reading svg { flex-shrink: 0; }
-
-.portfolio-decoder-caption {
-    @apply font-support;
-    display: grid;
-    gap: var(--spacing-dds-xs);
     padding: var(--spacing-dds-lg);
     border-top: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
 }
 
-.portfolio-decoder-caption > :first-child { color: var(--text-primary); }
-
-.portfolio-findings {
-    max-width: var(--layout-reading-width);
-    margin-block: var(--spacing-dds-lg) var(--spacing-dds-sm);
+.portfolio-decoder-comparison > div {
+    display: grid;
+    gap: var(--spacing-dds-xs);
 }
 
-.portfolio-findings p,
+.portfolio-decoder-comparison h4 { font-weight: 500; }
+.portfolio-decoder-comparison [data-constrained="true"] h4 { color: var(--diagram-accent); }
+.portfolio-feature > .dds-disclosure { margin-top: var(--spacing-dds-lg); }
+
 .portfolio-paper-title,
 .portfolio-publication h3,
 .portfolio-role-title { font-weight: 500; }
@@ -279,14 +246,8 @@
     }
 }
 
-@container portfolio-decoder (min-width: 40rem) {
-    .portfolio-decoder-body { grid-template-columns: minmax(0, 1fr) auto; gap: var(--spacing-dds-xl); }
-    .portfolio-decoder-readings { grid-template-columns: 1fr; gap: var(--spacing-dds-xl); }
-    .portfolio-decoder-caption {
-        grid-template-columns: auto minmax(0, 1fr);
-        align-items: baseline;
-        gap: var(--spacing-dds-xl);
-    }
+@container portfolio-decoder (min-width: 30rem) {
+    .portfolio-decoder-comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
