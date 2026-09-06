@@ -2,7 +2,7 @@ import Image from "next/image";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import LinkButton from "@/app/components/LinkButton";
 import LottieGraphic from "@/app/components/DDS/LottieGraphic";
-import DetailDialog from "@/app/components/DDS/DetailDialog";
+import GalleryCard from "@/app/components/DDS/GalleryCard";
 import Carousel from "@/app/components/DDS/Carousel";
 import ProjectVisual from "../ProjectVisual";
 import { projects, projectSection } from "../../_data/projects";
@@ -14,16 +14,9 @@ export default function Projects() {
             <SectionHeading title={projectSection.title} />
             <Carousel label={projectSection.title} variant="full-bleed">
                 {projects.map((project) => (
-                    <article key={project.name} className="portfolio-project-card" data-dialog-origin>
-                        <header className="portfolio-project-heading">
-                            <h3 className="font-work-title">{project.name}</h3>
-                            <p className="portfolio-project-purpose">{project.title}</p>
-                        </header>
-                        <figure
-                            className="portfolio-project-media"
-                            aria-label={projectScenes[project.visual].label}
-                        >
-                            {project.image ? (
+                    <GalleryCard key={project.name} title={project.name} description={project.title}
+                        detailsLabel={projectSection.detailsLabel} mediaLabel={projectScenes[project.visual].label}
+                        media={project.image ? (
                                 <Image
                                     src={project.image.src}
                                     alt={project.image.alt}
@@ -36,17 +29,7 @@ export default function Projects() {
                                     <ProjectVisual kind={project.visual} />
                                 </LottieGraphic>
                             )}
-                        </figure>
-                        <div className="portfolio-project-card-action">
-                            <DetailDialog title={project.name} label={projectSection.detailsLabel}
-                                expandFromCard triggerStyle="card" media={
-                                    <div className="portfolio-project-modal-media">
-                                        <LottieGraphic src={projectAnimationSrc(project.visual)}>
-                                            <ProjectVisual kind={project.visual} />
-                                        </LottieGraphic>
-                                    </div>
-                                }>
-                                <p className="font-work-title">{project.title}</p>
+                        >
                                 <div className="portfolio-project-content">
                                     <p>{project.contribution}</p>
                                     {project.recognition && (
@@ -63,9 +46,7 @@ export default function Projects() {
                                         aria-label={`${project.name} on GitHub`}
                                     />
                                 </footer>
-                            </DetailDialog>
-                        </div>
-                    </article>
+                    </GalleryCard>
                 ))}
             </Carousel>
         </section>

@@ -35,9 +35,12 @@ function Shape({ shape }: { shape: IllustrationShape }) {
     return <rect x={shape.x} y={shape.y} width={shape.width} height={shape.height} rx={shape.radius} {...style} />;
 }
 
-export default function Illustration({ scene }: { scene: IllustrationScene }) {
+export default function Illustration({ scene, frame }: {
+    scene: IllustrationScene; frame?: readonly [number, number, number, number];
+}) {
     return (
-        <svg className="dds-illustration" viewBox={`0 0 ${scene.width} ${scene.height}`} aria-hidden="true">
+        <svg className="dds-illustration" viewBox={frame?.join(" ") ?? `0 0 ${scene.width} ${scene.height}`}
+            aria-hidden="true">
             {scene.layers.map((layer) => {
                 const [x, y] = layer.motion?.position?.at(-1)?.value ?? [0, 0];
                 const [scaleX, scaleY] = layer.motion?.scale?.at(-1)?.value ?? [1, 1];

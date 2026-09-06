@@ -1,6 +1,7 @@
 @import "./dds-skeleton.css";
 @import "./dds-gallery.css";
 @import "./dds-graphics.css";
+@import "./dds-navigation.css";
 @reference "../globals.css";
 
 .dds-section-heading {
@@ -164,9 +165,12 @@
 
 .dds-color-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--spacing-dds-lg);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--spacing-dds-md);
 }
+
+.dds-color-grid > div { grid-column: span 3; min-width: 0; overflow-wrap: anywhere; }
+.dds-color-grid > div:nth-child(-n+3) { grid-column: span 4; }
 
 .dds-color-swatch {
     height: var(--spacing-dds-3xl);
@@ -186,6 +190,8 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
+
+.dds-type-spec { margin-top: var(--spacing-dds-xs); color: var(--text-tertiary); }
 
 .dds-spacing-sample {
     display: grid;
@@ -317,13 +323,13 @@
 
 @media (min-width: 640px) {
     .dds-color-grid {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: var(--spacing-dds-lg);
     }
 
     .dds-type-sample {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         gap: var(--spacing-dds-xl);
-        align-items: baseline;
+        align-items: start;
     }
 
     .dds-specimen-grid {
