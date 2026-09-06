@@ -1,32 +1,32 @@
 const blocks = [
-    { x: 24, y: 58, width: 142, label: "Global features" },
-    { x: 24, y: 176, width: 142, label: "Depth groups" },
-    { x: 206, y: 58, width: 112, label: "Gate" },
-    { x: 206, y: 176, width: 112, label: "Projection" },
+    { x: 24, y: 42, width: 142, label: "Global features" },
+    { x: 24, y: 124, width: 142, label: "Depth groups" },
+    { x: 206, y: 42, width: 112, label: "Gate" },
+    { x: 206, y: 124, width: 112, label: "Projection" },
 ];
 
 export default function DepthProjection() {
     return (
-        <svg viewBox="0 0 480 320" role="img" aria-label="Global features gate depth features before projection">
+        <svg viewBox="0 0 480 200" role="img" aria-label="Global features gate depth features before projection">
             <g fill="none" stroke="var(--diagram-accent)" strokeWidth="3" strokeLinejoin="round">
-                <path d="M166 83H206 M262 108V176 M166 201H206 M318 201H376V142"
+                <path d="M166 64H206 M262 86V124 M166 146H206 M318 146H396V120"
                     pathLength="1" className="dds-diagram-signal" />
-                <path d="M95 58V30H376V102 M376 142V270H262" />
+                <path d="M95 42V18H396V80" />
             </g>
             {blocks.map(({ x, y, width, label }) => (
                 <g key={label}>
-                    <rect x={x} y={y} width={width} height="50" rx="10" fill="var(--surface-panel)" />
-                    <text x={x + width / 2} y={y + 30} textAnchor="middle"
+                    <rect x={x} y={y} width={width} height="44" rx="10" fill="var(--surface-panel)" />
+                    <text x={x + width / 2} y={y + 27} textAnchor="middle"
                         className="font-support" fill="var(--text-primary)">{label}</text>
                 </g>
             ))}
-            <circle cx="376" cy="122" r="20" fill="var(--text-primary)" />
-            <text x="242" y="24" textAnchor="middle" className="font-support" fill="var(--text-primary)">
+            <circle cx="396" cy="100" r="20" fill="var(--text-primary)" />
+            <text x="312" y="37" textAnchor="middle" className="font-support" fill="var(--text-primary)">
                 Global projection
             </text>
-            <path d="M370 116L382 128M382 116L370 128" stroke="var(--surface-panel)" strokeWidth="3" />
-            <text x="240" y="275" textAnchor="end" className="font-support" fill="var(--text-primary)">
-                Classification
+            <path d="M390 94L402 106M402 94L390 106" stroke="var(--surface-panel)" strokeWidth="3" />
+            <text x="396" y="172" textAnchor="middle" className="font-support" fill="var(--text-primary)">
+                Fusion
             </text>
         </svg>
     );
