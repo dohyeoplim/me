@@ -39,10 +39,8 @@ export default function Projects() {
                             )}
                         </figure>
                         <div className="portfolio-project-card-action">
-                            <DetailDialog title={project.name} label={projectSection.detailsLabel} expandFromCard>
-                                <div className="portfolio-project-detail-visual">
-                                    <ProjectVisual kind={project.visual} />
-                                </div>
+                            <DetailDialog title={project.name} label={projectSection.detailsLabel}
+                                expandFromCard triggerStyle="card" media={<ProjectVisual kind={project.visual} />}>
                                 <p className="font-work-title">{project.title}</p>
                                 <div className="portfolio-project-content">
                                     <p>{project.contribution}</p>

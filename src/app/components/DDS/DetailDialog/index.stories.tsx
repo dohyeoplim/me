@@ -11,9 +11,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const ExpandingCard: Story = {
-    args: { expandFromCard: true },
+    args: { expandFromCard: true, triggerStyle: "card" },
     decorators: [(Story) => (
-        <article className="ds-panel p-dds-xl" data-dialog-origin>
+        <article className="ds-panel p-dds-xl relative" data-dialog-origin>
             <h2 className="font-work-title">Selected project</h2>
             <Story />
         </article>

@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/app/lib/utils";
 
 type ButtonAppearance = {
-    variant?: "solid" | "outline" | "text";
+    variant?: "solid" | "soft" | "outline" | "text";
     size?: "small" | "medium" | "large";
 };
 

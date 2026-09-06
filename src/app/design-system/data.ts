@@ -61,6 +61,7 @@ export const buttonStates = [
 
 export const buttonVariants = [
     { value: "solid", label: "Solid" },
+    { value: "soft", label: "Soft" },
     { value: "outline", label: "Outline" },
     { value: "text", label: "Text" },
 ] as const;

@@ -128,7 +128,7 @@
     flex-shrink: 0;
 }
 
-.ds-button:is([data-variant="outline"], [data-variant="text"])[aria-pressed="true"] {
+.ds-button:is([data-variant="outline"], [data-variant="text"], [data-variant="soft"])[aria-pressed="true"] {
     border-color: var(--text-primary);
     background: var(--text-primary);
     color: var(--surface-panel);
