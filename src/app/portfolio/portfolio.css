@@ -131,10 +131,10 @@
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: var(--spacing-dds-sm);
-    padding: var(--spacing-dds-lg);
+    padding: var(--spacing-dds-lg) var(--spacing-dds-lg) var(--spacing-dds-md);
 }
 .portfolio-rd-action { display: contents; }
-.portfolio-rd-action > .dds-card-trigger { justify-self: end; margin-top: var(--spacing-dds-sm); }
+.portfolio-rd-action > .dds-card-trigger { justify-self: end; }
 
 .portfolio-research-list article {
     display: grid;
