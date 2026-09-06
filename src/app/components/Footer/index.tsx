@@ -19,7 +19,7 @@ export default function Footer() {
                     href="/design-system"
                     transitionTypes={["nav-forward"]}
                     className="font-body03-regular text-muted hover:text-ink"
-                    aria-label="DDS, DohyeopLim Design System"
+                    aria-label="DDS, Dohyeop Lim Design System"
                 >
                     DDS
                 </Link>
