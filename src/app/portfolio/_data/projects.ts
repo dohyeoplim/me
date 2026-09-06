@@ -57,7 +57,7 @@ export const projects: Project[] = [
     },
     {
         name: "DriverNet",
-        period: "",
+        period: "March to July 2025",
         title: "Detecting driver distraction from images",
         contribution:
             "Developed depth-map-based gated projection. Global image features control a gate over " +
