@@ -85,7 +85,6 @@
 .portfolio-research-overview {
     display: grid;
     gap: var(--spacing-dds-sm);
-    max-width: var(--layout-reading-width);
     text-wrap: pretty;
 }
 
