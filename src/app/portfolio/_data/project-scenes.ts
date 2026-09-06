@@ -193,9 +193,9 @@ export const projectScenes = {
         {
             name: "Document relationships",
             shapes: [
-                path([[122, 140], [166, 188], [240, 222]], "accent", 3),
+                path([[122, 140], [240, 222]], "accent", 3),
                 path([[240, 146], [240, 222]], "accent", 3),
-                path([[354, 140], [310, 188], [240, 222]], "accent", 3),
+                path([[354, 140], [240, 222]], "accent", 3),
             ],
             motion: { draw: [
                 { at: 0, value: 0 }, { at: 38, value: 0 }, { at: 72, value: 1 },
