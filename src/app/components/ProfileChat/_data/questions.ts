@@ -26,7 +26,7 @@ export const suggestedQuestions: ProfileFollowUp[] = [
     {
         label: "What do you do outside the lab?",
         question: "What do you do outside the lab?",
-        sourceIds: ["community", "infrastructure"],
+        sourceIds: ["community"],
     },
     { label: "Show me project repositories", question: "Which GitHub repositories should I explore?", sourceIds: [] },
     {

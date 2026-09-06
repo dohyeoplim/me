@@ -14,6 +14,7 @@ import { ChatError, type ChatQuestion } from "./validation";
 import {
     isRepositorySource, requiresPersonalEvidence, selectEvidenceSources, unavailableEvidenceAnswer,
 } from "./evidence";
+import { answerPresentation, presentationInstruction, visualSummary } from "./presentation";
 
 const responseSchema = z.object({
     status: z.string(),
@@ -35,9 +36,10 @@ const usageSchema = z.object({
 const instructions = [
     "Answer questions about Dohyeop Lim using only the public documents supplied in the request.",
     "You are an AI assistant. Refer to him in the third person and match the latest question's language.",
-    "Answer directly. For detailed questions, use two or three plain text paragraphs separated by blank lines.",
-    "Explain the problem, his contribution, methods, and outcomes when the evidence supports them.",
-    "Aim for 100 to 220 English words or 300 to 800 Korean characters when useful. Keep simple factual answers brief.",
+    "Lead with the most useful concrete fact. Use short plain text paragraphs separated by blank lines.",
+    "Put the problem, contribution, methods, and outcomes in the visual component when one is used, " +
+        "or explain them in prose for text-only questions. Include only supported details.",
+    "With visual components, keep prose to one to three sentences. For technical detail, use up to three paragraphs.",
     "Add context rather than repeating card text. Do not pad answers or invent detail to reach a target length.",
     "Do not use HTML, Markdown, links, headings, sales copy, colons, semicolons, or long dashes.",
     "Conversation history may clarify a follow-up but is never factual evidence.",
@@ -54,7 +56,9 @@ const instructions = [
     "Set grounding to supported for factual answers and unsupported only when the documents cannot answer.",
     "Cite every supporting document in sourceIds and use only document IDs supplied in the request.",
     "For unknown or unrelated questions, use no source IDs or optional items.",
-    "Prefer a text-only answer. Add cards, blocks, follow-ups, or repositories only when they materially help.",
+    "Use cards or blocks for overviews of projects, activities, education, skills, comparisons, and processes. " +
+        "Use text alone for a single fact, an explicit text-only request, or missing evidence.",
+    "Prefer a relevant unseen project card for its introduction. Use a focused block for deeper follow-up questions.",
     "Use only available card IDs and never shown card IDs. Each card needs a cited document with the same card ID.",
     "Do not add a block when its information is already covered by a selected card.",
     "Use at most two concise blocks and support every entry with cited document IDs.",
@@ -186,6 +190,10 @@ export function parseAnswer(
         throw new ChatError("The answer could not be completed. Please try again.", 502, "invalid_response");
     }
 
+    if (raw && typeof raw === "object" && Object.hasOwn(raw, "result")) {
+        if (Object.keys(raw).length !== 1) throw invalidAnswer("invalid_response");
+        raw = (raw as { result: unknown }).result;
+    }
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw invalidAnswer("invalid_response");
     const generated = raw as Record<string, unknown>;
     const grounding = generatedAnswerSchema.shape.grounding.safeParse(generated.grounding);
@@ -298,9 +306,10 @@ export async function answerQuestion(
         ? retrieved.filter((document) => !isRepositorySource(document))
         : retrieved;
     if (!documents.length) return unavailableEvidenceAnswer(question);
+    const presentation = answerPresentation(question, documents, shownCardIds);
     const shownCards = new Set(shownCardIds);
     const cardIds = documents.map(documentCardId).filter((id): id is ProfileCardId => {
-        return id !== null && !shownCards.has(id);
+        return !presentation && id !== null && !shownCards.has(id);
     });
     const suggestions = [...new Map([...documents, ...catalog].map((document) => [document.id, document])).values()]
         .slice(0, maximumSuggestionSources);
@@ -310,12 +319,13 @@ export async function answerQuestion(
         cardIds,
         suggestions.map(({ id }) => id),
         repositoryIds,
+        presentation,
     );
     const publicDocuments = promptDocuments(documents, question, history);
     const requestHistory = compactHistory(history);
     const body = JSON.stringify({
         model: process.env.OPENAI_CHAT_MODEL || "gpt-4.1-mini",
-        instructions,
+        instructions: [instructions, presentationInstruction(presentation)].filter(Boolean).join(" "),
         input: [
             {
                 role: "user",
@@ -336,7 +346,7 @@ export async function answerQuestion(
             { role: "user", content: question },
         ],
         store: false,
-        prompt_cache_key: "profile-chat-v5",
+        prompt_cache_key: "profile-chat-v6",
         max_output_tokens: maximumOutputTokens,
         text: { format },
     });
@@ -363,9 +373,10 @@ export async function answerQuestion(
         documents: documents.length,
     });
 
-    return parseAnswer(payload, documents, {
+    const answer = parseAnswer(payload, documents, {
         shownCardIds,
         suggestionSources: suggestions,
         askedQuestions: [...history.filter(({ role }) => role === "user").map(({ content }) => content), question],
     });
+    return presentation && answer.blocks.length ? { ...answer, answer: visualSummary(answer.answer) } : answer;
 }

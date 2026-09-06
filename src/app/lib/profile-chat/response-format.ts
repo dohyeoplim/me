@@ -1,4 +1,5 @@
 import { maximumAnswerCharacters } from "./limits";
+import type { AnswerPresentation } from "./presentation";
 
 type JsonSchema = Record<string, unknown>;
 
@@ -23,6 +24,7 @@ export function createAnswerFormat(
     cardIds: string[],
     suggestionIds: string[],
     repositoryIds: string[] = [],
+    presentation: AnswerPresentation = null,
 ) {
     const source = identifier(sourceIds);
     const repositories = repositoryIds.filter((id) => sourceIds.includes(id));
@@ -38,12 +40,12 @@ export function createAnswerFormat(
             ...blockBase,
             items: array(object({ title: text(70), description: text(220) }), 6, 2),
         }),
-        object({
+        ...[2, 3].map((columns) => object({
             type: { type: "string", enum: ["comparison"] },
             ...blockBase,
-            columns: array(text(60), 3, 2),
-            rows: array(object({ label: text(60), values: array(text(140), 3, 2) }), 5, 2),
-        }),
+            columns: array(text(60), columns, columns),
+            rows: array(object({ label: text(60), values: array(text(140), columns, columns) }), 5, 2),
+        })),
         object({
             type: { type: "string", enum: ["timeline"] },
             ...blockBase,
@@ -51,25 +53,51 @@ export function createAnswerFormat(
         }),
     ];
 
+    const properties = {
+        grounding: { type: "string", enum: ["supported", "unsupported"] },
+        answer: text(maximumAnswerCharacters),
+        sourceIds: array(source, sourceIds.length ? 6 : 0),
+        cardIds: array(identifier(cardIds), cardIds.length ? 4 : 0),
+        blocks: array({ anyOf: blocks }, sourceIds.length ? 2 : 0),
+        followUps: array(object({
+            label: text(70),
+            question: text(180),
+            sourceIds: array(identifier(suggestionIds), 6, 1),
+        }), suggestionIds.length ? 4 : 0),
+        repositories: array(object({
+            sourceId: identifier(repositories),
+            reason: text(160),
+        }), Math.min(repositories.length, 3)),
+    };
+    const selected = presentation ? blocks.filter((block) => {
+        const properties = block.properties as { type: { enum: string[] } };
+        return properties.type.enum.includes(presentation);
+    }) : [];
+    const { answer, ...visualProperties } = properties;
+    const schema = selected.length && sourceIds.length ? object({ result: { anyOf: [
+        object({
+            ...visualProperties,
+            grounding: { type: "string", enum: ["supported"] },
+            sourceIds: array(source, 6, 1),
+            cardIds: array(identifier([]), 0),
+            blocks: array({ anyOf: selected }, 1, 1),
+            answer,
+        }),
+        object({
+            ...properties,
+            grounding: { type: "string", enum: ["unsupported"] },
+            sourceIds: array(source, 0),
+            cardIds: array(identifier([]), 0),
+            blocks: array({ anyOf: selected }, 0),
+            followUps: array(properties.followUps.items as JsonSchema, 0),
+            repositories: array(properties.repositories.items as JsonSchema, 0),
+        }),
+    ] } }) : object(properties);
+
     return {
         type: "json_schema",
         name: "profile_answer",
         strict: true,
-        schema: object({
-            grounding: { type: "string", enum: ["supported", "unsupported"] },
-            answer: text(maximumAnswerCharacters),
-            sourceIds: array(source, sourceIds.length ? 6 : 0),
-            cardIds: array(identifier(cardIds), cardIds.length ? 4 : 0),
-            blocks: array({ anyOf: blocks }, sourceIds.length ? 2 : 0),
-            followUps: array(object({
-                label: text(70),
-                question: text(180),
-                sourceIds: array(identifier(suggestionIds), 6, 1),
-            }), suggestionIds.length ? 4 : 0),
-            repositories: array(object({
-                sourceId: identifier(repositories),
-                reason: text(160),
-            }), Math.min(repositories.length, 3)),
-        }),
+        schema,
     };
 }

@@ -13,6 +13,7 @@ import { clientLimit, consumeLocalBudget, dailyLimit } from "./rate-limit";
 import { excerptDocument, retrieveDocuments } from "./retrieval";
 import { createAnswerFormat } from "./response-format";
 import { hasSourceInstructions, requiresPersonalEvidence } from "./evidence";
+import { answerPresentation, visualSummary } from "./presentation";
 import { ChatError, maxBodyBytes, questionSchema, readQuestion, validateOrigin } from "./validation";
 
 test("detailed answers preserve paragraphs across generated and client validation", () => {
@@ -363,12 +364,12 @@ test("sends a bounded structured Responses request without storing the conversat
         assert.equal(url, "https://api.openai.com/v1/responses");
         const body = JSON.parse(String(options.body));
         assert.equal(body.store, false);
-        assert.equal(body.prompt_cache_key, "profile-chat-v5");
+        assert.equal(body.prompt_cache_key, "profile-chat-v6");
         assert.equal(body.max_output_tokens, 3000);
         assert.equal(body.text.format.type, "json_schema");
         assert.equal(body.text.format.strict, true);
         assert.equal(body.input.at(-1).content, "What is E-ACT?");
-        assert.ok(body.instructions.length < 3_200);
+        assert.ok(body.instructions.length < 3_600);
         assert.ok(body.input.every(({ role }: { role: string }) => role === "user"));
         const evidence = JSON.parse(body.input[0]?.content);
         assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("keywords" in document)));
@@ -918,6 +919,66 @@ test("guided questions select their published profile evidence", () => {
     }
     assert.ok(retrieveDocuments("What have you built for iPhone?").some(({ id }) => id === "wonnit"));
     assert.ok(retrieveDocuments("What do you do outside the lab?").some(({ id }) => id === "community"));
+    assert.deepEqual(suggestedQuestions.find(({ label }) => label === "What do you do outside the lab?")?.sourceIds,
+        ["community"]);
+});
+
+test("overview presentation uses relevant evidence without forcing visuals for single facts", () => {
+    assert.equal(answerPresentation("What do you do outside the lab?", profileDocuments), "comparison");
+    assert.equal(answerPresentation("What is your education and academic background?", profileDocuments), "facts");
+    assert.equal(answerPresentation("What is his GPA?", profileDocuments), null);
+    assert.equal(answerPresentation("What is his TOEFL score?", profileDocuments), null);
+    assert.equal(answerPresentation("Explain his education in one sentence", profileDocuments), null);
+    assert.equal(answerPresentation("What do you do outside the lab?", []), null);
+    assert.equal(answerPresentation("Tell me more about Collog", profileDocuments, ["collog"]), "facts");
+    assert.equal(answerPresentation("How does Collog's pipeline work?", profileDocuments, ["collog"]), "steps");
+    assert.equal(answerPresentation("What is DriverNet?", profileDocuments), null);
+});
+
+test("visual answer formats require a block only in the supported branch", () => {
+    const format = createAnswerFormat(["community"], [], ["community"], [], "comparison");
+    const schema = format.schema as { properties: { result: { anyOf: Array<{ properties: Record<string,
+        { minItems?: number; maxItems?: number; enum?: string[]; items?: { anyOf: unknown[] } }> }> } } };
+    const [supported, unsupported] = schema.properties.result.anyOf;
+    assert.deepEqual(supported?.properties.grounding?.enum, ["supported"]);
+    assert.equal(supported?.properties.blocks?.minItems, 1);
+    assert.equal(supported?.properties.blocks?.maxItems, 1);
+    assert.equal(supported?.properties.cardIds?.maxItems, 0);
+    assert.deepEqual(unsupported?.properties.grounding?.enum, ["unsupported"]);
+    for (const field of ["sourceIds", "cardIds", "blocks", "followUps", "repositories"]) {
+        assert.equal(unsupported?.properties[field]?.maxItems, 0);
+    }
+});
+
+test("visual summaries keep a complete first sentence without cutting scores or Korean text", () => {
+    assert.equal(visualSummary("His GPA is 4.34 out of 4.5. More details follow."), "His GPA is 4.34 out of 4.5.");
+    assert.equal(visualSummary("학점은 4.34입니다. 장학금도 받았습니다."), "학점은 4.34입니다.");
+    assert.equal(visualSummary("He works with Prof. Park. More details."), "He works with Prof. Park.");
+    const long = "He organizes technical sessions and helps students work together through campus communities.";
+    assert.equal(visualSummary(long), long);
+});
+
+test("visual answer envelopes keep citation checks and unsupported answers intact", () => {
+    const result = {
+        grounding: "supported", answer: "He helps organize two campus communities.", sourceIds: ["community"],
+        cardIds: [], followUps: [], repositories: [], blocks: [{
+            type: "comparison", title: "Campus communities", sourceIds: ["community"],
+            columns: ["LIKELION", "GDG"], rows: [
+                { label: "Role", values: ["Vice President", "Core team member"] },
+                { label: "Activities", values: ["Technical sessions and hackathons", "Technical sessions"] },
+            ],
+        }],
+    };
+    const payload = (value: unknown) => ({ status: "completed", output: [{ type: "message", content: [{
+        type: "output_text", text: JSON.stringify({ result: value }),
+    }] }] });
+    assert.equal(parseAnswer(payload(result), profileDocuments).blocks[0]?.type, "comparison");
+    assert.throws(() => parseAnswer(payload({ ...result, sourceIds: ["unknown"] }), profileDocuments),
+        { code: "invalid_sources" });
+    const unsupported = parseAnswer(payload({ ...result, grounding: "unsupported", sourceIds: [] }), profileDocuments);
+    assert.deepEqual(unsupported.blocks, []);
+    assert.deepEqual(unsupported.sources, []);
+    assert.throws(() => parseAnswer(payload(null), profileDocuments), { code: "invalid_response" });
 });
 
 test("follow-up questions avoid repeating generated and curated labels", () => {
