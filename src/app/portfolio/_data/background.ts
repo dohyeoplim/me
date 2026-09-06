@@ -1,7 +1,7 @@
 export const experience = [
     {
         label: "Research & machine learning",
-        items: "PyTorch, Transformers, OpenCV, LoRA, OCR, vision-language models, ASR, synthetic data, evaluation",
+        items: "PyTorch, OpenCV",
     },
     { label: "Programming", items: "Python, Swift, TypeScript" },
     { label: "Applications", items: "SwiftUI, Core ML, Next.js" },
@@ -10,21 +10,7 @@ export const experience = [
 ];
 
 export const beyondTheLab = {
-    title: "Experience",
-    infrastructure: {
-        title: "National AI R&D tasks",
-        description: "Participating researcher supporting shared compute and industrial AI data preparation.",
-        responsibilities: [
-            {
-                title: "컴퓨팅자원집중형 인공지능 응용 기술개발",
-                detail: "Support training data preparation and shared research computing environments.",
-            },
-            {
-                title: "산업 AI용 데이터 전처리 자동화 기술개발",
-                detail: "Lead SeoulTech OCR work with KETI across data collection, synthesis, and evaluation.",
-            },
-        ],
-    },
+    title: "Additional experience",
     communities: [
         {
             name: "LIKELION University",
@@ -40,14 +26,15 @@ export const beyondTheLab = {
             description: "Organized 13 technical sessions in the 5th cohort.",
         },
     ],
-    additionalTitle: "Additional experience",
+    additionalTitle: "Visiting student",
     communityTitle: "Community",
     visits: [
         {
             name: "Technische Hochschule Ulm, Germany",
-            role: "One-month visiting student program",
+            role: "Visiting student",
             period: "January to February 2026",
-            description: "Completed Deep Learning for Industrial Data coursework and developed DocFusionX.",
+            description: "Worked with the lab for a month to understand its challenges, " +
+                "study possible approaches, and develop DocFusionX.",
             project: "DocFusionX",
             href: "https://github.com/DocFusionX/server",
         },
@@ -56,7 +43,7 @@ export const beyondTheLab = {
 
 export const background = {
     achievement:
-        "GPA 4.34 / 4.5, ranked first in the department. " +
+        "GPA 4.34 / 4.5, currently ranked first in the department.\n" +
         "Academic Excellence Scholarship, full tuition for five consecutive semesters.",
     title: "Background",
     education: [

@@ -50,7 +50,7 @@ export const listPublishedKnowledge = unstable_cache(async () => {
         listReservedComponents(),
     ]);
     return rows.map((row) => effectivePublishedSource(decodeSource(row), components));
-}, ["dedicated-published-knowledge-v2"], { tags: ["profile-knowledge", "reserved-components"], revalidate: 300 });
+}, ["dedicated-published-knowledge-v3"], { tags: ["profile-knowledge", "reserved-components"], revalidate: 300 });
 
 export async function getKnowledgeSource(id: string): Promise<KnowledgeSource | null> {
     await ensureKnowledgeSchema();

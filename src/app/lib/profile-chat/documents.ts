@@ -99,6 +99,7 @@ export const profileDocuments: ProfileDocument[] = [
         title: research.industrial.name,
         url: "/portfolio#research",
         text: joinSentences([
+            `Part of the ${research.programs.industrial.title} R&D project`,
             research.industrial.description,
             `${research.industrial.count} ${research.industrial.countLabel}`,
             research.industrial.insight,
@@ -123,7 +124,8 @@ export const profileDocuments: ProfileDocument[] = [
         id: "kraftbox",
         title: research.kraftbox.name,
         url: "/portfolio#research",
-        text: `${research.kraftbox.description} ${research.kraftbox.insight}`,
+        text: `Part of the ${research.programs.industrial.title} R&D project. ` +
+            `${research.kraftbox.description} ${research.kraftbox.insight}`,
         keywords: [
             "크래프트박스",
             "연구",
@@ -149,14 +151,16 @@ export const profileDocuments: ProfileDocument[] = [
     })),
     {
         id: "infrastructure",
-        title: beyondTheLab.infrastructure.title,
-        url: "/portfolio#beyond-the-lab",
+        title: research.programs.title,
+        url: "/portfolio#research",
         text: joinSentences([
-            beyondTheLab.infrastructure.description,
-            ...beyondTheLab.infrastructure.responsibilities.map(({ title, detail }) => `${title}, ${detail}`),
+            `${research.programs.industrial.title}, ${research.programs.industrial.description}`,
+            "Industrial OCR data and evaluation and Kraftbox are both part of this industrial AI project",
+            `${research.programs.computing.title} with IITP. ` +
+                `Project: ${research.programs.computing.projectTitle}. ${research.programs.computing.details}`,
         ]),
-        keywords: ["인프라", "연구환경", "컴퓨팅", "학습데이터", "gpu", "infrastructure", "computing"],
-        kind: "experience",
+        keywords: ["과제", "산업AI", "교육", "VLA", "요구사항", "개발보조", "gpu", "research", "education"],
+        kind: "research",
         cardId: null,
     },
     {

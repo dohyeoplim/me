@@ -1,5 +1,21 @@
 export const research = {
     title: "Research",
+    publicationsTitle: "Publications",
+    programs: {
+        title: "R&D participation",
+        industrial: {
+            title: "산업 AI용 데이터 전처리 자동화 기술개발",
+            description: "OCR evaluation and synthetic document data with KETI.",
+        },
+        computing: {
+            title: "컴퓨팅자원집중형 인공지능 응용 기술 개발",
+            description: "Education-focused VLA research with IITP.",
+            projectTitle: "분산 GPU 기반 비전-언어-행동 모델 확장 핵심 기술 개발",
+            role: "Participating researcher",
+            details: "Assist with requirements and technical development for an education-focused " +
+                "vision-language-action (VLA) system.",
+        },
+    },
     portfolioSummary:
         "I work on data generation, model development, and evaluation for computer vision and multimodal models.",
     affiliation: "Undergraduate researcher at the Visual Intelligence Lab, SeoulTech, since December 2025.",
@@ -38,7 +54,7 @@ export const research = {
         count: "~8,000",
         countLabel: "images annotated",
         description:
-            "Lead SeoulTech's OCR research with KETI. Recruited annotators, deployed a labeling tool, " +
+            "Developed OCR evaluation data with KETI. Built and deployed an annotation tool " +
             "and coordinated cross-checks.",
         insight: "More synthetic training images did not consistently improve recognition on real images.",
     },
@@ -50,3 +66,8 @@ export const research = {
         insight: "Applied Qwen vision-language models and revised schemas after finding field confusion across forms.",
     },
 };
+
+export const researchPublications = [
+    { title: research.eact.paper, authors: research.eact.authors, role: research.eact.role, status: research.eact.status },
+    ...research.additionalPublications,
+];
