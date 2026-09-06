@@ -4,6 +4,37 @@
 @import "./dds-navigation.css";
 @reference "../globals.css";
 
+.dds-grid-backdrop { position: relative; isolation: isolate; }
+.dds-search-link {
+    @apply font-support;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-dds-sm);
+    min-height: var(--button-height-large);
+    padding: var(--spacing-dds-sm) var(--control-padding-inline-large);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    background: var(--surface-panel);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-floating);
+    transition: border-color var(--duration-feedback), color var(--duration-feedback);
+}
+.dds-search-link span { flex: 1; }
+.dds-search-link svg { flex-shrink: 0; }
+.dds-search-link:hover { border-color: var(--border-control); color: var(--text-primary); }
+.dds-grid-backdrop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--border-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-grid) 1px, transparent 1px);
+    background-size: var(--spacing-dds-2xl) var(--spacing-dds-2xl);
+    background-position: center;
+    mask-image: radial-gradient(ellipse at center, #000 15%, transparent 72%);
+}
+
 .dds-section-heading {
     display: grid;
     gap: var(--spacing-dds-sm);

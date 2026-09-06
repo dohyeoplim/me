@@ -10,6 +10,7 @@ export const hero = {
 
 export const portfolioIntro = {
     title: "AI researcher & developer",
+    askLink: { label: "Ask anything about me", href: "/" },
     links: [
         { label: "CV", href: "https://cv.dohyeoplim.me/" },
         { label: "GitHub", href: "https://github.com/dohyeoplim" },

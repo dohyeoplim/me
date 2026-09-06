@@ -9,6 +9,7 @@
     --text-secondary: var(--color-grey-600);
     --text-tertiary: var(--color-grey-500);
     --border-subtle: var(--color-grey-200);
+    --border-grid: color-mix(in srgb, var(--border-subtle) 25%, transparent);
     --accent: var(--color-grey-800);
     --accent-soft: var(--color-grey-100);
     --success: var(--color-grey-700);

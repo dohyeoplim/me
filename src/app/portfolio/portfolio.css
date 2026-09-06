@@ -7,11 +7,12 @@
 }
 
 .portfolio-page-heading {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     align-content: center;
-    min-height: 75svh;
+    min-height: 68svh;
     gap: var(--spacing-dds-sm) var(--spacing-dds-lg);
     padding-block: var(--spacing-dds-page-top) var(--spacing-dds-2xl);
 }
@@ -25,6 +26,13 @@
     grid-column: 1 / -1;
     gap: var(--spacing-dds-lg);
     margin-top: var(--spacing-dds-sm);
+}
+
+.portfolio-ask-link {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: var(--layout-reading-width);
+    margin-top: var(--spacing-dds-md);
 }
 
 .portfolio-portrait {
