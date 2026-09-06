@@ -81,9 +81,7 @@ export const projectScenes = {
         {
             name: "Hospital approach",
             shapes: [
-                rect(122, 222, 306, 8, "soft", 4),
-                path([[126, 222], [424, 222]], "line", 2),
-                rect(344, 208, 80, 14, "soft", 4),
+                path([[126, 238], [444, 238]], "line", 2),
             ],
         },
         {
@@ -107,8 +105,8 @@ export const projectScenes = {
             ],
             motion: {
                 position: [
-                    { at: 0, value: [-72, 0] }, { at: 20, value: [-72, 0] },
-                    { at: 78, value: [0, 0] }, { at: 120, value: [0, 0] },
+                    { at: 0, value: [-72, 16] }, { at: 20, value: [-72, 16] },
+                    { at: 78, value: [48, 16] }, { at: 120, value: [48, 16] },
                 ],
                 opacity: [
                     { at: 0, value: 0 }, { at: 20, value: 1 },
