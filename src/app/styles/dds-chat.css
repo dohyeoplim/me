@@ -269,12 +269,16 @@
 
 .dds-chat-feedback {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: var(--spacing-dds-xs);
     min-height: var(--spacing-dds-lg);
     margin-top: var(--spacing-dds-2xs);
+}
+
+.dds-chat[data-started="true"] .dds-chat-feedback {
+    min-height: calc(var(--button-height-medium) + var(--spacing-dds-md));
 }
 
 .dds-chat[data-started="false"] .dds-chat-feedback {
