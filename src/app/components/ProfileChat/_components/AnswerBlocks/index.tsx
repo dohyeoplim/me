@@ -1,4 +1,3 @@
-import Disclosure from "@/app/components/DDS/Disclosure";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import type { ProfileAnswerBlock } from "@/app/lib/profile-chat/types";
 
@@ -24,9 +23,8 @@ function BlockContent({ block }: { block: ProfileAnswerBlock }) {
                 <ol className="dds-answer-steps" aria-label={block.title}>
                     {block.items.map(({ title, description }, index) => (
                         <li key={`${title}-${index}`}>
-                            <Disclosure label={title} variant="plain" open={index === 0}>
-                                <p>{description}</p>
-                            </Disclosure>
+                            <h4 className="font-body">{title}</h4>
+                            <p>{description}</p>
                         </li>
                     ))}
                 </ol>

@@ -48,15 +48,7 @@
     list-style: none;
 }
 
-.dds-answer-steps .dds-disclosure {
-    margin: 0;
-}
-
-.dds-answer-steps .dds-disclosure summary {
-    @apply font-body;
-    justify-content: space-between;
-    padding-block: var(--spacing-dds-sm);
-}
+.dds-answer-steps li { display: grid; gap: var(--spacing-dds-xs); padding-block: var(--spacing-dds-md); }
 
 .dds-answer-steps li + li {
     border-top: 1px solid var(--border-subtle);

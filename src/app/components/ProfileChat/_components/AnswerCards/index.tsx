@@ -2,7 +2,6 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { ButtonLink } from "@/app/components/DDS/Button";
-import Disclosure from "@/app/components/DDS/Disclosure";
 import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Surface from "@/app/components/DDS/Surface";
@@ -65,12 +64,12 @@ function EactCard() {
             </p>
             <RecognitionDemo />
             <p className="dds-answer-finding font-body">{eact.result}</p>
-            <Disclosure label={eact.detailsLabel} variant="plain">
+            <div className="dds-answer-copy">
                 <p>{eact.description}</p>
                 <p>{eact.errorResult}</p>
                 <p>{eact.paper}</p>
                 <p className="font-support text-muted">{eact.authors}</p>
-            </Disclosure>
+            </div>
         </AnswerCard>
     );
 }
@@ -102,11 +101,7 @@ function ProjectCard({ name }: { name: string }) {
                         <p>{project.contribution}</p>
                         {project.recognition && <p>{project.recognition}</p>}
                     </div>
-                    {project.outcome && (
-                        <Disclosure label="Project details" variant="plain">
-                            <p>{project.outcome}</p>
-                        </Disclosure>
-                    )}
+                    {project.outcome && <p>{project.outcome}</p>}
                     <footer className="dds-answer-footer">
                         <p className="font-support text-muted">{project.period}</p>
                         <ButtonLink

@@ -343,6 +343,20 @@
     gap: var(--spacing-dds-lg);
 }
 
+.dds-chat-response :is(h3, h4) { @apply font-body; font-weight: 500; }
+.dds-chat-response > * {
+    animation: dds-answer-appear var(--duration-reveal) var(--ease-reveal) both;
+}
+.dds-chat-response > :nth-child(2) { animation-delay: 60ms; }
+.dds-chat-response > :nth-child(3) { animation-delay: 100ms; }
+@keyframes dds-answer-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .dds-chat-response > * { animation: none; }
+}
+
 .dds-chat-exchange + .dds-chat-exchange {
     padding-top: var(--spacing-dds-lg);
 }

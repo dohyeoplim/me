@@ -86,7 +86,7 @@ export default function useProfileConversation() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ question: nextQuestion, history, shownCardIds, contextSourceIds }),
-                signal: controller.signal,
+                signal: AbortSignal.any([controller.signal, AbortSignal.timeout(35000)]),
             });
 
             if (!response.ok) {
