@@ -44,41 +44,39 @@ const scene = (label: string, layers: IllustrationLayer[]): IllustrationScene =>
 });
 
 export const projectScenes = {
-    driving: scene("An illustrative depth map separates the cabin, driver, and steering wheel by distance", [
-        {
-            name: "Distant cabin",
-            shapes: [
-                rect(92, 64, 296, 192, "paper", 18),
-                rect(112, 84, 256, 64, "soft", 10),
-            ],
-            motion: { position: [
-                { at: 0, value: [0, 0] }, { at: 18, value: [0, 0] },
-                { at: 52, value: [24, -12] }, { at: 72, value: [24, -12] },
-                { at: 108, value: [0, 0] }, { at: 120, value: [0, 0] },
-            ] },
-        },
-        {
-            name: "Middle distance driver",
-            shapes: [
-                ellipse(184, 126, 52, 52, "line"),
-                rect(146, 166, 76, 72, "line", 22),
-                path([[204, 180], [248, 210], [286, 180]], "line", 14),
-            ],
-        },
-        {
-            name: "Near steering wheel",
-            shapes: [
-                { kind: "ellipse", x: 300, y: 188, width: 80, height: 80, stroke: "ink", strokeWidth: 9 },
-                path([[262, 188], [338, 188]], "ink", 6),
-                path([[300, 188], [300, 226]], "ink", 6),
-            ],
-            motion: { position: [
-                { at: 0, value: [0, 0] }, { at: 18, value: [0, 0] },
-                { at: 52, value: [-28, 16] }, { at: 72, value: [-28, 16] },
-                { at: 108, value: [0, 0] }, { at: 120, value: [0, 0] },
-            ] },
-        },
-    ]),
+    driving: scene("Near, middle, and far depth features are pooled independently into three feature vectors",
+        (["line", "accent", "ink"] as const).flatMap((color, index): IllustrationLayer[] => {
+            const y = 116 + index * 34;
+            const shift = (index - 1) * 22;
+            return [
+                {
+                    name: `Depth group ${index}`,
+                    shapes: [0, 1, 2].map((column) => rect(88 + column * 38, y, 30, 30, color, 5)),
+                    motion: { position: [
+                        { at: 0, value: [0, 0] }, { at: 12, value: [0, 0] },
+                        { at: 40, value: [0, shift] }, { at: 84, value: [0, shift] },
+                        { at: 112, value: [0, 0] }, { at: 120, value: [0, 0] },
+                    ] },
+                },
+                {
+                    name: `Independent pooling ${index}`,
+                    shapes: [path([[216, y + shift + 15], [306, y + shift + 15]], color, 3)],
+                    motion: { draw: [
+                        { at: 0, value: 0 }, { at: 38, value: 0 }, { at: 64, value: 1 },
+                        { at: 84, value: 1 }, { at: 104, value: 0 }, { at: 120, value: 0 },
+                    ] },
+                },
+                {
+                    name: `Pooled vector ${index}`,
+                    shapes: [rect(330, y + shift + 1, 62, 28, color, 6)],
+                    motion: { opacity: [
+                        { at: 0, value: 0.2 }, { at: 54, value: 0.2 }, { at: 72, value: 1 },
+                        { at: 88, value: 1 }, { at: 112, value: 0.2 }, { at: 120, value: 0.2 },
+                    ] },
+                },
+            ];
+        }),
+    ),
     speech: scene("A spoken request becomes a hospital transportation trip", [
         { name: "Trip route", shapes: [path([[122, 222], [396, 222]], "line", 3)] },
         {
@@ -161,32 +159,85 @@ export const projectScenes = {
                 filledPath([[297, 193], [339, 193], [332, 234], [304, 234]], "accent"),
             ],
         },
-        {
-            name: "Space verification",
-            shapes: [
-                path([[110, 118], [110, 94], [134, 94]]),
-                path([[346, 94], [370, 94], [370, 118]]),
-                path([[110, 222], [110, 246], [134, 246]]),
-                path([[346, 246], [370, 246], [370, 222]]),
-            ],
-            motion: { opacity: [{ at: 18, value: 0.25 }, { at: 55, value: 1 }] },
-        },
-        {
-            name: "Verified",
-            shapes: [path([[348, 72], [358, 82], [378, 62]], "accent", 4)],
-            motion: { draw: [{ at: 52, value: 0 }, { at: 76, value: 1 }] },
-        },
+        ...[
+            { name: "Chair", left: 124, right: 230, top: 115, start: 6 },
+            { name: "Plant", left: 274, right: 360, top: 96, start: 44 },
+        ].flatMap(({ name, left, right, top, start }): IllustrationLayer[] => [
+            {
+                name: `${name} detection`,
+                shapes: [
+                    path([[left, top + 16], [left, top], [left + 16, top]]),
+                    path([[right - 16, top], [right, top], [right, top + 16]]),
+                    path([[left, 230], [left, 246], [left + 16, 246]]),
+                    path([[right - 16, 246], [right, 246], [right, 230]]),
+                ],
+                motion: { opacity: [
+                    { at: 0, value: 0 }, { at: start, value: 0 }, { at: start + 10, value: 1 },
+                    { at: 102, value: 1 }, { at: 120, value: 0 },
+                ] },
+            },
+            {
+                name: `${name} scan`,
+                shapes: [path([[left + 6, top + 6], [right - 6, top + 6]], "accent", 2)],
+                motion: {
+                    position: [{ at: start, value: [0, 0] }, { at: start + 32, value: [0, 234 - top] }],
+                    opacity: [
+                        { at: 0, value: 0 }, { at: start, value: 0 }, { at: start + 5, value: 0.7 },
+                        { at: start + 28, value: 0.7 }, { at: start + 34, value: 0 },
+                    ],
+                },
+            },
+        ]),
     ]),
-    graph: scene("Related document sections provide retrieval context", [
+    graph: scene("Selected fields from three documents are linked into a retrieved answer", [
         {
             name: "Document relationships",
-            shapes: [path([[134, 157], [218, 104], [340, 186]], "accent", 3)],
-            motion: { draw: [{ at: 14, value: 0 }, { at: 62, value: 1 }] },
+            shapes: [
+                path([[122, 140], [166, 188], [240, 222]], "accent", 3),
+                path([[240, 146], [240, 222]], "accent", 3),
+                path([[354, 140], [310, 188], [240, 222]], "accent", 3),
+            ],
+            motion: { draw: [
+                { at: 0, value: 0 }, { at: 38, value: 0 }, { at: 72, value: 1 },
+                { at: 100, value: 1 }, { at: 120, value: 0 },
+            ] },
         },
-        { name: "First document", shapes: paper(66, 113) },
-        { name: "Second document", shapes: paper(214, 58) },
-        { name: "Third document", shapes: paper(338, 158) },
+        { name: "Text document", shapes: paper(50, 76) },
+        { name: "Structured form", shapes: [
+            { ...rect(204, 42, 72, 104, "paper", 10), stroke: "line", strokeWidth: 2 },
+            rect(218, 62, 22, 5, "ink", 2),
+            rect(218, 82, 44, 16, "soft", 3), rect(218, 106, 44, 16, "soft", 3),
+        ] },
+        { name: "Table document", shapes: [
+            { ...rect(354, 76, 72, 104, "paper", 10), stroke: "line", strokeWidth: 2 },
+            rect(368, 94, 32, 5, "ink", 2),
+            ...[0, 1, 2].flatMap((row) => [
+                rect(368, 112 + row * 16, 16, 10, "soft", 2),
+                rect(390, 112 + row * 16, 22, 10, "line", 2),
+            ]),
+        ] },
+        ...[
+            { x: 66, y: 122, width: 40 }, { x: 218, y: 86, width: 44 }, { x: 390, y: 128, width: 22 },
+        ].map(({ x, y, width }, index): IllustrationLayer => ({
+            name: `Retrieved field ${index}`,
+            shapes: [rect(x, y, width, 6, "accent", 3)],
+            motion: { opacity: [
+                { at: 0, value: 0 }, { at: 8 + index * 12, value: 0 }, { at: 24 + index * 12, value: 1 },
+                { at: 100, value: 1 }, { at: 120, value: 0 },
+            ] },
+        })),
+        {
+            name: "Retrieved answer",
+            shapes: [
+                rect(178, 222, 124, 56, "paper", 10),
+                rect(194, 238, 78, 6, "accent", 3), rect(194, 253, 56, 5, "line", 2.5),
+            ],
+            motion: { opacity: [
+                { at: 0, value: 0.2 }, { at: 66, value: 0.2 }, { at: 84, value: 1 },
+                { at: 100, value: 1 }, { at: 120, value: 0.2 },
+            ] },
+        },
     ]),
 };
 
-export const projectAnimationSrc = (kind: keyof typeof projectScenes) => `/animations/${kind}.json?v=3`;
+export const projectAnimationSrc = (kind: keyof typeof projectScenes) => `/animations/${kind}.json?v=4`;
