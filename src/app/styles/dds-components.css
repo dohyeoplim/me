@@ -2,6 +2,7 @@
 @import "./dds-gallery.css";
 @import "./dds-graphics.css";
 @import "./dds-navigation.css";
+@import "./dds-input-select.css";
 @reference "../globals.css";
 
 .dds-grid-backdrop { position: relative; isolation: isolate; }

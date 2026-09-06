@@ -1,0 +1,56 @@
+.dds-select { position: relative; display: block; width: 100%; min-width: 0; }
+.dds-select > select {
+    appearance: none;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: var(--button-height-medium);
+    padding: var(--spacing-dds-xs) var(--spacing-dds-2xl) var(--spacing-dds-xs) var(--spacing-dds-md);
+    border: 1px solid var(--border-control);
+    border-radius: var(--control-radius);
+    background: var(--surface-panel);
+    color: var(--text-primary);
+    font: inherit;
+    text-overflow: ellipsis;
+}
+.dds-select > svg {
+    position: absolute;
+    right: var(--spacing-dds-md);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary);
+}
+.dds-select[data-multiple="true"] select { padding: var(--spacing-dds-sm); }
+.dds-select > select:not([multiple]) { padding-inline-end: var(--spacing-dds-2xl); }
+.dds-select > select:disabled { opacity: 0.5; cursor: not-allowed; }
+.dds-sheet {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(100%, var(--layout-reading-width));
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--border-subtle);
+    background: var(--surface-panel);
+    color: var(--text-primary);
+    overscroll-behavior: contain;
+}
+.dds-sheet::backdrop { background: color-mix(in srgb, var(--surface-overlay) 40%, transparent); }
+body:has(.dds-sheet[open]) { overflow: hidden; }
+.dds-sheet-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--spacing-dds-lg);
+    padding: var(--spacing-dds-lg);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--surface-panel);
+}
+.dds-sheet-content { padding: var(--spacing-dds-lg); }

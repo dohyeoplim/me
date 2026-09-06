@@ -4,6 +4,7 @@ import Metric from "@/app/components/DDS/Metric";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import Surface from "@/app/components/DDS/Surface";
 import TextField from "@/app/components/DDS/TextField";
+import Select from "@/app/components/DDS/Select";
 import Disclosure from "@/app/components/DDS/Disclosure";
 import LinkButton from "@/app/components/LinkButton";
 import { surfaceVariants } from "../../data";
@@ -66,6 +67,13 @@ export default function ComponentShowcase() {
                     <Surface padding="compact" className="dds-specimen-stack">
                         <TextField label="Search" placeholder="Find a project" variant="line" />
                         <TextField label="Project name" defaultValue="Collog" error="Check this value." />
+                        <label className="dds-text-field font-support">Category
+                            <Select defaultValue="research">
+                                <option value="research">Research</option>
+                                <option value="project">Project</option>
+                                <option value="experience">Experience</option>
+                            </Select>
+                        </label>
                     </Surface>
                 </div>
             </div>
