@@ -73,17 +73,6 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
     margin-top: var(--spacing-dds-md);
     padding: 0 var(--spacing-dds-xl) var(--spacing-dds-xl);
 }
-.dds-diagram-signal {
-    stroke-dasharray: 1;
-    animation: dds-diagram-signal var(--duration-diagram-loop) var(--ease-feedback) infinite;
-}
-
-@keyframes dds-diagram-signal {
-    0% { stroke-dashoffset: 1; opacity: 0; }
-    15% { opacity: 1; }
-    60%, 85% { stroke-dashoffset: 0; opacity: 1; }
-    100% { stroke-dashoffset: 0; opacity: 0; }
-}
 
 @keyframes dds-dialog-enter {
     from { opacity: 0; transform: translateY(var(--spacing-dds-sm)); }
@@ -99,6 +88,5 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .dds-diagram-signal { animation: none; stroke-dashoffset: 0; }
     .dds-detail-dialog[open] { animation: none; }
 }

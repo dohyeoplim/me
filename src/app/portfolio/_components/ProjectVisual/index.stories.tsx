@@ -23,7 +23,6 @@ export const Wonnit: Story = { args: { kind: "vision" } };
 export const DocFusionX: Story = { args: { kind: "graph" } };
 export const DriverNet: Story = {
     args: { kind: "driving" },
-    render: ({ kind }) => <div className="dds-illustration-preview"><ProjectVisual kind={kind} /></div>,
 };
 export const Static: Story = {
     render: ({ kind }) => <div className="dds-illustration-preview"><ProjectVisual kind={kind} /></div>,

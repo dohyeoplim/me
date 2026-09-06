@@ -44,24 +44,39 @@ const scene = (label: string, layers: IllustrationLayer[]): IllustrationScene =>
 });
 
 export const projectScenes = {
-    driving: scene("Global features gate depth-grouped features before projection", [
+    driving: scene("An illustrative depth map separates the cabin, driver, and steering wheel by distance", [
         {
-            name: "Feature paths",
+            name: "Distant cabin",
             shapes: [
-                path([[166, 83], [262, 83], [262, 201], [376, 201], [376, 122]]),
-                path([[95, 83], [95, 30], [376, 30], [376, 122]]),
-                path([[166, 201], [206, 201]]),
+                rect(92, 64, 296, 192, "paper", 18),
+                rect(112, 84, 256, 64, "soft", 10),
             ],
-            motion: { draw: [{ at: 0, value: 0 }, { at: 48, value: 1 }] },
+            motion: { position: [
+                { at: 0, value: [0, 0] }, { at: 18, value: [0, 0] },
+                { at: 52, value: [24, -12] }, { at: 72, value: [24, -12] },
+                { at: 108, value: [0, 0] }, { at: 120, value: [0, 0] },
+            ] },
         },
         {
-            name: "Gated projection",
+            name: "Middle distance driver",
             shapes: [
-                rect(24, 58, 142, 50, "paper", 10), rect(24, 176, 142, 50, "paper", 10),
-                rect(206, 58, 112, 50, "accent", 10), rect(206, 176, 112, 50, "paper", 10),
-                ellipse(376, 122, 40, 40, "ink"),
-                path([[370, 116], [382, 128]], "paper"), path([[382, 116], [370, 128]], "paper"),
+                ellipse(184, 126, 52, 52, "line"),
+                rect(146, 166, 76, 72, "line", 22),
+                path([[204, 180], [248, 210], [286, 180]], "line", 14),
             ],
+        },
+        {
+            name: "Near steering wheel",
+            shapes: [
+                { kind: "ellipse", x: 300, y: 188, width: 80, height: 80, stroke: "ink", strokeWidth: 9 },
+                path([[262, 188], [338, 188]], "ink", 6),
+                path([[300, 188], [300, 226]], "ink", 6),
+            ],
+            motion: { position: [
+                { at: 0, value: [0, 0] }, { at: 18, value: [0, 0] },
+                { at: 52, value: [-28, 16] }, { at: 72, value: [-28, 16] },
+                { at: 108, value: [0, 0] }, { at: 120, value: [0, 0] },
+            ] },
         },
     ]),
     speech: scene("A spoken request becomes a hospital transportation trip", [
@@ -174,4 +189,4 @@ export const projectScenes = {
     ]),
 };
 
-export const projectAnimationSrc = (kind: keyof typeof projectScenes) => `/animations/${kind}.json?v=2`;
+export const projectAnimationSrc = (kind: keyof typeof projectScenes) => `/animations/${kind}.json?v=3`;

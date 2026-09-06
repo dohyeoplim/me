@@ -5,7 +5,6 @@ import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import DetailDialog from "@/app/components/DDS/DetailDialog";
 import Carousel from "@/app/components/DDS/Carousel";
 import ProjectVisual from "../ProjectVisual";
-import { EmaTeacher } from "../DepthProjection";
 import { projects, projectSection } from "../../_data/projects";
 import { projectAnimationSrc, projectScenes } from "../../_data/project-scenes";
 
@@ -32,7 +31,7 @@ export default function Projects() {
                                     sizes="(max-width: 767px) calc(100vw - 48px), 420px"
                                     className="object-cover"
                                 />
-                            ) : project.visual === "driving" ? <ProjectVisual kind="driving" /> : (
+                            ) : (
                                 <LottieGraphic src={projectAnimationSrc(project.visual)}>
                                     <ProjectVisual kind={project.visual} />
                                 </LottieGraphic>
@@ -40,7 +39,13 @@ export default function Projects() {
                         </figure>
                         <div className="portfolio-project-card-action">
                             <DetailDialog title={project.name} label={projectSection.detailsLabel}
-                                expandFromCard triggerStyle="card" media={<ProjectVisual kind={project.visual} />}>
+                                expandFromCard triggerStyle="card" media={
+                                    <div className="portfolio-project-modal-media">
+                                        <LottieGraphic src={projectAnimationSrc(project.visual)}>
+                                            <ProjectVisual kind={project.visual} />
+                                        </LottieGraphic>
+                                    </div>
+                                }>
                                 <p className="font-work-title">{project.title}</p>
                                 <div className="portfolio-project-content">
                                     <p>{project.contribution}</p>
@@ -49,7 +54,6 @@ export default function Projects() {
                                     )}
                                 </div>
                                 {project.outcome && <p>{project.outcome}</p>}
-                                {project.visual === "driving" && <EmaTeacher />}
                                 <footer className="portfolio-project-footer">
                                     {project.period && <p className="portfolio-project-period">{project.period}</p>}
                                     <LinkButton
