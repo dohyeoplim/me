@@ -51,7 +51,6 @@ export function repositoryKnowledgeSource(repository: RepositoryMetadata, readme
         ].filter(Boolean))].slice(0, 50),
         kind: "repository",
         status: "draft",
-        cardId: null,
         origin: "github",
         repository,
     };

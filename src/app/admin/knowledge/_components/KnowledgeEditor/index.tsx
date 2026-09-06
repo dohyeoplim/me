@@ -6,10 +6,9 @@ import Button from "@/app/components/DDS/Button";
 import type { KnowledgeEdit, KnowledgeSource } from "@/app/lib/knowledge/schema";
 import { useRegisterDirty } from "../../../_components/shared/dirty";
 import { archiveKnowledgeAction, saveKnowledgeAction } from "../../actions";
-import { profileCardRegistry, type ProfileCardId } from "@/app/lib/profile-chat/types";
-import AnswerCards from "@/app/components/ProfileChat/_components/AnswerCards";
+import Select from "@/app/components/DDS/Select";
 
-type Props = { source: KnowledgeSource | null };
+type Props = { source: KnowledgeSource | null; embedded?: boolean };
 
 const newNote: KnowledgeEdit = {
     id: "new",
@@ -25,7 +24,7 @@ function editorValue(source: KnowledgeEdit) {
     return { ...source, keywordsText: source.keywords.join(", ") };
 }
 
-export default function KnowledgeEditor({ source }: Props) {
+export default function KnowledgeEditor({ source, embedded = false }: Props) {
     const router = useRouter();
     const [value, setValue] = useState(() => editorValue(source ?? newNote));
     const [baseline, setBaseline] = useState(value);
@@ -34,8 +33,6 @@ export default function KnowledgeEditor({ source }: Props) {
     const [error, setError] = useState("");
     const [pending, startTransition] = useTransition();
     const dirty = JSON.stringify(value) !== JSON.stringify(baseline);
-    const cardId = source?.cardId && Object.hasOwn(profileCardRegistry, source.cardId)
-        ? source.cardId as ProfileCardId : null;
     useRegisterDirty(dirty);
 
     useEffect(() => {
@@ -100,16 +97,14 @@ export default function KnowledgeEditor({ source }: Props) {
     return (
         <form className="knowledge-editor" onSubmit={save} aria-busy={pending}>
             <div className="knowledge-editor-heading">
-                <h2 className="font-work-title">{source?.title ?? "New source"}</h2>
+                {!embedded && <h2 className="font-work-title">{source?.title ?? "New source"}</h2>}
                 <Button variant="text" onClick={() => setPreview(!preview)} aria-pressed={preview}>
                     {preview ? "Edit" : "Preview"}
                 </Button>
             </div>
             {source?.origin === "portfolio" && (
                 <p className="knowledge-help">
-                    Editing these facts changes future AI answers. If the text differs from the portfolio,
-                    the assistant uses flexible answers in place of the original project card.
-                    The portfolio page is edited separately.
+                    Changes apply to future AI answers. Portfolio page content is managed separately.
                 </p>
             )}
             {source?.repository && (
@@ -169,7 +164,7 @@ export default function KnowledgeEditor({ source }: Props) {
                     <div className="knowledge-field-pair">
                         <label className="knowledge-field">
                             Category
-                            <select
+                            <Select
                                 value={value.kind}
                                 onChange={(event) => update("kind", event.target.value as KnowledgeEdit["kind"])}
                             >
@@ -179,54 +174,21 @@ export default function KnowledgeEditor({ source }: Props) {
                                 <option value="education">Education</option>
                                 <option value="experience">Experience</option>
                                 <option value="repository">Repository</option>
-                            </select>
+                            </Select>
                         </label>
                         <label className="knowledge-field">
                             Visibility
-                            <select
+                            <Select
                                 value={value.status}
                                 onChange={(event) => update("status", event.target.value as KnowledgeEdit["status"])}
                             >
                                 <option value="draft">Draft</option>
                                 <option value="published">Published</option>
-                            </select>
+                            </Select>
                         </label>
                     </div>
                 </fieldset>
             )}
-            {cardId && <section className="knowledge-card-editor">
-                <h3 className="font-work-title">Reserved component</h3>
-                <p className="knowledge-help">
-                    Edit its text here. The illustration and layout stay consistent with DDS.
-                </p>
-                {!value.cardPresentation ? <Button variant="outline" disabled={pending} onClick={() => {
-                    update("cardPresentation", {
-                        enabled: true, title: value.title, description: "", body: value.text.slice(0, 2400),
-                    });
-                }}>Customize card</Button> : <fieldset className="knowledge-fields" disabled={pending}>
-                    <label className="knowledge-selection">
-                        <input type="checkbox" checked={value.cardPresentation.enabled} onChange={(event) => {
-                            update("cardPresentation", { ...value.cardPresentation!, enabled: event.target.checked });
-                        }} />
-                        Allow this component in answers
-                    </label>
-                    {(["title", "description", "body"] as const).map((field) => (
-                    <label className="knowledge-field" key={field}>
-                        {field === "body" ? "Card content" : field === "title" ? "Card title" : "Card description"}
-                        <textarea value={value.cardPresentation![field]}
-                            maxLength={field === "body" ? 2400 : field === "title" ? 200 : 300}
-                            required={field !== "description"} onChange={(event) => {
-                                update("cardPresentation", { ...value.cardPresentation!, [field]: event.target.value });
-                            }} />
-                    </label>))}
-                    <Button variant="text" onClick={() => update("cardPresentation", undefined)}>
-                        Use default content
-                    </Button>
-                </fieldset>}
-                {value.cardPresentation?.enabled !== false && <AnswerCards cards={[{
-                    ...profileCardRegistry[cardId], presentation: value.cardPresentation,
-                }]} />}
-            </section>}
             <div className="knowledge-save-actions">
                 <Button type="submit" disabled={pending || (value.id !== "new" && !dirty)}>
                     {pending ? "Saving..." : "Save changes"}

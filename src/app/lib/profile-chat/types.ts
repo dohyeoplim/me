@@ -9,7 +9,7 @@ export const profileCardRegistry = {
 
 export type ProfileCardId = keyof typeof profileCardRegistry;
 export type ProfileCard = (typeof profileCardRegistry)[ProfileCardId] & {
-    presentation?: import("../knowledge/card-presentation").CardPresentation;
+    presentation?: import("../reserved-components/presentation").CardPresentation;
 };
 
 export type ProfileSource = {

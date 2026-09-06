@@ -9,6 +9,8 @@ import { retrieveHybridDocuments, fuseRankings } from "../profile-chat/hybrid-re
 import type { ProfileDocument } from "../profile-chat/documents";
 import { curatePortfolioSources, portfolioRepositories } from "./curation";
 import { repositoryKnowledgeSource } from "./github-content";
+import { defaultReservedComponents } from "../reserved-components/schema";
+import { selectSourceRange } from "./selection";
 
 const source = createPortfolioSources()[0]!;
 const vector = (axis: number) => Array.from({ length: embeddingDimensions }, (_, index) => Number(index === axis));
@@ -46,15 +48,24 @@ test("CSV rejects duplicate IDs, wrong columns and broken quotes", () => {
     assert.throws(() => parseKnowledgeCsv("title,text\nHello,World"));
 });
 
-test("CSV carries reserved component presentation", () => {
+test("reserved components are independent of source CSV and can be disabled separately", () => {
     const cardPresentation = {
         enabled: true, title: "Profile", description: "Research", body: "Public profile details.",
     };
-    const [parsed] = parseKnowledgeCsv(exportKnowledgeCsv([{ ...source, cardPresentation }]));
-    assert.deepEqual(parsed?.cardPresentation, cardPresentation);
-    const disabled = effectivePublishedSource({ ...source, cardPresentation: { ...cardPresentation, enabled: false } });
+    const [parsed] = parseKnowledgeCsv(exportKnowledgeCsv([source]));
+    assert.equal("cardPresentation" in parsed!, false);
+    const components = defaultReservedComponents.map((component) => ({ ...component, presentation: cardPresentation }));
+    const disabled = effectivePublishedSource(source, components.map((component) => ({ ...component, enabled: false })));
     assert.equal(disabled.cardId, null);
-    assert.ok(effectivePublishedSource({ ...source, cardPresentation }).text.includes(cardPresentation.body));
+    assert.ok(effectivePublishedSource(source, components).text.includes(cardPresentation.body));
+});
+
+test("range selection is inclusive, reversible and preserves unrelated selections", () => {
+    const ordered = ["a", "b", "c", "d", "e"];
+    assert.deepEqual(selectSourceRange(ordered, ["a", "e"], "a", "c", true), ["a", "e", "b", "c"]);
+    assert.deepEqual(selectSourceRange(ordered, [], "d", "b", true), ["b", "c", "d"]);
+    assert.deepEqual(selectSourceRange(ordered, ordered, "a", "c", false), ["d", "e"]);
+    assert.deepEqual(selectSourceRange(ordered, [], "missing", "b", true), ["b"]);
 });
 
 test("embedding chunks preserve Unicode and respect byte limits", () => {

@@ -1,7 +1,7 @@
 import { z } from "../schema";
 import { profileCardRegistry } from "./types";
 import { maximumAnswerCharacters } from "./limits";
-import { CardPresentationSchema } from "../knowledge/card-presentation";
+import { CardPresentationSchema } from "../reserved-components/presentation";
 
 export const documentIdSchema = z.string().regex(/^[a-z0-9][a-z0-9._-]{0,119}$/);
 export const cardIdSchema = z.enum(Object.keys(profileCardRegistry) as [keyof typeof profileCardRegistry]);

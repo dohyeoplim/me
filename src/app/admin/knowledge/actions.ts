@@ -14,6 +14,7 @@ import { embedSource, embeddingHash } from "@/app/lib/knowledge/embeddings";
 import { effectivePublishedSource } from "@/app/lib/knowledge/sources";
 import { parseKnowledgeCsv } from "@/app/lib/knowledge/csv";
 import { z } from "@/app/lib/schema";
+import { listReservedComponents } from "@/app/lib/reserved-components/repository";
 
 type ActionResult<T> = { ok: true; value: T; warning?: string } | { ok: false; error: string };
 
@@ -35,11 +36,9 @@ export async function saveKnowledgeAction(input: unknown, create = false): Promi
             ...result.data,
             id: create ? `note-${crypto.randomUUID()}` : result.data.id,
             origin: existing?.origin ?? "manual",
-            cardId: existing?.cardId ?? null,
-            cardPresentation: result.data.cardPresentation,
         });
         let warning: string | undefined;
-        const effective = effectivePublishedSource(source);
+        const effective = effectivePublishedSource(source, await listReservedComponents());
         if (source.status === "published" && source.embedding?.hash !== embeddingHash(effective)) {
             try { await saveKnowledgeEmbedding(source, await embedSource(effective)); }
             catch { warning = "Saved. Search indexing is pending. Use Build search index to retry."; }
@@ -98,10 +97,9 @@ export async function importKnowledgeCsvAction(form: FormData): Promise<ActionRe
         const sources = rows.map((row): KnowledgeSource => {
             const previous = existing.get(row.id);
             if (!previous && !row.id.startsWith("new-")) throw new Error("Unknown source ID. Leave new IDs empty.");
-            if (row.cardPresentation && !previous?.cardId) throw new Error("This source has no reserved card.");
-            return { ...previous, ...row, cardPresentation: row.cardPresentation,
+            return { ...previous, ...row,
                 id: previous?.id ?? `note-${crypto.randomUUID()}`,
-                origin: previous?.origin ?? "manual", cardId: previous?.cardId ?? null };
+                origin: previous?.origin ?? "manual" };
         });
         await saveKnowledgeSources(sources);
         refreshKnowledge();
@@ -116,11 +114,12 @@ type IndexReport = { indexed: number; failed: number; remaining: number };
 export async function buildSearchIndexAction(): Promise<ActionResult<IndexReport>> {
     await requireAdmin();
     try {
+        const components = await listReservedComponents();
         const sources = (await listKnowledgeSources(true)).filter((source) => source.status === "published" &&
-            source.embedding?.hash !== embeddingHash(effectivePublishedSource(source)));
+            source.embedding?.hash !== embeddingHash(effectivePublishedSource(source, components)));
         const results = await Promise.all(sources.slice(0, 5).map(async (source) => {
             try {
-                await saveKnowledgeEmbedding(source, await embedSource(effectivePublishedSource(source)));
+                await saveKnowledgeEmbedding(source, await embedSource(effectivePublishedSource(source, components)));
                 return true;
             }
             catch { return false; }

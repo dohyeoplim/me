@@ -3,6 +3,7 @@ import test from "node:test";
 import { includeRepository, plainReadme, repositoryKnowledgeSource, repositorySourceId } from "./github-content";
 import { isPublicSourceUrl, KnowledgeEditSchema, type RepositoryMetadata } from "./schema";
 import { createPortfolioSources, effectivePublishedSource } from "./sources";
+import { ReservedComponentSchema } from "../reserved-components/schema";
 
 const repository: RepositoryMetadata = {
     fullName: "Collog-App/server",
@@ -40,9 +41,10 @@ test("edited portfolio facts disable the static card", () => {
 });
 
 test("removed and inherited card names never become specialized cards", () => {
-    const source = createPortfolioSources().find(({ id }) => id === "education")!;
-    assert.equal(effectivePublishedSource({ ...source, cardId: "education" }).cardId, null);
-    assert.equal(effectivePublishedSource({ ...source, cardId: "constructor" }).cardId, null);
+    for (const id of ["education", "constructor"]) {
+        const result = ReservedComponentSchema.safeParse({ id, enabled: true, sourceIds: [], presentation: null });
+        assert.equal(result.success, false);
+    }
 });
 
 test("repository IDs are stable, distinct, and valid source identifiers", () => {
@@ -67,7 +69,7 @@ test("organization sources distinguish repository information from personal cont
     const source = repositoryKnowledgeSource(repository, "README detail.");
     assert.equal(source.origin, "github");
     assert.equal(source.status, "draft");
-    assert.equal(source.cardId, null);
+    assert.equal("cardId" in source, false);
     assert.match(source.text, /membership alone does not establish/);
     assert.match(source.text, /README detail/);
     assert.ok(source.keywords.includes("Python"));

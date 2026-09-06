@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import Button from "@/app/components/DDS/Button";
+import Sheet from "@/app/components/DDS/Sheet";
 import type { KnowledgeEdit, KnowledgeSource } from "@/app/lib/knowledge/schema";
 import { exportKnowledgeCsv, parseKnowledgeCsv } from "@/app/lib/knowledge/csv";
 import { useDirty } from "../../../_components/shared/dirty";
@@ -74,8 +75,12 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
     return (
         <div className="knowledge-manager">
             <div className="knowledge-toolbar">
-                <Link className="dds-link" href="/admin"
-                    onClick={(event) => { if (!mayChange()) event.preventDefault(); }}>Back to admin</Link>
+                <nav className="knowledge-actions">
+                    <Link className="dds-link" href="/admin"
+                        onClick={(event) => { if (!mayChange()) event.preventDefault(); }}>Back to admin</Link>
+                    <Link className="dds-link" href="/admin/components"
+                        onClick={(event) => { if (!mayChange()) event.preventDefault(); }}>Reserved components</Link>
+                </nav>
                 <div className="knowledge-actions">
                     <Link className="ds-button" data-variant="solid" data-size="medium"
                         href="/admin/knowledge?source=new"
@@ -144,9 +149,11 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
                 <KnowledgeLibrary sources={sources} selectedId={selectedId} checked={checked}
                     setChecked={setChecked} pending={pending} onVisibility={setVisibility}
                     onNavigate={(event) => { if (!mayChange()) event.preventDefault(); }} />
-                {(selected || selectedId === "new") && <div className="knowledge-editor-panel">
-                    <KnowledgeEditor key={selected?.id ?? "new"} source={selected ?? null} />
-                </div>}
+                <Sheet open={Boolean(selected || selectedId === "new")} title={selected?.title ?? "New source"}
+                    beforeClose={mayChange} onClose={() => router.push("/admin/knowledge", { scroll: false })}>
+                    {(selected || selectedId === "new") && <KnowledgeEditor
+                        key={selected?.id ?? "new"} source={selected ?? null} embedded />}
+                </Sheet>
             </div>
         </div>
     );

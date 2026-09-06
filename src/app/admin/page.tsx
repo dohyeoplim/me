@@ -20,52 +20,11 @@ export default async function AdminDashboard() {
                 <SignOutButton />
             </HeaderActions>
 
-            <Link
-                href="/admin/intro"
-                className={
-                    "flex items-center justify-between border-b border-grey-200 pb-3 font-body02-light " +
-                    "text-grey-900"
-                }
-            >
-                Intro
-                <span className="font-body05-light text-grey-400">edit</span>
-            </Link>
-
             <Link href="/admin/knowledge" className="dds-link">
                 AI knowledge
             </Link>
 
-            <div className="flex flex-col gap-dds-xs">
-                <h2 className="font-head01-medium text-ink">Saved sections</h2>
-                <p className="font-body03-regular text-muted">
-                    The home page now uses AI knowledge. These saved sections remain available for editing.
-                </p>
-            </div>
-
-            <EntryList entries={entries} type="home_section" />
-
-            <form
-                action={createEntry}
-                className="flex flex-col gap-3 sm:flex-row sm:items-end"
-            >
-                <label className="flex flex-1 flex-col gap-1.5 font-caption01-light text-grey-400">
-                    Title
-                    <input
-                        name="title"
-                        placeholder="New section"
-                        className={
-                            "rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light " +
-                            "text-grey-900 outline-none focus:border-grey-400"
-                        }
-                    />
-                </label>
-                <button
-                    type="submit"
-                    className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50"
-                >
-                    Create
-                </button>
-            </form>
+            <Link href="/admin/components" className="dds-link">Reserved components</Link>
 
             <h2 className="mt-4 font-head01-medium text-grey-900">Writing</h2>
 
@@ -127,6 +86,45 @@ export default async function AdminDashboard() {
             >
                 Export all entries (CSV)
             </a>
+            <section className="flex flex-col gap-dds-lg border-t border-line pt-dds-xl">
+                <h2 className="font-work-title">Legacy</h2>
+                <Link
+                    href="/admin/intro"
+                    className={
+                        "flex items-center justify-between border-b border-grey-200 pb-3 font-body02-light " +
+                        "text-grey-900"
+                    }
+                >
+                    Intro
+                    <span className="font-body05-light text-grey-400">edit</span>
+                </Link>
+
+                <EntryList entries={entries} type="home_section" />
+
+                <form
+                    action={createEntry}
+                    className="flex flex-col gap-3 sm:flex-row sm:items-end"
+                >
+                    <label className="flex flex-1 flex-col gap-1.5 font-caption01-light text-grey-400">
+                        Title
+                        <input
+                            name="title"
+                            placeholder="New section"
+                            className={
+                                "rounded-md border border-grey-200 bg-grey-50 px-3 py-2 font-body03-light " +
+                                "text-grey-900 outline-none focus:border-grey-400"
+                            }
+                        />
+                    </label>
+                    <button
+                        type="submit"
+                        className="rounded-md bg-grey-900 px-4 py-2 font-body04-light text-grey-50"
+                    >
+                        Create
+                    </button>
+                </form>
+
+            </section>
         </div>
     );
 }

@@ -13,6 +13,7 @@ const apply = process.argv.includes("--apply");
 try {
     const compiled = spawnSync(process.execPath, [require.resolve("typescript/lib/tsc.js"),
         "src/app/lib/knowledge/curation.ts", "src/app/lib/knowledge/github.ts", "src/app/lib/knowledge/embeddings.ts",
+        "src/app/lib/reserved-components/repository.ts",
         "--outDir", output, "--module", "commonjs", "--target", "es2022", "--strict",
         "--esModuleInterop", "--skipLibCheck", "--types", "node",
     ], { stdio: "inherit" });
@@ -24,10 +25,13 @@ try {
     const { embedSource, embeddingHash } = require(join(output, "lib/knowledge/embeddings.js"));
     const { effectivePublishedSource } = require(join(output, "lib/knowledge/sources.js"));
     const { KnowledgeSourceSchema } = require(join(output, "lib/knowledge/schema.js"));
+    const { listReservedComponents } = require(join(output, "lib/reserved-components/repository.js"));
     const sql = neon(process.env.DATABASE_URL);
-    const rows = await sql`select *, updated_at::text as snapshot_time from content_entries
-        where type = 'profile_knowledge' order by order_index, title`;
-    const existing = rows.map(({ doc, status }) => KnowledgeSourceSchema.parse({ ...doc, status }));
+    const rows = await sql`select s.*, s.updated_at::text as snapshot_time, e.data as embedding
+        from knowledge_sources s left join knowledge_embeddings e on e.source_id=s.id order by s.sort_order,s.title`;
+    const existing = rows.map((row) => KnowledgeSourceSchema.parse({ ...row, text: row.body,
+        cardId: null, repository: row.repository ?? undefined, embedding: row.embedding ?? undefined }));
+    const components = await listReservedComponents();
     const additional = existing.some((source) => source.repository?.fullName === "DriverNet-Project/DriverNet")
         ? [] : [await importGitHubRepository("https://github.com/DriverNet-Project/DriverNet")];
     const { published, excluded } = curatePortfolioSources(existing, additional);
@@ -39,7 +43,7 @@ try {
         let indexed = 0;
         for (let offset = 0; offset < published.length; offset += 4) {
             await Promise.all(published.slice(offset, offset + 4).map(async (source) => {
-                const effective = effectivePublishedSource(source);
+                const effective = effectivePublishedSource(source, components);
                 if (source.embedding?.hash !== embeddingHash(effective)) {
                     source.embedding = await embedSource(effective);
                 }
@@ -49,25 +53,29 @@ try {
         const snapshot = crypto.randomUUID();
         await sql.transaction([
             sql`select 1 / case when count(*) = ${rows.length} then 1 else 0 end as unchanged
-                from content_entries as entry
+                from knowledge_sources as entry
                 join jsonb_array_elements(${JSON.stringify(rows)}::jsonb) as expected
                     on entry.id = expected->>'id'
-                where entry.updated_at::text = expected->>'snapshot_time' and entry.doc = expected->'doc'`,
-            sql`insert into content_entries (id, type, slug, title, status, doc)
-                values (${`knowledge-backup-${snapshot}`}, 'profile_knowledge_backup', ${snapshot},
-                    'Before portfolio knowledge curation', 'draft', ${JSON.stringify(rows)}::jsonb)`,
-            sql`update content_entries set status = 'draft',
-                doc = jsonb_set(doc, '{status}', '"draft"'::jsonb), updated_at = now()
-                where type = 'profile_knowledge' and slug = any(${excluded.map(({ id }) => id)}::text[])`,
-            sql`insert into content_entries (id, type, slug, title, status, order_index, doc, updated_at)
-                select 'profile-knowledge-' || (source->>'id'), 'profile_knowledge', source->>'id', source->>'title',
-                    'published', position::int, source, now()
+                where entry.updated_at::text = expected->>'snapshot_time'`,
+            sql`insert into knowledge_snapshots (id, description, data)
+                values (${snapshot}, 'Before portfolio knowledge curation', ${JSON.stringify(rows)}::jsonb)`,
+            sql`update knowledge_sources set status = 'draft', updated_at = now()
+                where id = any(${excluded.map(({ id }) => id)}::text[])`,
+            sql`insert into knowledge_sources(id,title,body,url,keywords,kind,status,origin,repository,sort_order)
+                select source->>'id',source->>'title',source->>'text',source->>'url',source->'keywords',
+                    source->>'kind','published',source->>'origin',
+                    nullif(source->'repository','null'::jsonb),position::int
                 from jsonb_array_elements(${JSON.stringify(published)}::jsonb) with ordinality as item(source, position)
-                on conflict (type, slug) do update set title = excluded.title, status = excluded.status,
-                    order_index = excluded.order_index, doc = excluded.doc, updated_at = now()`,
+                on conflict(id) do update set title=excluded.title,body=excluded.body,url=excluded.url,
+                    keywords=excluded.keywords,kind=excluded.kind,status=excluded.status,origin=excluded.origin,
+                    repository=excluded.repository,sort_order=excluded.sort_order,updated_at=now()`,
+            sql`insert into knowledge_embeddings(source_id,content_hash,data)
+                select source->>'id',source->'embedding'->>'hash',source->'embedding'
+                from jsonb_array_elements(${JSON.stringify(published)}::jsonb) as source
+                on conflict(source_id) do update set content_hash=excluded.content_hash,
+                    data=excluded.data,updated_at=now()`,
         ]);
-        const counts = await sql`select status, count(*)::int as count from content_entries
-            where type = 'profile_knowledge' group by status`;
+        const counts = await sql`select status, count(*)::int as count from knowledge_sources group by status`;
         console.log(JSON.stringify({ snapshot, indexed, counts }));
     }
 } finally {
