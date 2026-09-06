@@ -78,14 +78,22 @@ export const projectScenes = {
         }),
     ),
     speech: scene("A spoken request becomes a hospital transportation trip", [
-        { name: "Trip route", shapes: [path([[122, 222], [396, 222]], "line", 3)] },
+        {
+            name: "Hospital approach",
+            shapes: [
+                rect(122, 222, 306, 8, "soft", 4),
+                path([[126, 222], [424, 222]], "line", 2),
+                rect(344, 208, 80, 14, "soft", 4),
+            ],
+        },
         {
             name: "Hospital",
             shapes: [
-                rect(332, 88, 76, 134, "paper", 10),
-                rect(355, 114, 30, 9, "accent", 2),
-                rect(366, 103, 9, 31, "accent", 2),
-                rect(361, 195, 18, 27, "soft", 3),
+                rect(346, 88, 76, 120, "paper", 10),
+                rect(369, 114, 30, 9, "accent", 2),
+                rect(380, 103, 9, 31, "accent", 2),
+                rect(373, 181, 22, 27, "soft", 3),
+                rect(368, 176, 32, 5, "accent", 2),
             ],
         },
         ...voice(94, 154),
