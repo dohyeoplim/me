@@ -37,8 +37,7 @@ export const beyondTheLab = {
             name: "Technische Hochschule Ulm, Germany",
             role: "Visiting student",
             period: "January to February 2026",
-            description: "Worked with the lab for a month to understand its challenges, " +
-                "study possible approaches, and develop DocFusionX.",
+            description: "Developed DocFusionX to address the lab’s document retrieval needs.",
             project: "DocFusionX",
             href: "https://github.com/DocFusionX/server",
         },
