@@ -1,4 +1,6 @@
 import { z } from "../schema";
+import { EmbeddingSchema } from "./embedding-schema";
+import { CardPresentationSchema } from "./card-presentation";
 
 export function isPublicSourceUrl(value: string) {
     if (/^\/(?![\/\\])[^\u0000-\u0020]*$/.test(value)) return true;
@@ -35,6 +37,8 @@ export const KnowledgeSourceSchema = z.object({
     cardId: z.string().nullable(),
     origin: z.enum(["portfolio", "manual", "github"]),
     repository: RepositorySchema.optional(),
+    embedding: EmbeddingSchema.optional().catch(undefined),
+    cardPresentation: CardPresentationSchema.optional(),
 });
 
 export const KnowledgeEditSchema = KnowledgeSourceSchema.pick({
@@ -45,6 +49,7 @@ export const KnowledgeEditSchema = KnowledgeSourceSchema.pick({
     keywords: true,
     kind: true,
     status: true,
+    cardPresentation: true,
 });
 
 export type KnowledgeSource = z.infer<typeof KnowledgeSourceSchema>;

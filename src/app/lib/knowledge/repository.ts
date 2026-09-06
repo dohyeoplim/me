@@ -2,8 +2,10 @@ import { ensureSchema, sql } from "../db";
 import { unstable_cache } from "next/cache";
 import { KnowledgeSourceSchema, type KnowledgeSource } from "./schema";
 import { createPortfolioSources, effectivePublishedSource } from "./sources";
+import type { SourceEmbedding } from "./embedding-schema";
+import { embeddingHash } from "./embeddings";
 
-type KnowledgeRow = { doc: unknown; status: string };
+type KnowledgeRow = { doc: unknown; status: string; embedding_hash?: string };
 
 export async function ensureKnowledgeSeeded() {
     await ensureSchema();
@@ -27,14 +29,20 @@ export async function ensureKnowledgeSeeded() {
     `;
 }
 
-export async function listKnowledgeSources(): Promise<KnowledgeSource[]> {
+export async function listKnowledgeSources(includeEmbeddings = false) {
     await ensureSchema();
     const rows = await sql`
-        select doc, status from content_entries
+        select case when ${includeEmbeddings} then doc else doc - 'embedding' end as doc,
+            status, doc->'embedding'->>'hash' as embedding_hash from content_entries
         where type = 'profile_knowledge'
         order by order_index asc, title asc
     ` as KnowledgeRow[];
-    return rows.map(({ doc, status }) => KnowledgeSourceSchema.parse({ ...(doc as object), status }));
+    return rows.map(({ doc, status, embedding_hash }) => {
+        const source = KnowledgeSourceSchema.parse({ ...(doc as object), status });
+        const searchStatus = status !== "published" ? "Excluded"
+            : embedding_hash === embeddingHash(effectivePublishedSource(source)) ? "Indexed" : "Needs indexing";
+        return { ...source, searchStatus };
+    });
 }
 
 export const listPublishedKnowledge = unstable_cache(async () => {
@@ -87,21 +95,38 @@ export async function archiveKnowledgeSource(id: string) {
     `;
 }
 
-export async function saveGitHubKnowledgeSources(input: KnowledgeSource[]) {
-    const sources = input.map((item) => KnowledgeSourceSchema.parse(item));
-    if (sources.some((source) => source.origin !== "github" || !source.repository)) {
-        throw new Error("Expected GitHub repositories.");
-    }
-    if (!sources.length) return;
+export async function setKnowledgeVisibility(ids: string[], status: "draft" | "published") {
     await ensureSchema();
-    await sql.transaction([sql`
+    await sql`
+        update content_entries set status = ${status},
+            doc = jsonb_set(doc, '{status}', ${JSON.stringify(status)}::jsonb), updated_at = now()
+        where type = 'profile_knowledge' and slug = any(${ids}::text[])
+    `;
+}
+
+export async function saveKnowledgeEmbedding(source: KnowledgeSource, embedding: SourceEmbedding) {
+    await ensureSchema();
+    const rows = await sql`
+        update content_entries set doc = jsonb_set(doc, '{embedding}', ${JSON.stringify(embedding)}::jsonb)
+        where type = 'profile_knowledge' and slug = ${source.id} and status = 'published'
+            and doc->>'text' = ${source.text} and doc->>'title' = ${source.title}
+            and doc->>'kind' = ${source.kind} and doc->'keywords' = ${JSON.stringify(source.keywords)}::jsonb
+            and coalesce(doc->'cardPresentation', 'null'::jsonb) =
+                ${JSON.stringify(source.cardPresentation ?? null)}::jsonb
+        returning id
+    `;
+    if (!rows.length) throw new Error("Source changed while indexing.");
+}
+
+export async function saveKnowledgeSources(input: KnowledgeSource[]) {
+    const sources = input.map((source) => KnowledgeSourceSchema.parse(source));
+    await ensureSchema();
+    await sql`
         insert into content_entries (id, type, slug, title, status, order_index, doc, updated_at)
         select 'profile-knowledge-' || (source->>'id'), 'profile_knowledge', source->>'id', source->>'title',
-            source->>'status', 2000, source, now()
+            source->>'status', 1000, source, now()
         from jsonb_array_elements(${JSON.stringify(sources)}::jsonb) as source
-        on conflict (type, slug) do update set
-            doc = jsonb_set(content_entries.doc, '{repository}', excluded.doc->'repository'),
-            updated_at = now()
-        where content_entries.doc->>'origin' = 'github'
-    `], { fetchOptions: { signal: AbortSignal.timeout(10_000) } });
+        on conflict (type, slug) do update set title = excluded.title, status = excluded.status,
+            doc = excluded.doc, updated_at = now()
+    `;
 }

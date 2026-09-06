@@ -23,9 +23,15 @@ export function createPortfolioSources(): KnowledgeSource[] {
 
 export function effectivePublishedSource(source: KnowledgeSource): PublishedKnowledgeSource {
     const canonical = profileDocuments.find(({ id }) => id === source.id);
-    const cardIsCurrent = source.origin !== "portfolio" || canonical?.text.trim() === source.text.trim();
+    const cardIsCurrent = source.cardPresentation?.enabled === false ? false
+        : Boolean(source.cardPresentation) || source.origin !== "portfolio" ||
+            canonical?.text.trim() === source.text.trim();
     const cardId = cardIsCurrent && source.cardId && Object.hasOwn(profileCardRegistry, source.cardId)
         ? source.cardId as ProfileCardId
         : null;
-    return { ...source, cardId };
+    const presentation = source.cardPresentation?.enabled ? source.cardPresentation : null;
+    const text = presentation
+        ? `${source.text}\n\n${presentation.title}\n${presentation.description}\n${presentation.body}`
+        : source.text;
+    return { ...source, text, cardId };
 }

@@ -1,12 +1,13 @@
 import { z } from "../schema";
 import { maximumOutputTokens } from "./limits";
+import { retrieveHybridDocuments } from "./hybrid-retrieval";
 import {
     generatedAnswerSchema,
     profileChatAnswerSchema,
     profileRepositorySchema,
 } from "./answer-content";
 import type { ProfileDocument } from "./documents";
-import { excerptDocument, retrieveDocuments } from "./retrieval";
+import { excerptDocument } from "./retrieval";
 import { createAnswerFormat } from "./response-format";
 import { profileCardRegistry, type ProfileCardId, type ProfileChatAnswer, type ProfileSource } from "./types";
 import { ChatError, type ChatQuestion } from "./validation";
@@ -252,7 +253,11 @@ export function parseAnswer(
     const result = profileChatAnswerSchema.safeParse({
         answer: answer.data,
         sources: [...cited].map((id) => sources.get(id)),
-        cards: currentCardIds.map((id) => profileCardRegistry[id]),
+        cards: currentCardIds.map((id) => {
+            const presentation = documents.find((document) =>
+                cited.has(document.id) && documentCardId(document) === id)?.cardPresentation;
+            return { ...profileCardRegistry[id], ...(presentation ? { presentation } : {}) };
+        }),
         blocks: distinctBlocks,
         followUps,
         repositories: [...new Map(repositories.map((repository) => [repository.sourceId, repository])).values()],
@@ -278,7 +283,7 @@ export async function answerQuestion(
     loadDocuments = loadPublishedDocuments,
 ) {
     const catalog = await loadDocuments();
-    const documents = retrieveDocuments(question, history, catalog, contextSourceIds);
+    const documents = await retrieveHybridDocuments(question, history, catalog, contextSourceIds, signal);
     const shownCards = new Set(shownCardIds);
     const cardIds = documents.map(documentCardId).filter((id): id is ProfileCardId => {
         return id !== null && !shownCards.has(id);

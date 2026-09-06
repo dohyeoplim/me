@@ -226,6 +226,7 @@ export function retrieveDocuments(
     history: ChatMessage[] = [],
     documents: ProfileDocument[] = profileDocuments,
     contextSourceIds: string[] = [],
+    allowFallback = true,
 ) {
     const query = expandQuestion(normalize(question));
     const previousQuestion = normalize(history.filter(({ role }) => role === "user").at(-1)?.content ?? "");
@@ -252,6 +253,7 @@ export function retrieveDocuments(
         });
 
     if (!ranked.length) {
+        if (!allowFallback) return [];
         console.info({
             event: "profile_chat_retrieval_miss", queryLength: question.length, catalogSize: documents.length,
         });

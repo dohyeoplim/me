@@ -94,7 +94,7 @@
     scrollbar-gutter: stable;
 }
 
-.knowledge-source-list > a {
+.knowledge-source-row > a {
     display: grid;
     gap: var(--spacing-dds-2xs);
     padding: var(--spacing-dds-sm) var(--control-padding-inline-compact);
@@ -103,18 +103,26 @@
     overflow-wrap: anywhere;
 }
 
-.knowledge-source-list > a:hover,
-.knowledge-source-list > a[aria-current="page"] {
+.knowledge-source-row > a:hover,
+.knowledge-source-row > a[aria-current="page"] {
     background: var(--surface-muted);
 }
 
-.knowledge-source-list > a[aria-current="page"] {
+.knowledge-source-row > a[aria-current="page"] {
     box-shadow: inset 0 0 0 1px var(--border-control);
 }
 
-.knowledge-source-list > a:focus-visible {
+.knowledge-source-row > a:focus-visible {
     outline-offset: -2px;
 }
+
+.knowledge-source-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--spacing-dds-xs); }
+.knowledge-source-row > input { align-self: center; }
+.knowledge-selection { display: flex; align-items: center; gap: var(--spacing-dds-xs); }
+.knowledge-repository-form { display: flex; align-items: end; gap: var(--spacing-dds-md); flex-wrap: wrap; }
+.knowledge-repository-form > label { flex: 1; min-width: 0; }
+.knowledge-card-editor { display: grid; gap: var(--spacing-dds-md); }
+.knowledge-card-editor textarea { min-height: var(--spacing-dds-3xl); }
 
 .knowledge-field-pair {
     display: grid;

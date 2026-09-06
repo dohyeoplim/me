@@ -7,7 +7,7 @@ import KnowledgeManager from "./_components/KnowledgeManager";
 import "../../styles/dds-knowledge.css";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 type Props = { searchParams: Promise<{ source?: string }> };
 

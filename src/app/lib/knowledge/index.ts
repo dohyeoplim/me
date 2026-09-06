@@ -7,4 +7,4 @@ export {
     saveKnowledgeSource,
 } from "./repository";
 export { KnowledgeSourceSchema, type KnowledgeSource, type RepositoryMetadata } from "./schema";
-export { syncGitHubKnowledge, type GitHubSyncReport } from "./github";
+export { importGitHubRepository } from "./github";

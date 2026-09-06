@@ -3,6 +3,8 @@ import { hero } from "../../portfolio/_data/hero";
 import { projects } from "../../portfolio/_data/projects";
 import { research } from "../../portfolio/_data/research";
 import type { ProfileCardId, ProfileSource } from "./types";
+import type { SourceEmbedding } from "../knowledge/embedding-schema";
+import type { CardPresentation } from "../knowledge/card-presentation";
 
 export type ProfileDocument = ProfileSource & {
     id: string;
@@ -10,6 +12,8 @@ export type ProfileDocument = ProfileSource & {
     keywords: string[];
     cardId?: ProfileCardId | null;
     kind?: string;
+    embedding?: SourceEmbedding;
+    cardPresentation?: CardPresentation;
     repository?: {
         fullName: string;
         url: string;

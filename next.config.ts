@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     agentRules: false,
     poweredByHeader: false,
+    experimental: { serverActions: { bodySizeLimit: "5mb" } },
     async headers() {
         return [{ source: "/:path*", headers: securityHeaders(process.env.NODE_ENV === "development") }];
     },

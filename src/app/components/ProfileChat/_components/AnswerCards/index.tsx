@@ -20,7 +20,7 @@ type CardProps = {
 };
 
 type Props = {
-    cards: ReadonlyArray<{ type: ProfileCard["type"]; id: string }>;
+    cards: ReadonlyArray<{ type: ProfileCard["type"]; id: string; presentation?: ProfileCard["presentation"] }>;
 };
 
 function AnswerCard({ title, description, children }: CardProps) {
@@ -141,8 +141,24 @@ export default function ProfileChatCards({ cards }: Props) {
 
     return (
         <div className="dds-answer-cards">
-            {selected.map(({ id }) => (
-                <div key={id}>{cardRenderers[id as ProfileCardId]()}</div>
+            {selected.map(({ id, presentation }) => (
+                <div key={id}>
+                    {presentation ? (
+                        <AnswerCard title={presentation.title} description={presentation.description}>
+                            {id === "profile" && <Image src={hero.image.src} alt={hero.image.alt}
+                                width={64} height={80} className="dds-answer-portrait" />}
+                            {id === "eact" && <RecognitionDemo />}
+                            {projects.filter((project) => project.name.toLowerCase() === id).map((project) => (
+                                <figure key={project.name} className="dds-answer-media" aria-label={project.title}>
+                                    <LottieGraphic src={projectAnimationSrc(project.visual)}>
+                                        <ProjectVisual kind={project.visual} />
+                                    </LottieGraphic>
+                                </figure>
+                            ))}
+                            <p className="dds-answer-custom-body">{presentation.body}</p>
+                        </AnswerCard>
+                    ) : cardRenderers[id as ProfileCardId]()}
+                </div>
             ))}
         </div>
     );
