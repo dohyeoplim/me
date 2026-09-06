@@ -30,10 +30,10 @@ export default function Background() {
                         <article key={community.name}>
                             <div>
                                 <h4 className="font-body portfolio-role-title">{community.name}</h4>
+                                <p className="font-support">{community.role}</p>
                                 <p className="font-support text-muted">{community.period}</p>
                             </div>
                             <div>
-                                <p>{community.role}</p>
                                 <p className="font-support">{community.description}</p>
                                 {community.href && (
                                     <LinkButton href={community.href} label="Website" icon="external" />

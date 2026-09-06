@@ -16,14 +16,14 @@ export const beyondTheLab = {
             name: "LIKELION University",
             href: "https://www.seoultech-likelion.com/",
             period: "2025 to present",
-            role: "SeoulTech, Vice President, 14th cohort. Member, 13th cohort.",
+            role: "Vice President, 14th cohort. Member, 13th cohort. SeoulTech.",
             description:
                 "Coordinate a 30-member chapter. Organized four technical sessions, invited talks, and hackathons.",
         },
         {
             name: "Google Developer Groups on Campus",
             period: "2025 to present",
-            role: "SeoulTech, Core team member, 5th and 6th cohorts",
+            role: "Core team member, 5th and 6th cohorts. SeoulTech.",
             description: "Organized 13 technical sessions in the 5th cohort.",
         },
     ],
