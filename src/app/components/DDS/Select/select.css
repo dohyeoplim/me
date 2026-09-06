@@ -24,33 +24,3 @@
 .dds-select[data-multiple="true"] select { padding: var(--spacing-dds-sm); }
 .dds-select > select:not([multiple]) { padding-inline-end: var(--spacing-dds-2xl); }
 .dds-select > select:disabled { opacity: 0.5; cursor: not-allowed; }
-.dds-sheet {
-    position: fixed;
-    inset: 0 0 0 auto;
-    width: min(100%, var(--layout-reading-width));
-    max-width: none;
-    height: 100dvh;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-left: 1px solid var(--border-subtle);
-    background: var(--surface-panel);
-    color: var(--text-primary);
-    overscroll-behavior: contain;
-}
-.dds-sheet::backdrop { background: color-mix(in srgb, var(--surface-overlay) 40%, transparent); }
-body:has(.dds-sheet[open]) { overflow: hidden; }
-.dds-sheet-header {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    gap: var(--spacing-dds-lg);
-    padding: var(--spacing-dds-lg);
-    border-bottom: 1px solid var(--border-subtle);
-    background: var(--surface-panel);
-}
-.dds-sheet-content { padding: var(--spacing-dds-lg); }

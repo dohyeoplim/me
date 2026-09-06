@@ -15,6 +15,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const Wide: Story = { args: { size: "wide" } };
 export const LongContent: Story = {
     args: { children: Array.from({ length: 30 }, (_, index) => <p key={index}>Selected item content.</p>) },
 };

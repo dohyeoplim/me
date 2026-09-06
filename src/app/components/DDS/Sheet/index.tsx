@@ -5,10 +5,14 @@ import { useAnimate, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import IconButton from "../IconButton";
 import { getDdsMotionTransition } from "../Motion";
+import "./sheet.css";
 
-type Props = { open: boolean; title: string; children: ReactNode; onClose: () => void; beforeClose?: () => boolean };
+type Props = {
+    open: boolean; title: string; children: ReactNode; onClose: () => void; beforeClose?: () => boolean;
+    size?: "default" | "wide";
+};
 
-export default function Sheet({ open, title, children, onClose, beforeClose }: Props) {
+export default function Sheet({ open, title, children, onClose, beforeClose, size = "default" }: Props) {
     const dialog = useRef<HTMLDialogElement>(null);
     const closing = useRef(false);
     const [, animate] = useAnimate();
@@ -35,7 +39,7 @@ export default function Sheet({ open, title, children, onClose, beforeClose }: P
         if (dialog.current) onClose();
     };
 
-    return <dialog ref={dialog} className="dds-sheet" aria-labelledby={titleId}
+    return <dialog ref={dialog} className="dds-sheet" data-size={size} aria-labelledby={titleId}
         onCancel={(event) => { event.preventDefault(); void close(); }}
         onClick={(event) => {
             if (event.target !== event.currentTarget) return;

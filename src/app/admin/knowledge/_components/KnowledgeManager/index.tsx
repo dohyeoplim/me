@@ -150,6 +150,7 @@ export default function KnowledgeManager({ sources, selectedId }: Props) {
                     setChecked={setChecked} pending={pending} onVisibility={setVisibility}
                     onNavigate={(event) => { if (!mayChange()) event.preventDefault(); }} />
                 <Sheet open={Boolean(selected || selectedId === "new")} title={selected?.title ?? "New source"}
+                    size="wide"
                     beforeClose={mayChange} onClose={() => router.push("/admin/knowledge", { scroll: false })}>
                     {(selected || selectedId === "new") && <KnowledgeEditor
                         key={selected?.id ?? "new"} source={selected ?? null} embedded />}

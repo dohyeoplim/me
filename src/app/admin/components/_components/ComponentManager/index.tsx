@@ -21,7 +21,7 @@ export default function ComponentManager({ components, sources }: Props) {
     return <>
         <nav className="knowledge-actions"><Link className="dds-link" href="/admin">Back to admin</Link>
             <Link className="dds-link" href="/admin/knowledge">Knowledge</Link></nav>
-        <div className="knowledge-table-wrap"><table className="knowledge-table">
+        <div className="knowledge-library"><div className="knowledge-table-wrap"><table className="knowledge-table">
             <thead><tr><th>Component</th><th>Type</th><th>Evidence sources</th><th>Visibility</th></tr></thead>
             <tbody>{components.map((component) => <tr key={component.id}>
                 <td><button type="button" className="dds-link" onClick={() => setSelected(component)}>
@@ -30,8 +30,9 @@ export default function ComponentManager({ components, sources }: Props) {
                 <td>{profileCardRegistry[component.id].type}</td><td>{component.sourceIds.length}</td>
                 <td>{component.enabled ? "Enabled" : "Disabled"}</td>
             </tr>)}</tbody>
-        </table></div>
+        </table></div></div>
         <Sheet open={Boolean(selected)} title={selected ? componentDefaults(selected.id).title : "Component"}
+            size="wide"
             beforeClose={() => !dirty || window.confirm("Discard unsaved changes?")} onClose={() => setSelected(null)}>
             {selected && <ComponentEditor key={selected.id} component={selected} sources={sources} />}
         </Sheet>

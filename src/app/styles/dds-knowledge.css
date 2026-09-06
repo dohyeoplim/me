@@ -161,6 +161,7 @@
 
 @media (min-width: 768px) {
     .knowledge-filters { grid-template-columns: minmax(0, 1fr) auto; }
+    .knowledge-filters > label:not(:first-child) { min-width: calc(var(--spacing-dds-5xl) + var(--spacing-dds-2xl)); }
     .knowledge-filters:has(.knowledge-owner-filter) > label:first-child { grid-column: 1 / -1; }
 
 }
