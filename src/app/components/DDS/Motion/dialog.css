@@ -1,0 +1,14 @@
+.dds-modal-motion::backdrop {
+    opacity: 0;
+    transition: opacity var(--dds-modal-duration, var(--duration-feedback)) var(--ease-feedback);
+}
+
+.dds-modal-motion[open]:not([data-closing="true"])::backdrop { opacity: 1; }
+
+@starting-style {
+    .dds-modal-motion[open]:not([data-closing="true"])::backdrop { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dds-modal-motion::backdrop { transition: none; }
+}

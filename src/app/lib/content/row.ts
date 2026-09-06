@@ -1,5 +1,5 @@
-import { EntrySchema } from "./schema";
-import type { Entry } from "./schema";
+import { EntrySchema, PostSchema } from "./schema";
+import type { Entry, Post } from "./schema";
 
 export type Row = {
     id: string;
@@ -20,6 +20,17 @@ export function toEntry(row: Row): Entry {
         title: row.title,
         status: row.status,
         orderIndex: row.order_index,
+        doc: row.doc,
+        updatedAt: new Date(row.updated_at).toISOString(),
+    });
+}
+
+export function toPost(row: Row): Post {
+    return PostSchema.parse({
+        id: row.id,
+        slug: row.slug,
+        title: row.title,
+        status: row.status,
         doc: row.doc,
         updatedAt: new Date(row.updated_at).toISOString(),
     });

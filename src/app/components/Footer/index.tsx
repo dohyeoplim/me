@@ -1,10 +1,20 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 export default function Footer() {
+    const pathname = usePathname();
+    const home = pathname === "/";
+
     return (
-        <footer className="w-full max-w-4xl mx-auto px-6 pb-30 select-none pointer-events-none">
-            <hr className="h-px text-grey-200 mb-6" />
-            <small className="font-body04-light text-grey-500">
-                &copy; 2026 Dohyeop Lim
-            </small>
+        <footer
+            className={`dds-container site-footer ${home ? "pb-dds-xl" : "pb-dds-3xl"}`}
+            data-home={home || undefined}
+        >
+            <hr className="h-px text-line mb-dds-lg" />
+            <div className="flex items-center justify-between gap-dds-md">
+                <small className="font-body04-light text-muted">&copy; 2026 Dohyeop Lim</small>
+            </div>
         </footer>
     );
 }

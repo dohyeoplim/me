@@ -1,26 +1,22 @@
-import Intro from "./sections/Intro";
-import SectionWithContent from "@/app/components/SectionWithContent";
-import SlideTransition from "@/app/components/SlideTransition";
-import { loadEntriesByType } from "@/app/lib/contentLoader";
+import type { Metadata } from "next";
+import ProfileChat from "./components/ProfileChat";
+import SlideTransition from "./components/SlideTransition";
+import "./styles/dds-chat.css";
+import "./styles/dds-answer-cards.css";
+import "./styles/dds-answer-blocks.css";
+import "./portfolio/portfolio.css";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+    title: "Dohyeop Lim",
+    description: "Explore Dohyeop Lim's research, projects, and experience.",
+};
 
-export default async function Home() {
-    const sections = await loadEntriesByType("home_section", true);
-
+export default function Home() {
     return (
         <SlideTransition>
-            <div className="w-full max-w-4xl mx-auto md:pt-40 pb-30 px-6">
-                <main className="flex flex-col items-center gap-30">
-                    <Intro />
-                    {sections.map((section) => (
-                        <SectionWithContent
-                            key={section.id}
-                            doc={section.doc}
-                        />
-                    ))}
-                </main>
-            </div>
+            <main id="main-content">
+                <ProfileChat />
+            </main>
         </SlideTransition>
     );
 }

@@ -1,0 +1,17 @@
+.writing-page {
+    padding-block: var(--spacing-dds-page-top) var(--spacing-dds-5xl);
+}
+
+.writing-index {
+    display: grid;
+    gap: var(--spacing-dds-2xl);
+}
+
+.writing-heading {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+}
+
+.writing-list-skeleton > .dds-skeleton-content > .dds-skeleton[data-variant="control"] {
+    margin-bottom: var(--spacing-dds-sm);
+}

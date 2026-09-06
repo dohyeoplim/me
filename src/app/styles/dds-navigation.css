@@ -1,0 +1,102 @@
+.dds-section-nav {
+    @apply font-support;
+    padding-block: var(--spacing-dds-xs);
+    user-select: none;
+}
+
+.dds-section-nav ul {
+    display: flex;
+    align-items: stretch;
+    justify-content: safe center;
+    gap: var(--spacing-dds-xs);
+    width: max-content;
+    max-width: 100%;
+    margin-inline: 0;
+    padding: var(--spacing-dds-2xs);
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-navigation);
+    corner-shape: squircle;
+    background: var(--surface-floating);
+    box-shadow: var(--shadow-floating);
+    scrollbar-width: none;
+}
+
+.dds-section-nav li {
+    flex-shrink: 0;
+}
+
+.dds-section-nav[data-floating="true"] {
+    position: fixed;
+    inset: auto 0 max(var(--spacing-dds-lg), env(safe-area-inset-bottom));
+    z-index: 45;
+    pointer-events: none;
+    animation: dds-nav-enter var(--duration-feedback) var(--ease-feedback) both;
+}
+
+.dds-section-nav[data-floating="true"] ul {
+    margin-inline: auto;
+    pointer-events: auto;
+}
+
+@keyframes dds-nav-enter {
+    from { opacity: 0; transform: translateY(var(--spacing-dds-xs)); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dds-section-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: var(--button-height-medium);
+    padding: var(--spacing-dds-2xs) var(--control-padding-inline-compact);
+    border-radius: var(--radius-navigation);
+    corner-shape: squircle;
+    color: var(--text-secondary);
+    isolation: isolate;
+    transition: color var(--duration-feedback) var(--ease-feedback);
+}
+
+.dds-section-nav a[aria-current="location"] {
+    color: var(--text-primary);
+}
+
+.dds-section-indicator {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    corner-shape: squircle;
+    background: var(--surface-muted);
+    pointer-events: none;
+}
+
+.dds-section-label {
+    position: relative;
+    z-index: 1;
+}
+
+.dds-section-nav a:focus-visible {
+    outline-offset: -2px;
+}
+
+
+@media (max-width: 479px) {
+    .dds-section-nav .dds-container {
+        padding-inline: var(--spacing-dds-xs);
+    }
+
+    .dds-section-nav ul {
+        justify-content: flex-start;
+        gap: var(--spacing-dds-2xs);
+    }
+
+    .dds-section-nav a {
+        padding-inline: var(--spacing-dds-xs);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dds-section-nav { animation: none !important; }
+    .dds-section-nav a { transition: none; }
+}

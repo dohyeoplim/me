@@ -1,0 +1,31 @@
+.signIn {
+    display: grid;
+    width: 100%;
+    max-width: var(--layout-copy-width);
+    gap: var(--spacing-dds-2xl);
+}
+
+.header,
+.form,
+.fields {
+    display: grid;
+}
+
+.header {
+    gap: var(--spacing-dds-sm);
+}
+
+.form {
+    gap: var(--spacing-dds-xl);
+    padding-top: var(--spacing-dds-xl);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.fields {
+    gap: var(--spacing-dds-lg);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,31 @@
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { profileCardRegistry } from "@/app/lib/profile-chat/types";
+import "@/app/portfolio/portfolio.css";
+import "@/app/styles/dds-answer-cards.css";
+import ProfileChatCards from ".";
+
+const meta = {
+    title: "Portfolio/Answer cards",
+    component: ProfileChatCards,
+    parameters: { layout: "padded" },
+    args: { cards: [profileCardRegistry.profile] },
+} satisfies Meta<typeof ProfileChatCards>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Profile: Story = {};
+export const Research: Story = { args: { cards: [profileCardRegistry.eact] } };
+export const Projects: Story = {
+    args: {
+        cards: [
+            profileCardRegistry.collog,
+            profileCardRegistry.mochicall,
+            profileCardRegistry.docfusionx,
+            profileCardRegistry.wonnit,
+            profileCardRegistry.drivernet,
+        ],
+    },
+};
+export const DriverNet: Story = { args: { cards: [profileCardRegistry.drivernet] } };
+export const UnknownCard: Story = { args: { cards: [{ type: "project", id: "not-registered" }] } };

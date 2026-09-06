@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { listAllRows } from "@/app/lib/content/repository";
+import { csvCell as cell } from "@/app/lib/csv";
 
 export const dynamic = "force-dynamic";
 
@@ -14,14 +15,9 @@ const COLUMNS = [
     "updated_at",
 ] as const;
 
-function cell(value: unknown): string {
-    const s = value == null ? "" : String(value);
-    return `"${s.replace(/"/g, '""')}"`;
-}
-
 export async function GET() {
     const session = await auth();
-    if (!session?.user) return new Response("Unauthorized", { status: 401 });
+    if (session?.user?.admin !== true) return new Response("Unauthorized", { status: 401 });
 
     const rows = await listAllRows();
     const lines = [COLUMNS.join(",")];
@@ -43,6 +39,7 @@ export async function GET() {
     const csv = "﻿" + lines.join("\r\n");
     return new Response(csv, {
         headers: {
+            "Cache-Control": "private, no-store",
             "Content-Type": "text/csv; charset=utf-8",
             "Content-Disposition": 'attachment; filename="content-entries.csv"',
         },

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "../schema";
 
 export const SIZE_TOKENS = [
     "title1",

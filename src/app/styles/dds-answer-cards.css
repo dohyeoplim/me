@@ -1,0 +1,119 @@
+@reference "../globals.css";
+
+.dds-answer-cards {
+    display: grid;
+    gap: var(--spacing-dds-lg);
+    text-align: left;
+}
+
+.dds-answer-cards > div,
+.dds-answer-card {
+    min-width: 0;
+}
+
+.dds-answer-card { @apply font-body; }
+.dds-answer-card .dds-section-heading :is(h3, h4) { @apply font-body; font-weight: 500; }
+
+.dds-answer-card-surface {
+    overflow-wrap: anywhere;
+}
+
+.dds-answer-card .dds-section-heading {
+    margin-bottom: var(--spacing-dds-md);
+}
+
+.dds-answer-card .dds-section-heading > p {
+    @apply font-support;
+    color: var(--text-secondary);
+}
+
+.dds-answer-copy {
+    @apply font-support;
+    display: grid;
+    gap: var(--spacing-dds-xs);
+    min-width: 0;
+}
+
+.dds-answer-copy h4 {
+    font-weight: 500;
+}
+
+.dds-answer-custom-body { white-space: pre-wrap; margin-top: var(--spacing-dds-md); }
+
+.dds-answer-profile {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-dds-md);
+}
+
+.dds-answer-portrait {
+    flex-shrink: 0;
+    width: var(--spacing-dds-3xl);
+    height: var(--spacing-dds-3xl);
+    border-radius: 50%;
+    background: var(--surface-portrait);
+    object-fit: cover;
+    object-position: 50% 25%;
+}
+
+.dds-answer-finding {
+    margin-top: var(--spacing-dds-md);
+}
+
+.dds-answer-project {
+    display: grid;
+    gap: var(--spacing-dds-lg);
+}
+
+.dds-answer-media {
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    min-height: calc(var(--spacing-dds-5xl) + var(--spacing-dds-2xl));
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-dds-small);
+    corner-shape: squircle;
+    background: var(--surface-muted);
+}
+
+.dds-answer-media .dds-lottie-fallback > div {
+    gap: var(--spacing-dds-sm);
+    padding-inline: var(--spacing-dds-sm);
+}
+
+.dds-answer-image {
+    object-fit: cover;
+}
+
+.dds-answer-project-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.dds-answer-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-dds-sm);
+    margin-top: auto;
+    padding-top: var(--spacing-dds-md);
+}
+
+.dds-answer-card .portfolio-decoder {
+    margin-top: var(--spacing-dds-md);
+}
+
+@media (min-width: 640px) {
+    .dds-answer-project {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+        align-items: start;
+    }
+
+    .dds-answer-project-content {
+        align-self: stretch;
+    }
+}

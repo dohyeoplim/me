@@ -1,0 +1,139 @@
+"use client";
+
+import { useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
+import { useReducedMotion } from "motion/react";
+import * as motion from "motion/react-m";
+import Button from "@/app/components/DDS/Button";
+import { getDdsMotionTransition } from "@/app/components/DDS/Motion";
+import type { ProfileExchange } from "../../Context";
+import AnswerBlocks from "../AnswerBlocks";
+import AnswerCards from "../AnswerCards";
+import AnswerLoading from "../AnswerLoading";
+import RepositoryCards from "../RepositoryCards";
+
+type Props = {
+    exchanges: ProfileExchange[];
+    pendingQuestion: string;
+    pending: boolean;
+    error?: string;
+    focusRequest?: number;
+    viewportRef?: RefObject<HTMLDivElement | null>;
+    onRetry?: () => void;
+    followUps?: ReactNode;
+};
+
+export default function Conversation({
+    exchanges,
+    pendingQuestion,
+    pending,
+    error,
+    focusRequest = 0,
+    viewportRef,
+    onRetry,
+    followUps,
+}: Props) {
+    const localConversation = useRef<HTMLDivElement>(null);
+    const conversation = viewportRef ?? localConversation;
+    const latestExchange = useRef<HTMLDivElement>(null);
+    const latestQuestion = useRef<HTMLHeadingElement>(null);
+    const scrollSpace = useRef<HTMLDivElement>(null);
+    const reducedMotion = useReducedMotion();
+    const movement = getDdsMotionTransition(reducedMotion);
+
+    useLayoutEffect(() => {
+        const viewport = conversation.current;
+        const exchange = latestExchange.current;
+        const latest = latestQuestion.current;
+        const spacer = scrollSpace.current;
+        if (!viewport || !exchange || !latest || !spacer) return;
+        const align = () => {
+            const topInset = Number.parseFloat(getComputedStyle(viewport).paddingTop) || 0;
+            spacer.style.height = `${Math.max(0, viewport.clientHeight - exchange.offsetHeight - topInset)}px`;
+            viewport.scrollTo({
+                top: Math.max(0, latest.offsetTop - topInset),
+                behavior: "auto",
+            });
+        };
+        const observer = new ResizeObserver(align);
+        observer.observe(viewport);
+        observer.observe(exchange);
+        align();
+        return () => observer.disconnect();
+    }, [conversation, exchanges.length, pendingQuestion, reducedMotion]);
+
+    useLayoutEffect(() => {
+        if (focusRequest > 0) latestQuestion.current?.focus({ preventScroll: true });
+    }, [exchanges.length, focusRequest, pendingQuestion]);
+
+    return (
+        <motion.div
+            className="dds-chat-conversation"
+            ref={conversation}
+            tabIndex={0}
+            role="region"
+            aria-label="Answers"
+            aria-busy={pending}
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={movement}
+        >
+            <h1 className="sr-only">Ask anything about me</h1>
+            <div className="dds-chat-log" role="log" aria-label="Conversation" aria-live="polite">
+                {exchanges.map((exchange, index) => {
+                    const latest = !pendingQuestion && index === exchanges.length - 1;
+
+                    return (
+                        <div key={exchange.id} ref={latest ? latestExchange : null} className="dds-chat-exchange">
+                            <h2
+                                ref={latest ? latestQuestion : null}
+                                className="dds-chat-question"
+                                tabIndex={-1}
+                            >
+                                <span className="sr-only">You asked. </span>
+                                {exchange.question}
+                            </h2>
+                            <motion.div
+                                className="dds-chat-response"
+                                initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={movement}
+                            >
+                                <p className="dds-chat-answer">{exchange.answer}</p>
+                                <AnswerCards cards={exchange.cards} />
+                                <AnswerBlocks blocks={exchange.blocks} />
+                                <RepositoryCards repositories={exchange.repositories} />
+                            </motion.div>
+                            {latest && followUps}
+                        </div>
+                    );
+                })}
+                {pendingQuestion && (
+                    <div ref={latestExchange} className="dds-chat-exchange">
+                        <h2 ref={latestQuestion} className="dds-chat-question" tabIndex={-1}>
+                            <span className="sr-only">You asked. </span>
+                            {pendingQuestion}
+                        </h2>
+                        {pending && <AnswerLoading />}
+                        {!pending && error && (
+                            <motion.div
+                                className="dds-chat-request-error"
+                                role="alert"
+                                initial={{ opacity: 0, y: reducedMotion ? 0 : 4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={movement}
+                            >
+                                <p>{error}</p>
+                                {onRetry && (
+                                    <Button variant="text" size="small" onClick={onRetry}>
+                                        Try again
+                                    </Button>
+                                )}
+                            </motion.div>
+                        )}
+                    </div>
+                )}
+                <div ref={scrollSpace} className="dds-chat-scroll-space" aria-hidden="true" />
+            </div>
+        </motion.div>
+    );
+}

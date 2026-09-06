@@ -1,0 +1,13 @@
+@import "../src/assets/fonts/pretendard/pretendard.css";
+
+:root {
+    --font-pretendard: "Pretendard Variable";
+}
+
+.sbdocs,
+.sbdocs p,
+.sbdocs h1,
+.sbdocs h2,
+.sbdocs h3 {
+    font-family: "Pretendard Variable", system-ui, sans-serif;
+}

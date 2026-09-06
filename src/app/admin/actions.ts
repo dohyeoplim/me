@@ -1,8 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidateTag } from "next/cache";
-import { auth, signOut } from "@/auth";
+import { updateTag } from "next/cache";
+import { signOut } from "@/auth";
+import { requireAdmin } from "@/app/lib/admin-session";
 import {
     ContentDocSchema,
     IntroDocSchema,
@@ -19,13 +20,8 @@ import {
     upsertPost,
 } from "@/app/lib/content/repository";
 
-async function requireAdmin() {
-    const session = await auth();
-    if (!session?.user) throw new Error("Unauthorized");
-}
-
 function purge(tag: string) {
-    revalidateTag(tag, "max");
+    updateTag(tag);
 }
 
 function revalidate(type: string, slug: string) {
