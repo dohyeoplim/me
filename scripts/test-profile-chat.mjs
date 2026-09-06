@@ -8,7 +8,7 @@ import { spawnSync } from "node:child_process";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const require = createRequire(import.meta.url);
 const output = mkdtempSync(join(tmpdir(), "profile-chat-tests-"));
-const tests = ["profile-chat/profile-chat.test", "knowledge/knowledge.test"];
+const tests = ["profile-chat/profile-chat.test", "knowledge/knowledge.test", "knowledge/management.test"];
 
 try {
     const compile = spawnSync(process.execPath, [
