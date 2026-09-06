@@ -1,5 +1,6 @@
 import { z } from "../schema";
 import { profileCardRegistry } from "./types";
+import { maximumAnswerCharacters } from "./limits";
 
 export const documentIdSchema = z.string().regex(/^[a-z0-9][a-z0-9._-]{0,119}$/);
 export const cardIdSchema = z.enum(Object.keys(profileCardRegistry) as [keyof typeof profileCardRegistry]);
@@ -56,7 +57,7 @@ export const profileFollowUpSchema = z.object({
 
 export const generatedAnswerSchema = z.object({
     grounding: z.enum(["supported", "unsupported"]),
-    answer: plainText(1200),
+    answer: plainText(maximumAnswerCharacters),
     sourceIds: z.array(documentIdSchema).max(6),
     cardIds: z.array(cardIdSchema).max(4),
     blocks: z.array(profileAnswerBlockSchema).max(2),
@@ -89,7 +90,7 @@ export const profileRepositorySchema = z.object({
 });
 
 export const profileChatAnswerSchema = z.object({
-    answer: plainText(1200),
+    answer: plainText(maximumAnswerCharacters),
     sources: z.array(z.object({
         id: documentIdSchema,
         title: z.string().min(1).max(200),

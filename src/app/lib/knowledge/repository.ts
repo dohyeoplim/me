@@ -1,4 +1,5 @@
 import { ensureSchema, sql } from "../db";
+import { unstable_cache } from "next/cache";
 import { KnowledgeSourceSchema, type KnowledgeSource } from "./schema";
 import { createPortfolioSources, effectivePublishedSource } from "./sources";
 
@@ -36,7 +37,7 @@ export async function listKnowledgeSources(): Promise<KnowledgeSource[]> {
     return rows.map(({ doc, status }) => KnowledgeSourceSchema.parse({ ...(doc as object), status }));
 }
 
-export async function listPublishedKnowledge() {
+export const listPublishedKnowledge = unstable_cache(async () => {
     await ensureSchema();
     const rows = await sql`
         select doc, status from content_entries
@@ -46,7 +47,7 @@ export async function listPublishedKnowledge() {
     return rows.map(({ doc, status }) => effectivePublishedSource(
         KnowledgeSourceSchema.parse({ ...(doc as object), status }),
     ));
-}
+}, ["published-profile-knowledge-v1"], { tags: ["profile-knowledge"], revalidate: 300 });
 
 export async function getKnowledgeSource(id: string): Promise<KnowledgeSource | null> {
     await ensureSchema();

@@ -66,7 +66,7 @@ test("README excerpts discard code and HTML and have a fixed maximum length", ()
 test("organization sources distinguish repository information from personal contributions", () => {
     const source = repositoryKnowledgeSource(repository, "README detail.");
     assert.equal(source.origin, "github");
-    assert.equal(source.status, "published");
+    assert.equal(source.status, "draft");
     assert.equal(source.cardId, null);
     assert.match(source.text, /membership alone does not establish/);
     assert.match(source.text, /README detail/);

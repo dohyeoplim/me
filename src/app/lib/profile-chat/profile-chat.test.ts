@@ -6,12 +6,30 @@ import {
     suggestedQuestions,
 } from "../../components/ProfileChat/_data/questions";
 import { answerQuestion, parseAnswer } from "./answer";
-import { profileChatAnswerSchema } from "./answer-content";
+import { generatedAnswerSchema, profileChatAnswerSchema } from "./answer-content";
+import { maximumAnswerCharacters } from "./limits";
 import { profileDocuments, type ProfileDocument } from "./documents";
 import { clientLimit, consumeLocalBudget, dailyLimit } from "./rate-limit";
 import { excerptDocument, retrieveDocuments } from "./retrieval";
 import { createAnswerFormat } from "./response-format";
 import { ChatError, maxBodyBytes, questionSchema, readQuestion, validateOrigin } from "./validation";
+
+test("detailed answers preserve paragraphs across generated and client validation", () => {
+    const answer = `${"Research methods and evaluation details. ".repeat(20)}\n\n` +
+        "Project contributions. ".repeat(25).trim();
+    assert.ok(answer.length > 1200);
+    assert.equal(generatedAnswerSchema.shape.answer.parse(answer), answer);
+    assert.equal(profileChatAnswerSchema.shape.answer.parse(answer), answer);
+});
+
+test("answer schemas share the same expanded limit", () => {
+    const schema = createAnswerFormat([], [], []).schema as { properties: { answer: { maxLength: number } } };
+    assert.equal(schema.properties.answer.maxLength, maximumAnswerCharacters);
+    for (const validator of [generatedAnswerSchema.shape.answer, profileChatAnswerSchema.shape.answer]) {
+        assert.equal(validator.safeParse("x".repeat(maximumAnswerCharacters)).success, true);
+        assert.equal(validator.safeParse("x".repeat(maximumAnswerCharacters + 1)).success, false);
+    }
+});
 
 function request(body: unknown, headers: Record<string, string> = {}) {
     return new Request("https://example.com/api/profile-chat", {
@@ -20,6 +38,44 @@ function request(body: unknown, headers: Record<string, string> = {}) {
         body: JSON.stringify(body),
     });
 }
+
+test("common study and current-work questions retrieve relevant evidence", () => {
+    assert.ok(retrieveDocuments("무슨 공부 하세요").some(({ id }) => id === "education"));
+    for (const question of ["지금 어떤 일 하고 계신가요", "what is he working on now", "tell me about his thesis"]) {
+        assert.ok(retrieveDocuments(question).some(({ kind }) => kind === "research"), question);
+    }
+});
+
+test("previous context cannot occupy all retrieval slots", () => {
+    const context = Array.from({ length: 6 }, (_, index): ProfileDocument => ({
+        id: `old-${index}`, title: "Old topic", text: "Unrelated previous material", keywords: [], url: "/portfolio",
+    }));
+    const current: ProfileDocument = {
+        id: "new-topic", title: "Robotics", text: "Robotics experiments", keywords: ["robotics"], url: "/portfolio",
+    };
+    const selected = retrieveDocuments("Robotics", [], [...context, current], context.map(({ id }) => id));
+    assert.ok(selected.some(({ id }) => id === current.id));
+    assert.ok(selected.filter(({ id }) => id.startsWith("old-")).length <= 2);
+});
+
+test("fallback uses published document kinds rather than fixed identifiers", () => {
+    const documents: ProfileDocument[] = [{
+        id: "custom-background", title: "Academic record", text: "Applied science", keywords: [],
+        kind: "education", url: "/portfolio",
+    }];
+    assert.deepEqual(retrieveDocuments("zzzzzz", [], documents).map(({ id }) => id), ["custom-background"]);
+    assert.deepEqual(retrieveDocuments("zzzzzz", [], []), []);
+});
+
+test("cached lexical text is refreshed after document edits", () => {
+    const document: ProfileDocument = {
+        id: "edited-source", title: "Notes", text: "Robotics", keywords: [], url: "/portfolio",
+    };
+    retrieveDocuments("Robotics", [], [document]);
+    const edited = { ...document, text: "Acoustics" };
+    const distractor = { ...document, id: "other-source", text: "Robotics acoustics introduction" };
+    assert.ok(retrieveDocuments("Acoustics", [], [edited, distractor]).some(({ id }) => id === edited.id));
+});
 
 function responsePayload(
     answer: string,
@@ -142,13 +198,11 @@ test("reads message output after other items and validates every source ID", () 
     );
     const unknownAnswer = responsePayload("The public profile does not provide that information.", []);
     assert.deepEqual(parseAnswer(unknownAnswer, documents).sources, []);
-    assert.throws(
-        () => parseAnswer(
-            responsePayload("Unsupported factual answer.", [], [], { grounding: "supported" }),
-            documents,
-        ),
-        { code: "invalid_sources" },
+    const missingCitation = parseAnswer(
+        responsePayload("Unsupported factual answer.", [], [], { grounding: "supported" }), documents,
     );
+    assert.equal(missingCitation.sources.length, 0);
+    assert.notEqual(missingCitation.answer, "Unsupported factual answer.");
     const unsupportedWithSource = parseAnswer(
         responsePayload("Unsupported answer.", ["mochicall"], ["mochicall"], {
             grounding: "unsupported",
@@ -309,7 +363,7 @@ test("sends a bounded structured Responses request without storing the conversat
         const body = JSON.parse(String(options.body));
         assert.equal(body.store, false);
         assert.equal(body.prompt_cache_key, "profile-chat-v4");
-        assert.equal(body.max_output_tokens, 1800);
+        assert.equal(body.max_output_tokens, 3000);
         assert.equal(body.text.format.type, "json_schema");
         assert.equal(body.text.format.strict, true);
         assert.equal(body.input.at(-1).content, "What is E-ACT?");
@@ -775,7 +829,7 @@ test("guided questions select their published profile evidence", () => {
         assert.ok(suggestion.sourceIds.length <= 6);
         assert.ok(suggestion.sourceIds.every((id) => sourceIds.has(id)));
         const selected = retrieveDocuments(suggestion.question, [], profileDocuments, suggestion.sourceIds);
-        assert.ok(suggestion.sourceIds.every((id) => selected.some((document) => document.id === id)));
+        assert.ok(suggestion.sourceIds.slice(0, 2).every((id) => selected.some((document) => document.id === id)));
     }
     assert.ok(retrieveDocuments("What have you built for iPhone?").some(({ id }) => id === "wonnit"));
     assert.ok(retrieveDocuments("What do you do outside the lab?").some(({ id }) => id === "community"));

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/app/lib/admin-session";
 import {
     archiveKnowledgeSource,
@@ -13,6 +13,7 @@ import { KnowledgeEditSchema, type KnowledgeSource } from "@/app/lib/knowledge/s
 type ActionResult<T> = { ok: true; value: T } | { ok: false; error: string };
 
 function refreshKnowledge() {
+    updateTag("profile-knowledge");
     revalidatePath("/admin/knowledge");
     revalidatePath("/");
 }

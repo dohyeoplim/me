@@ -57,6 +57,38 @@ function normalize(text: string) {
     return text.normalize("NFKC").toLowerCase();
 }
 
+const indexedDocuments = new Map<string, {
+    sourceText: string; sourceTitle: string; sourceKeywords: string;
+    text: string; title: string; keywords: string[]; textLatinTerms: Set<string>; titleLatinTerms: Set<string>;
+}>();
+
+function indexedDocument(document: ProfileDocument) {
+    const sourceKeywords = document.keywords.join("\n");
+    const cached = indexedDocuments.get(document.id);
+    if (cached?.sourceText === document.text && cached.sourceTitle === document.title &&
+        cached.sourceKeywords === sourceKeywords) return cached;
+    const title = normalize(document.title);
+    const text = normalize(`${document.title} ${document.text}`);
+    const indexed = {
+        sourceText: document.text, sourceTitle: document.title, sourceKeywords, text, title,
+        keywords: document.keywords.map(normalize),
+        textLatinTerms: new Set(text.match(/[a-z0-9]+/g) ?? []),
+        titleLatinTerms: new Set(title.match(/[a-z0-9]+/g) ?? []),
+    };
+    if (indexedDocuments.size >= 512) indexedDocuments.delete(indexedDocuments.keys().next().value ?? "");
+    indexedDocuments.set(document.id, indexed);
+    return indexed;
+}
+
+function expandQuestion(query: string) {
+    if (/무슨\s*공부|어떤\s*공부|what.*study|studying/.test(query)) return `${query} education major`;
+    if (/지금.*(?:일|연구)|현재.*(?:일|연구)|working on.*now|currently working/.test(query)) {
+        return `${query} research current projects`;
+    }
+    if (/\bthesis\b/.test(query)) return `${query} research paper publication`;
+    return query;
+}
+
 function queryTerms(query: string) {
     return [...new Set(query.match(/[\p{L}\p{N}]+/gu) ?? [])]
         .filter((term) => term.length >= 2 && !ignoredTerms.has(term));
@@ -111,11 +143,8 @@ function repositoryPriority(
 }
 
 function scoreDocument(document: ProfileDocument, query: string) {
-    const text = normalize(`${document.title} ${document.text}`);
-    const title = normalize(document.title);
+    const { text, title, keywords, textLatinTerms, titleLatinTerms } = indexedDocument(document);
     const terms = queryTerms(query);
-    const textLatinTerms = new Set(text.match(/[a-z0-9]+/g) ?? []);
-    const titleLatinTerms = new Set(title.match(/[a-z0-9]+/g) ?? []);
     const queryLatinTerms = new Set(query.match(/[a-z0-9]+/g) ?? []);
     const hasLatinTerm = (latinTerms: Set<string>, term: string) => {
         if (latinTerms.has(term)) return true;
@@ -125,8 +154,7 @@ function scoreDocument(document: ProfileDocument, query: string) {
     const includesTerm = (value: string, latinTerms: Set<string>, term: string) => {
         return /^[a-z0-9]+$/.test(term) ? hasLatinTerm(latinTerms, term) : value.includes(term);
     };
-    const keywordScore = document.keywords.reduce((score, keyword) => {
-        const normalizedKeyword = normalize(keyword);
+    const keywordScore = keywords.reduce((score, normalizedKeyword) => {
         const matches = /^[a-z0-9]+$/.test(normalizedKeyword)
             ? hasLatinTerm(queryLatinTerms, normalizedKeyword)
             : query.includes(normalizedKeyword);
@@ -199,9 +227,10 @@ export function retrieveDocuments(
     documents: ProfileDocument[] = profileDocuments,
     contextSourceIds: string[] = [],
 ) {
-    const query = normalize(question);
+    const query = expandQuestion(normalize(question));
     const previousQuestion = normalize(history.filter(({ role }) => role === "user").at(-1)?.content ?? "");
-    const context = new Set(contextSourceIds);
+    const publishedIds = new Set(documents.map(({ id }) => id));
+    const context = new Set(contextSourceIds.filter((id) => publishedIds.has(id)).slice(0, 2));
     const profiles = documents.filter(({ repository }) => !repository);
     const links = new Map(documents.filter(({ repository }) => repository).map((document) => [
         document.id,
@@ -223,19 +252,28 @@ export function retrieveDocuments(
         });
 
     if (!ranked.length) {
-        const overview = new Set(["profile", "eact", "mochicall", "education", "skills"]);
-        const selected = documents.filter(({ id }) => overview.has(id));
-        return (selected.length ? selected : documents).slice(0, 6);
+        console.info({
+            event: "profile_chat_retrieval_miss", queryLength: question.length, catalogSize: documents.length,
+        });
+        const groups = ["profile", "research", "education", "project", "experience"];
+        const kind = (document: ProfileDocument) => document.kind ?? (
+            Object.hasOwn(profileCardRegistry, document.id)
+                ? profileCardRegistry[document.id as keyof typeof profileCardRegistry].type : "profile"
+        );
+        const overview = groups.flatMap((group) => profiles.filter((document) => kind(document) === group).slice(0, 1));
+        return [...new Map([...overview, ...profiles].map((document) => [document.id, document])).values()].slice(0, 6);
     }
 
-    const repositories = ranked.filter(({ document }) => document.repository).slice(0, 3);
+    const topScore = Math.max(...ranked.map(({ score }) => score));
+    const relevant = ranked.filter(({ document, score }) => context.has(document.id) || score >= topScore * 0.25);
+    const repositories = relevant.filter(({ document }) => document.repository).slice(0, 3);
     const repositoryIds = new Set(repositories.map(({ document }) => document.id));
     const candidates = asksForRepositories(query) ? [
-        ...ranked.filter(({ document }) => context.has(document.id)),
+        ...relevant.filter(({ document }) => context.has(document.id)),
         ...repositories,
         ...repositories.flatMap(({ document }) => links.get(document.id) ?? []),
-        ...ranked,
-    ] : ranked;
+        ...relevant,
+    ] : relevant;
     const selected = candidates.filter(({ document }) => !document.repository || repositoryIds.has(document.id));
     return [...new Map(selected.map(({ document }) => [document.id, document])).values()]
         .slice(0, 6);

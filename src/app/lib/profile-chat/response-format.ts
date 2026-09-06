@@ -1,3 +1,5 @@
+import { maximumAnswerCharacters } from "./limits";
+
 type JsonSchema = Record<string, unknown>;
 
 function text(maximum: number): JsonSchema {
@@ -55,7 +57,7 @@ export function createAnswerFormat(
         strict: true,
         schema: object({
             grounding: { type: "string", enum: ["supported", "unsupported"] },
-            answer: text(480),
+            answer: text(maximumAnswerCharacters),
             sourceIds: array(source, sourceIds.length ? 6 : 0),
             cardIds: array(identifier(cardIds), cardIds.length ? 4 : 0),
             blocks: array({ anyOf: blocks }, sourceIds.length ? 2 : 0),
