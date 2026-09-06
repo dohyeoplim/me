@@ -14,4 +14,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const FullBleed: Story = {
+    args: { variant: "full-bleed" },
+    decorators: [(Story) => <div className="dds-container"><Story /></div>],
+};
 export const SingleItem: Story = { args: { children: <Skeleton variant="media" /> } };

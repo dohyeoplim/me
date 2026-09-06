@@ -11,6 +11,17 @@
 
 .dds-carousel-track > * { flex: 0 0 82%; scroll-snap-align: start; min-width: 0; }
 .dds-carousel-track:focus-visible { outline-offset: 0; }
+
+.dds-carousel[data-variant="full-bleed"] .dds-carousel-track {
+    width: var(--carousel-viewport, 100%);
+    margin-inline-start: calc(-1 * var(--carousel-inset-start, 0px));
+    padding-inline: var(--carousel-inset-start, 0px) var(--carousel-inset-end, 0px);
+    scroll-padding-inline-start: var(--carousel-inset-start, 0px);
+}
+
+.dds-carousel[data-variant="full-bleed"] .dds-carousel-track > * {
+    flex-basis: calc(var(--carousel-content, 100%) * 0.82);
+}
 .dds-carousel-controls {
     display: flex;
     justify-content: flex-end;
@@ -37,6 +48,7 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
 .dds-detail-dialog-header { display: flex; align-items: start; justify-content: space-between; }
 .dds-detail-dialog-content { display: grid; gap: var(--spacing-dds-lg); margin-top: var(--spacing-dds-xl); }
 .dds-detail-dialog[open] { animation: dds-dialog-enter var(--duration-feedback) var(--ease-feedback); }
+.dds-detail-dialog[data-expanding="true"] { animation: none; }
 
 @keyframes dds-dialog-enter {
     from { opacity: 0; transform: translateY(var(--spacing-dds-sm)); }
@@ -45,6 +57,9 @@ body:has(.dds-detail-dialog[open]) { overflow: hidden; }
 
 @media (min-width: 768px) {
     .dds-carousel-track > * { flex-basis: 46%; }
+    .dds-carousel[data-variant="full-bleed"] .dds-carousel-track > * {
+        flex-basis: calc(var(--carousel-content, 100%) * 0.46);
+    }
     .dds-detail-dialog { padding: var(--spacing-dds-2xl); }
 }
 

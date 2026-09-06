@@ -10,6 +10,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+export const ExpandingCard: Story = {
+    args: { expandFromCard: true },
+    decorators: [(Story) => (
+        <article className="ds-panel p-dds-xl" data-dialog-origin>
+            <h2 className="font-work-title">Selected project</h2>
+            <Story />
+        </article>
+    )],
+};
 export const LongContent: Story = {
     args: { children: Array.from({ length: 20 }, (_, index) => <p key={index}>Research and implementation notes.</p>) },
 };
