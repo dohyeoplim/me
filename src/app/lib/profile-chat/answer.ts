@@ -226,6 +226,14 @@ export function parseAnswer(
     const optionalBlocks = optionalItems(generated.blocks, generatedAnswerSchema.shape.blocks.element, 2);
     const blocks = (unsupported ? [] : optionalBlocks)
         .filter((block) => block.sourceIds.every((id) => cited.has(id)));
+    if (!unsupported && Array.isArray(generated.blocks) && generated.blocks.length > blocks.length) {
+        const failures = generated.blocks.slice(0, 2).flatMap((block) => {
+            const parsed = generatedAnswerSchema.shape.blocks.element.safeParse(block);
+            return parsed.success ? [] : parsed.error.issues.map(({ code, path }) => ({ code, path }));
+        });
+        console.info({ event: "profile_chat_omitted_blocks", received: generated.blocks.length,
+            valid: optionalBlocks.length, cited: blocks.length, failures });
+    }
 
     const suggestionSources = new Set((context.suggestionSources ?? documents).map(({ id }) => id));
     const validFollowUps = (unsupported
@@ -378,5 +386,8 @@ export async function answerQuestion(
         suggestionSources: suggestions,
         askedQuestions: [...history.filter(({ role }) => role === "user").map(({ content }) => content), question],
     });
+    if (presentation && !answer.blocks.length && answer.sources.length) {
+        console.info({ event: "profile_chat_missing_visual", presentation });
+    }
     return presentation && answer.blocks.length ? { ...answer, answer: visualSummary(answer.answer) } : answer;
 }
