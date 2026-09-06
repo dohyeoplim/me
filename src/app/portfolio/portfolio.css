@@ -9,27 +9,34 @@
 .portfolio-page-heading {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
+    justify-items: center;
+    text-align: center;
     align-content: center;
     min-height: 68svh;
-    gap: var(--spacing-dds-sm) var(--spacing-dds-lg);
+    gap: var(--spacing-dds-lg);
     padding-block: var(--spacing-dds-page-top) var(--spacing-dds-2xl);
 }
 
-.portfolio-identity { display: contents; }
-.portfolio-identity > :is(h1, p) { grid-column: 1; }
+.portfolio-identity {
+    display: grid;
+    justify-items: center;
+    gap: var(--spacing-dds-sm);
+    width: 100%;
+    max-width: var(--layout-copy-width);
+}
 
 .portfolio-intro-links {
     display: flex;
     flex-wrap: wrap;
-    grid-column: 1 / -1;
+    justify-content: center;
     gap: var(--spacing-dds-lg);
     margin-top: var(--spacing-dds-sm);
 }
 
 .portfolio-ask-link {
-    grid-column: 1 / -1;
+    text-align: left;
     width: calc(var(--spacing-dds-5xl) * 3);
     max-width: 100%;
     margin-top: var(--spacing-dds-md);
@@ -38,8 +45,6 @@
 
 .portfolio-portrait {
     position: relative;
-    grid-column: 2;
-    grid-row: 1 / span 2;
     width: var(--size-profile-portrait);
     aspect-ratio: 4 / 5;
     overflow: hidden;
@@ -260,18 +265,6 @@
 .portfolio-skills dd { color: var(--text-secondary); }
 
 @media (min-width: 768px) {
-    .portfolio-identity {
-        display: grid;
-        align-content: center;
-        gap: var(--spacing-dds-sm);
-    }
-
-    .portfolio-portrait { grid-row: 1; }
-    .portfolio-intro-links {
-        grid-column: 1;
-        justify-content: flex-start;
-    }
-
     .portfolio-feature-intro { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--spacing-dds-2xl); }
 
     .portfolio-research-list,

@@ -8,6 +8,15 @@ export default function PortfolioIntro() {
     return (
         <header className="dds-grid-backdrop">
             <div className="dds-container portfolio-page-heading">
+                <div className="portfolio-portrait">
+                    <Image
+                        src={hero.image.src}
+                        alt={hero.image.alt}
+                        fill
+                        sizes="(max-width: 571px) 80px, (max-width: 1257px) 14vw, 176px"
+                        priority
+                    />
+                </div>
                 <div className="portfolio-identity">
                     <h1 className="font-page-title">{hero.name}</h1>
                     <p className="font-work-title">{portfolioIntro.title}</p>
@@ -21,15 +30,6 @@ export default function PortfolioIntro() {
                         <span>{portfolioIntro.askLink.label}</span>
                         <ArrowRight size={18} aria-hidden="true" />
                     </Link>
-                </div>
-                <div className="portfolio-portrait">
-                    <Image
-                        src={hero.image.src}
-                        alt={hero.image.alt}
-                        fill
-                        sizes="(max-width: 571px) 80px, (max-width: 1257px) 14vw, 176px"
-                        priority
-                    />
                 </div>
             </div>
         </header>
