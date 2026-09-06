@@ -13,6 +13,7 @@
         "storybook": "storybook dev -p 6006 --no-open --disable-telemetry",
         "build-storybook": "storybook build --disable-telemetry",
         "test:profile-chat": "node scripts/test-profile-chat.mjs",
+        "test:profile-chat:live": "node scripts/test-profile-chat-live.mjs",
         "test:graphics": "node --test scripts/test-project-animations.mjs",
         "auth:setup": "node scripts/setup-admin-auth.mjs",
         "auth:upgrade": "node scripts/upgrade-admin-auth.mjs",
