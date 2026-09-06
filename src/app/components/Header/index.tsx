@@ -39,6 +39,7 @@ export default function Header() {
                         [
                             { href: "/portfolio", label: "Portfolio" },
                             { href: "/blog", label: "Writing" },
+                            { href: "/design-system", label: "Design" },
                         ].map(({ href, label }) => (
                             <Link
                                 key={href}
