@@ -97,7 +97,16 @@ export const projectScenes = {
                 ellipse(276, 214, 17, 17, "ink"),
                 ellipse(328, 214, 17, 17, "ink"),
             ],
-            motion: { position: [{ at: 14, value: [-72, 0] }, { at: 78, value: [0, 0] }] },
+            motion: {
+                position: [
+                    { at: 0, value: [-72, 0] }, { at: 20, value: [-72, 0] },
+                    { at: 78, value: [0, 0] }, { at: 120, value: [0, 0] },
+                ],
+                opacity: [
+                    { at: 0, value: 0 }, { at: 20, value: 1 },
+                    { at: 86, value: 1 }, { at: 108, value: 0 }, { at: 120, value: 0 },
+                ],
+            },
         },
     ]),
     calls: scene("Audio from a family call becomes a health record", [
