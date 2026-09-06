@@ -23,23 +23,30 @@ export default function Background() {
                         </ul>
                     </article>
                     <div className="portfolio-community">
-                        <SectionHeading title={beyondTheLab.additionalTitle} variant="subsection" />
+                        <SectionHeading title={beyondTheLab.communityTitle} variant="subsection" />
                         {communities.map(({ name, role, description }) => (
                             <article key={name}>
-                                <h4 className="font-work-title">{name}</h4>
+                                <h4 className="font-body portfolio-role-title">{name}</h4>
                                 <p>{role}</p>
                                 <p>{description}</p>
                             </article>
                         ))}
-                        {beyondTheLab.visits.map((visit) => (
-                            <article key={visit.name}>
-                                <h4 className="font-work-title">{visit.name}</h4>
-                                <p>{visit.role}, {visit.period}</p>
+                    </div>
+                </div>
+                <div className="portfolio-additional">
+                    <SectionHeading title={beyondTheLab.additionalTitle} variant="subsection" />
+                    {beyondTheLab.visits.map((visit) => (
+                        <article key={visit.name}>
+                            <div>
+                                <h4 className="font-body portfolio-role-title">{visit.name}</h4>
+                                <p className="font-support text-muted">{visit.role}, {visit.period}</p>
+                            </div>
+                            <div>
                                 <p>{visit.description}</p>
                                 <LinkButton href={visit.href} label={visit.project} icon="external" />
-                            </article>
-                        ))}
-                    </div>
+                            </div>
+                        </article>
+                    ))}
                 </div>
             </section>
             <section id="background" className="portfolio-section">
@@ -52,8 +59,8 @@ export default function Background() {
                             <p className="font-support text-muted">{period}</p>
                         </article>
                     ))}
+                    <p className="portfolio-achievement">{background.achievement}</p>
                 </div>
-                <p className="portfolio-achievement">{background.achievement}</p>
                 <div className="portfolio-skills">
                     <SectionHeading title={background.experienceTitle} variant="subsection" />
                     <dl>

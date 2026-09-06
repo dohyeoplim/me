@@ -43,6 +43,7 @@ export const beyondTheLab = {
         },
     ],
     additionalTitle: "Additional experience",
+    communityTitle: "Community",
     visits: [
         {
             name: "Technische Hochschule Ulm, Germany",

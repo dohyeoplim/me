@@ -1,5 +1,7 @@
 export const research = {
     title: "Research",
+    portfolioSummary:
+        "I work on data generation, model development, and evaluation for computer vision and multimodal models.",
     affiliation: "Undergraduate researcher at the Visual Intelligence Lab, SeoulTech, since December 2025.",
     interests:
         "Current work examines how training data and evaluation affect models in unfamiliar domains. " +

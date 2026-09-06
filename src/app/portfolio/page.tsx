@@ -4,6 +4,7 @@ import ChapterNav from "./_components/ChapterNav";
 import Research from "./_components/Research";
 import Projects from "./_components/Projects";
 import Background from "./_components/Background";
+import PortfolioIntro from "./_components/PortfolioIntro";
 import "./portfolio.css";
 
 export const metadata: Metadata = {
@@ -15,12 +16,7 @@ export default function PortfolioPage() {
     return (
         <SlideTransition>
             <main id="main-content" className="portfolio-page">
-                <div className="dds-container portfolio-page-heading">
-                    <h1 className="font-page-title">Dohyeop Lim</h1>
-                    <p className="font-body">
-                        Research and projects in computer vision, speech recognition, multimodal models, and evaluation.
-                    </p>
-                </div>
+                <PortfolioIntro />
                 <ChapterNav />
                 <div className="dds-container">
                     <Research />

@@ -6,6 +6,7 @@ import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import Disclosure from "@/app/components/DDS/Disclosure";
 import ProjectVisual from "../ProjectVisual";
 import { projects, projectSection } from "../../_data/projects";
+import { projectAnimationSrc, projectScenes } from "../../_data/project-scenes";
 
 export default function Projects() {
     return (
@@ -19,24 +20,31 @@ export default function Projects() {
                                 <h3 className="font-work-title">{project.name}</h3>
                                 <p className="portfolio-project-purpose">{project.title}</p>
                             </header>
-                            <figure className="portfolio-project-media" aria-label={`${project.name} process diagram`}>
+                            <figure
+                                className="portfolio-project-media"
+                                aria-label={projectScenes[project.visual].label}
+                            >
                                 {project.image ? (
                                     <Image
                                         src={project.image.src}
                                         alt={project.image.alt}
                                         fill
-                                        sizes="(max-width: 767px) calc(100vw - 48px), 400px"
+                                        sizes="(max-width: 767px) calc(100vw - 48px), 420px"
                                         className="object-cover"
                                     />
                                 ) : (
-                                    <LottieGraphic src={`/animations/${project.visual}.json`}>
+                                    <LottieGraphic src={projectAnimationSrc(project.visual)}>
                                         <ProjectVisual kind={project.visual} />
                                     </LottieGraphic>
                                 )}
                             </figure>
-                            <div className="portfolio-project-content">
-                                <p>{project.contribution}</p>
-                                {project.recognition && <p className="portfolio-recognition">{project.recognition}</p>}
+                            <div className="portfolio-project-info">
+                                <div className="portfolio-project-content">
+                                    <p>{project.contribution}</p>
+                                    {project.recognition && (
+                                        <p className="portfolio-recognition">{project.recognition}</p>
+                                    )}
+                                </div>
                                 {project.outcome && (
                                     <Disclosure
                                         label={projectSection.detailsLabel}
@@ -46,16 +54,16 @@ export default function Projects() {
                                         <p>{project.outcome}</p>
                                     </Disclosure>
                                 )}
+                                <footer className="portfolio-project-footer">
+                                    <p className="portfolio-project-period">{project.period}</p>
+                                    <LinkButton
+                                        href={project.href}
+                                        label={projectSection.repositoryLabel}
+                                        icon="external"
+                                        aria-label={`${project.name} on GitHub`}
+                                    />
+                                </footer>
                             </div>
-                            <footer className="portfolio-project-footer">
-                                <p className="portfolio-project-period">{project.period}</p>
-                                <LinkButton
-                                    href={project.href}
-                                    label={projectSection.repositoryLabel}
-                                    icon="external"
-                                    aria-label={`${project.name} on GitHub`}
-                                />
-                            </footer>
                         </article>
                     </Reveal>
                 ))}

@@ -9,19 +9,18 @@ const { eact, industrial, kraftbox } = research;
 export default function Research() {
     return (
         <section id="research" className="portfolio-section">
-            <SectionHeading title={research.title} />
-            <div className="portfolio-research-overview">
-                <p className="font-support text-muted">{research.affiliation}</p>
-                <p>{research.interests}</p>
+            <div className="portfolio-section-intro">
+                <SectionHeading title={research.title} />
+                <p className="portfolio-research-overview">{research.portfolioSummary}</p>
             </div>
             <article className="portfolio-feature">
-                <header className="portfolio-work-heading">
-                    <h3 className="font-work-title">{eact.name}</h3>
-                    <p className="font-support text-muted">
-                        {eact.role}, {eact.status}
-                    </p>
-                </header>
-                <p className="font-body portfolio-research-intro">{eact.description}</p>
+                <div className="portfolio-feature-intro">
+                    <header className="portfolio-work-heading">
+                        <h3 className="font-work-title">{eact.name}</h3>
+                        <p className="font-support text-muted">{eact.role}, {eact.status}</p>
+                    </header>
+                    <p className="portfolio-research-intro">{eact.description}</p>
+                </div>
                 <RecognitionDemo />
                 <div className="portfolio-findings">
                     <p className="font-body">{eact.result}</p>
@@ -35,13 +34,6 @@ export default function Research() {
                     </div>
                 </Disclosure>
             </article>
-            {research.additionalPublications.map((publication) => (
-                <article key={publication.title} className="portfolio-publication">
-                    <h3 className="font-body">{publication.title}</h3>
-                    <p className="font-support text-muted">{publication.authors}</p>
-                    <p className="font-support">{publication.role}, {publication.status}</p>
-                </article>
-            ))}
             <Reveal className="portfolio-research-list">
                 <article>
                     <h3 className="font-work-title">{industrial.name}</h3>
@@ -56,6 +48,13 @@ export default function Research() {
                     <p>{kraftbox.insight}</p>
                 </article>
             </Reveal>
+            {research.additionalPublications.map((publication) => (
+                <article key={publication.title} className="portfolio-publication">
+                    <h3 className="font-body">{publication.title}</h3>
+                    <p className="font-support text-muted">{publication.authors}</p>
+                    <p className="font-support">{publication.role}, {publication.status}</p>
+                </article>
+            ))}
         </section>
     );
 }

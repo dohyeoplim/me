@@ -7,3 +7,11 @@ export const hero = {
         "and structured identifier recognition.",
     image: { src: "/profile.png", alt: "Dohyeop Lim" },
 };
+
+export const portfolioIntro = {
+    description: "I study Applied Artificial Intelligence at SeoulTech and work in the Visual Intelligence Lab.",
+    links: [
+        { label: "CV", href: "https://cv.dohyeoplim.me/" },
+        { label: "GitHub", href: "https://github.com/dohyeoplim" },
+    ],
+};
