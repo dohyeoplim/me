@@ -1,9 +1,9 @@
 export const experience = [
+    { label: "Programming", items: "Python, Swift, TypeScript" },
     {
         label: "Research & machine learning",
         items: "PyTorch, OpenCV",
     },
-    { label: "Programming", items: "Python, Swift, TypeScript" },
     { label: "Applications", items: "SwiftUI, Core ML, Next.js" },
     { label: "Tools", items: "Linux, Docker, Git, vLLM, LaTeX, Figma" },
     { label: "Spoken languages", items: "Korean (native), English (TOEFL iBT 100/120)" },
@@ -56,5 +56,5 @@ export const background = {
             period: "2024 to present",
         },
     ],
-    experienceTitle: "Technical experience",
+    experienceTitle: "Skills",
 };
