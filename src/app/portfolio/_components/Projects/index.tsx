@@ -31,12 +31,12 @@ export default function Projects() {
                             )}
                         >
                                 <div className="portfolio-project-content">
-                                    <p>{project.contribution}</p>
+                                    <p className="font-support">{project.contribution}</p>
                                     {project.recognition && (
                                         <p className="portfolio-recognition">{project.recognition}</p>
                                     )}
                                 </div>
-                                {project.outcome && <p>{project.outcome}</p>}
+                                {project.outcome && <p className="font-support">{project.outcome}</p>}
                                 <footer className="portfolio-project-footer">
                                     {project.period && <p className="portfolio-project-period">{project.period}</p>}
                                     <LinkButton

@@ -18,7 +18,7 @@ export default function Background() {
                                 <p className="font-support text-muted">{visit.period}</p>
                             </div>
                             <div>
-                                <p>{visit.description}</p>
+                                <p className="font-support">{visit.description}</p>
                                 <LinkButton href={visit.href} label={visit.project} icon="external" />
                             </div>
                         </article>
@@ -34,7 +34,7 @@ export default function Background() {
                             </div>
                             <div>
                                 <p>{community.role}</p>
-                                <p>{community.description}</p>
+                                <p className="font-support">{community.description}</p>
                                 {community.href && (
                                     <LinkButton href={community.href} label="Website" icon="external" />
                                 )}
