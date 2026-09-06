@@ -379,36 +379,6 @@
     max-width: var(--layout-copy-width);
 }
 
-.dds-chat-answer-loading-line {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: var(--spacing-dds-sm);
-    overflow: hidden;
-    border-radius: var(--control-radius);
-    corner-shape: squircle;
-    background: var(--surface-muted);
-}
-
-.dds-chat-answer-loading-line[data-length="long"] {
-    width: 86%;
-}
-
-.dds-chat-answer-loading-line[data-length="short"] {
-    width: 62%;
-}
-
-.dds-chat-answer-loading-scan {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        color-mix(in srgb, var(--surface-panel) 72%, transparent),
-        transparent
-    );
-}
-
 .dds-chat[data-started="true"] .dds-chat-scene {
     max-width: none;
     height: 100svh;

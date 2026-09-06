@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { imageUploadError, imageUploadTypes } from "@/app/lib/uploads";
 import { previewMarkdown } from "./actions";
+import { SkeletonGroup } from "@/app/components/DDS/Skeleton";
+import MarkdownSkeleton from "@/app/components/Markdown/Skeleton";
 
 type Props = {
     value: string;
@@ -317,7 +319,9 @@ export default function MarkdownEditor({ value, onChange }: Props) {
                 />
             ) : (
                 <div className="min-h-[60vh]">
-                    {previewPending ? <p className="font-support" role="status">Loading preview…</p> : preview}
+                    {previewPending ? (
+                        <SkeletonGroup label="Loading preview"><MarkdownSkeleton /></SkeletonGroup>
+                    ) : preview}
                 </div>
             )}
         </div>

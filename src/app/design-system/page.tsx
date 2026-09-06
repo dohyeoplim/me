@@ -5,6 +5,7 @@ import ButtonShowcase from "./_components/ButtonShowcase";
 import ComponentShowcase from "./_components/ComponentShowcase";
 import FoundationsShowcase from "./_components/FoundationsShowcase";
 import MotionShowcase from "./_components/MotionShowcase";
+import LoadingShowcase from "./_components/LoadingShowcase";
 import { designSystem, navigation } from "./data";
 
 export const metadata: Metadata = {
@@ -41,6 +42,13 @@ export default function DesignSystemPage() {
                 <section id="motion" className="ds-section border-t border-line">
                     <SectionHeading title="Motion" description="A brief entrance, with reduced motion support." />
                     <MotionShowcase />
+                </section>
+                <section id="loading" className="ds-section border-t border-line">
+                    <SectionHeading
+                        title="Loading states"
+                        description="Keep the layout in place while content loads."
+                    />
+                    <LoadingShowcase />
                 </section>
             </main>
         </SlideTransition>

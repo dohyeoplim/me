@@ -61,7 +61,7 @@ export default async function PostPage({ params }: { params: Params }) {
 
     return (
         <SlideTransition>
-            <div className="w-full max-w-4xl mx-auto px-6 pt-28 md:pt-40 pb-30">
+            <div className="dds-container writing-page">
                 <article className="flex flex-col gap-10">
                     <GoBack className="w-fit font-body04-light text-grey-400 transition-colors hover:text-grey-600">
                         ← Go back
@@ -77,7 +77,7 @@ export default async function PostPage({ params }: { params: Params }) {
                                 <span>{readingTime(doc.body)} min read</span>
                             </div>
 
-                            <h1 className="font-title02-light text-grey-900">
+                            <h1 className="font-page-title text-ink">
                                 {post.title}
                             </h1>
 

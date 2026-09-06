@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AnimationItem } from "lottie-web";
 import { RotateCcw } from "lucide-react";
+import IconButton from "../IconButton";
 
 type Props = {
     src: string;
@@ -93,8 +94,10 @@ export default function LottieGraphic({ src, children }: Props) {
             </div>
             <div ref={container} className="dds-lottie-player" aria-hidden="true" />
             {ready && !reducedMotion && (
-                <button
+                <IconButton
                     type="button"
+                    variant="text"
+                    size="large"
                     className="dds-lottie-replay"
                     aria-label="Replay project animation"
                     onClick={() => {
@@ -104,7 +107,7 @@ export default function LottieGraphic({ src, children }: Props) {
                     }}
                 >
                     <RotateCcw size={16} aria-hidden="true" />
-                </button>
+                </IconButton>
             )}
         </div>
     );

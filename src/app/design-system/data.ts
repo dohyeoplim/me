@@ -5,6 +5,7 @@ export const navigation = [
     { id: "buttons", label: "Buttons" },
     { id: "components", label: "Components" },
     { id: "motion", label: "Motion" },
+    { id: "loading", label: "Loading" },
 ];
 
 export const colors = [
@@ -14,6 +15,7 @@ export const colors = [
     { name: "Divider", token: "--border-subtle" },
     { name: "Text", token: "--text-primary" },
     { name: "Diagram", token: "--diagram-accent" },
+    { name: "Illustration background", token: "--surface-illustration" },
 ];
 
 export const typography = [
