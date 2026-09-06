@@ -28,11 +28,9 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         <main id="main-content" className={styles.signIn}>
             <header className={styles.header}>
                 <h1 className="font-section-title">Admin sign in</h1>
-                <p className="font-support text-muted">
-                    {configured
-                        ? "Enter your admin password and the current verification code from Enpass."
-                        : "Admin authentication needs to be configured."}
-                </p>
+                {!configured && (
+                    <p className="font-support text-muted">Admin authentication needs to be configured.</p>
+                )}
             </header>
 
             {configured ? (
@@ -54,7 +52,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
                             id="admin-code"
                             name="code"
                             label="Verification code"
-                            hint="Enter the 6-digit code from Enpass. A recovery code also works."
                             type="text"
                             autoComplete="one-time-code"
                             autoCapitalize="off"
