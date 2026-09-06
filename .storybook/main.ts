@@ -4,7 +4,7 @@ const config: StorybookConfig = {
     stories: ["../src/**/*.stories.@(ts|tsx)"],
     addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
     framework: "@storybook/nextjs-vite",
-    staticDirs: ["../public", { from: "../src/assets/fonts/pretendard/woff2", to: "/fonts" }],
+    staticDirs: ["../public"],
     core: { disableTelemetry: true },
 };
 
