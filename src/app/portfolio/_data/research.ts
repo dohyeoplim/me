@@ -16,6 +16,12 @@ export const research = {
                 "vision-language-action (VLA) system.",
             infrastructure: "Support GPU resource allocation and shared research environments with Docker.",
         },
+        culture: {
+            title: "문화서비스확산형기술개발",
+            description: "Software QA for a senior content creation platform with ETRI.",
+            projectTitle: "시니어의 콘텐츠 제작 접근성 향상을 위한 생성형 AI 기반 콘텐츠 창·저작 플랫폼 기술 개발",
+            details: "Reviewed software, managed issues, and conducted QA in preparation for integration testing.",
+        },
     },
     portfolioSummary:
         "I work on data generation, model development, and evaluation for computer vision and multimodal models.",

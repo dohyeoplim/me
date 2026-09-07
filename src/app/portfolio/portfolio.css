@@ -127,6 +127,7 @@
 .portfolio-supporting-research { margin-top: var(--spacing-dds-3xl); }
 .portfolio-supporting-research > .dds-section-heading { margin-bottom: var(--spacing-dds-lg); }
 .portfolio-rd-cards { display: grid; gap: var(--spacing-dds-lg); }
+.portfolio-rd-card[data-featured="true"] { grid-column: 1 / -1; }
 .portfolio-rd-card {
     position: relative;
     display: grid;
