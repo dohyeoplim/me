@@ -29,7 +29,7 @@ export const research = {
                 "Imagine the Structure Before You Speak: " +
                 "Structural Imagination in Latent Space for Table Recognition",
             authors: "MinKi Jeong, Dohyeop Lim, Jongyoul Park",
-            status: "WACV 2027, under review",
+            status: "Under review",
             role: "Co-author",
             url: "https://cv.dohyeoplim.me/Dohyeop_Lim.pdf",
         },
@@ -39,7 +39,7 @@ export const research = {
         role: "First author",
         result: "Improved exact-match accuracy by 12.3 to 31.2 percentage points across four benchmarks.",
         errorResult: "Prevented 89.5 to 93.6% of single-edit OCR errors from propagating to final predictions.",
-        status: "WACV 2027, under review",
+        status: "Under review",
         description:
             "A factorized CTC decoder that enforces identifier length, allowed characters, and checksums. " +
             "Works with existing recognizers without retraining.",

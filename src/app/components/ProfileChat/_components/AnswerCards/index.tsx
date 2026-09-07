@@ -12,6 +12,7 @@ import { research } from "@/app/portfolio/_data/research";
 import ProjectVisual from "@/app/portfolio/_components/ProjectVisual";
 import { projectAnimationSrc } from "@/app/portfolio/_data/project-scenes";
 import RecognitionDemo from "@/app/portfolio/_components/RecognitionDemo";
+import PublicationAuthors from "@/app/portfolio/_components/PublicationAuthors";
 import "@/app/styles/dds-answer-cards.css";
 
 type CardProps = {
@@ -60,14 +61,11 @@ function EactCard() {
 
     return (
         <AnswerCard title={eact.name}>
-            <p className="font-support text-muted">
-                {eact.role}, {eact.status}
-            </p>
             <RecognitionDemo />
             <div className="dds-answer-copy">
                 <p>{eact.description}</p>
                 <p>{eact.paper}</p>
-                <p className="font-support text-muted">{eact.authors}</p>
+                <PublicationAuthors authors={eact.authors} status={eact.status} />
             </div>
         </AnswerCard>
     );

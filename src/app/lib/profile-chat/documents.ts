@@ -66,7 +66,7 @@ export const profileDocuments: ProfileDocument[] = [
         ]),
         keywords: [
             "이액트", "연구", "논문", "체크섬", "식별", "인식",
-            "eact", "ctc", "checksum", "wacv", "research",
+            "eact", "ctc", "checksum", "research",
         ],
     },
     {
@@ -89,7 +89,7 @@ export const profileDocuments: ProfileDocument[] = [
             "Dohyeop Lim is the second author. Individual contributions are not listed in the CV.",
         ]),
         keywords: [
-            "논문", "표", "공동저자", "연구", "table", "recognition", "wacv", "publication", "research",
+            "논문", "표", "공동저자", "연구", "table", "recognition", "publication", "research",
         ],
         kind: "research",
         cardId: null,

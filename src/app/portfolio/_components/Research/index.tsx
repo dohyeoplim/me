@@ -1,6 +1,7 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import RecognitionDemo from "../RecognitionDemo";
 import ResearchPrograms from "../ResearchPrograms";
+import PublicationAuthors from "../PublicationAuthors";
 import { research, researchPublications } from "../../_data/research";
 
 const { eact } = research;
@@ -17,8 +18,7 @@ export default function Research() {
                 {researchPublications.map((publication) => (
                     <article key={publication.title} className="portfolio-publication">
                         <h4 className="font-body portfolio-role-title">{publication.title}</h4>
-                        <p className="font-support text-muted">{publication.authors}</p>
-                        <p className="font-support">{publication.role}, {publication.status}</p>
+                        <PublicationAuthors authors={publication.authors} status={publication.status} />
                         {publication.title === eact.paper && (
                             <div className="portfolio-publication-detail">
                                 <div className="portfolio-research-summary">
