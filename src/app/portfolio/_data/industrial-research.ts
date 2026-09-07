@@ -1,4 +1,4 @@
-const imageBase = "https://ctylphpsl8g3drjb.public.blob.vercel-storage.com";
+const imageBase = "https://ctylphpsl8g3drjb.public.blob.vercel-storage.com/portfolio";
 
 export const industrialResearch = [
     {
@@ -49,3 +49,5 @@ export const industrialResearch = [
         ],
     },
 ] as const;
+
+export const industrialResearchPreview = [industrialResearch[0].images[0], industrialResearch[2].images[0]];

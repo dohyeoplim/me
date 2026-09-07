@@ -131,12 +131,35 @@
 .portfolio-rd-card {
     position: relative;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     gap: var(--spacing-dds-sm);
     padding: var(--spacing-dds-lg) var(--spacing-dds-lg) var(--spacing-dds-md);
 }
 .portfolio-rd-action { display: contents; }
 .portfolio-rd-action > .dds-card-trigger { justify-self: end; }
+
+.portfolio-rd-copy {
+    display: grid;
+    align-content: start;
+    gap: var(--spacing-dds-sm);
+}
+
+.portfolio-rd-preview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-dds-sm);
+    padding-block: var(--spacing-dds-sm);
+}
+
+.portfolio-rd-preview img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: right;
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+}
 
 .portfolio-research-list article {
     display: grid;
@@ -148,7 +171,6 @@
 
 .portfolio-research-image {
     display: block;
-    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-control);
     corner-shape: squircle;
     overflow: hidden;
@@ -225,6 +247,12 @@
 
 @media (min-width: 768px) {
     .portfolio-rd-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .portfolio-rd-card[data-featured="true"] {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        column-gap: var(--spacing-dds-xl);
+    }
+    .portfolio-rd-card[data-featured="true"] .portfolio-rd-copy { align-self: center; }
+    .portfolio-rd-card[data-featured="true"] .dds-card-trigger { grid-column: 2; }
     .portfolio-community article,
     .portfolio-additional article { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-dds-2xl); }
 

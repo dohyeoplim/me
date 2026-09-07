@@ -1,7 +1,9 @@
+import Image from "next/image";
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import DetailDialog from "@/app/components/DDS/DetailDialog";
 import IndustrialResearch from "../IndustrialResearch";
 import { research } from "../../_data/research";
+import { industrialResearchPreview } from "../../_data/industrial-research";
 
 const { programs } = research;
 
@@ -12,8 +14,20 @@ export default function ResearchPrograms() {
             {([programs.industrial, programs.computing, programs.culture] as const).map((program) => (
                 <article key={program.title} className="ds-panel portfolio-rd-card"
                     data-featured={program === programs.industrial} data-dialog-origin>
-                    <h4 className="font-body portfolio-role-title" lang="ko">{program.title.replaceAll(" ", "")}</h4>
-                    <p className="font-support text-muted">{program.description}</p>
+                    <div className="portfolio-rd-copy">
+                        <h4 className="font-body portfolio-role-title" lang="ko">
+                            {program.title.replaceAll(" ", "")}
+                        </h4>
+                        <p className="font-support text-muted">{program.description}</p>
+                    </div>
+                    {program === programs.industrial && (
+                        <div className="portfolio-rd-preview" aria-hidden="true">
+                            {industrialResearchPreview.map((image) => (
+                                <Image key={image.src} {...image} alt=""
+                                    sizes="(max-width: 767px) calc((100vw - 112px) / 2), 208px" />
+                            ))}
+                        </div>
+                    )}
                     <div className="portfolio-rd-action">
                         <DetailDialog title={program.title.replaceAll(" ", "")} label="Project details"
                             expandFromCard triggerStyle="card" density="compact">
