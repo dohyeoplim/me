@@ -1,8 +1,9 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import DetailDialog from "@/app/components/DDS/DetailDialog";
+import IndustrialResearch from "../IndustrialResearch";
 import { research } from "../../_data/research";
 
-const { programs, industrial, kraftbox } = research;
+const { programs } = research;
 
 export default function ResearchPrograms() {
     return <div className="portfolio-supporting-research">
@@ -16,20 +17,7 @@ export default function ResearchPrograms() {
                     <div className="portfolio-rd-action">
                         <DetailDialog title={program.title.replaceAll(" ", "")} label="Project details"
                             expandFromCard triggerStyle="card" density="compact">
-                            {!("projectTitle" in program) ? <div className="portfolio-research-list">
-                                <article>
-                                    <h4 className="font-body portfolio-role-title">{industrial.name}</h4>
-                                    <p className="font-support">{industrial.description}</p>
-                                    <p className="font-support">
-                                        {industrial.count} {industrial.countLabel}. {industrial.insight}
-                                    </p>
-                                </article>
-                                <article>
-                                    <h4 className="font-body portfolio-role-title">{kraftbox.name}</h4>
-                                    <p className="font-support">{kraftbox.description}</p>
-                                    <p className="font-support">{kraftbox.insight}</p>
-                                </article>
-                            </div> : <>
+                            {!("projectTitle" in program) ? <IndustrialResearch /> : <>
                                 <h4 className="font-body portfolio-role-title" lang="ko">
                                     {program.projectTitle}
                                 </h4>

@@ -146,6 +146,20 @@
 
 .portfolio-research-list article > p:last-child { color: var(--text-secondary); }
 
+.portfolio-research-image {
+    display: block;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    overflow: hidden;
+}
+
+.portfolio-research-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .portfolio-publications { margin-top: var(--spacing-dds-2xl); }
 .portfolio-publications > .dds-section-heading { margin-bottom: var(--spacing-dds-lg); }
 .portfolio-publication {
