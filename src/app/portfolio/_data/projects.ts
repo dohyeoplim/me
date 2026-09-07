@@ -8,6 +8,7 @@ export type Project = {
     href: string;
     visual: "speech" | "calls" | "vision" | "graph" | "driving";
     image?: { src: string; alt: string };
+    deck?: { prefix: string; count: number };
     placement?: "selected" | "additional";
 };
 
@@ -23,6 +24,7 @@ export const projects: Project[] = [
         recognition: "14th LIKELION hackathon, Honorable Mention among 317 teams. AAC Track, 2nd of 128 teams.",
         href: "https://github.com/Collog-App",
         visual: "calls",
+        deck: { prefix: "collog", count: 3 },
     },
     {
         name: "MochiCall",
@@ -34,6 +36,7 @@ export const projects: Project[] = [
         recognition: "Grand Prize, AICOSS Summer AI SCI Bootcamp 2026",
         href: "https://github.com/Fresh-Mango-Mochi/welfare-call-asr",
         visual: "speech",
+        deck: { prefix: "mochicall", count: 4 },
     },
     {
         name: "DocFusionX",
@@ -46,6 +49,7 @@ export const projects: Project[] = [
         outcome: "",
         href: "https://github.com/DocFusionX/server",
         visual: "graph",
+        deck: { prefix: "docfusionx", count: 3 },
     },
     {
         name: "WONNIT",
@@ -55,6 +59,7 @@ export const projects: Project[] = [
         outcome: "Deployed the models on iOS with Core ML.",
         href: "https://github.com/GGUNGSIL-WONNIT",
         visual: "vision",
+        deck: { prefix: "wonnit", count: 4 },
     },
     {
         name: "DriverNet",
@@ -66,6 +71,7 @@ export const projects: Project[] = [
         outcome: "Implemented the EMA teacher training pipeline using moving averages of model parameters.",
         href: "https://github.com/DriverNet-Project/DriverNet",
         visual: "driving",
+        deck: { prefix: "drivernet", count: 5 },
     },
 ];
 

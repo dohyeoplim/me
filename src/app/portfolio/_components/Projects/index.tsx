@@ -5,6 +5,7 @@ import LottieGraphic from "@/app/components/DDS/LottieGraphic";
 import GalleryCard from "@/app/components/DDS/GalleryCard";
 import Carousel from "@/app/components/DDS/Carousel";
 import ProjectVisual from "../ProjectVisual";
+import ProjectDeck from "../ProjectDeck";
 import { projects, projectSection } from "../../_data/projects";
 import { projectAnimationSrc, projectScenes } from "../../_data/project-scenes";
 
@@ -37,6 +38,7 @@ export default function Projects() {
                                     )}
                                 </div>
                                 {project.outcome && <p className="font-support">{project.outcome}</p>}
+                                <ProjectDeck name={project.name} deck={project.deck} />
                                 <footer className="portfolio-project-footer">
                                     {project.period && <p className="portfolio-project-period">{project.period}</p>}
                                     <LinkButton

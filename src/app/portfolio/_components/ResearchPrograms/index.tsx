@@ -22,10 +22,8 @@ export default function ResearchPrograms() {
                     </div>
                     {program === programs.industrial && (
                         <div className="portfolio-rd-preview" aria-hidden="true">
-                            {industrialResearchPreview.map((image) => (
-                                <Image key={image.src} {...image} alt=""
-                                    sizes="(max-width: 767px) calc((100vw - 112px) / 2), 208px" />
-                            ))}
+                            <Image {...industrialResearchPreview} alt="" loading="eager"
+                                sizes="(max-width: 896px) calc(100vw - 96px), 800px" />
                         </div>
                     )}
                     <div className="portfolio-rd-action">

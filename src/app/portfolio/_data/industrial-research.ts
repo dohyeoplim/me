@@ -50,4 +50,8 @@ export const industrialResearch = [
     },
 ] as const;
 
-export const industrialResearchPreview = [industrialResearch[0].images[0], industrialResearch[2].images[0]];
+export const industrialResearchPreview = {
+    src: `${imageBase}/keti_thumb.png`,
+    width: 1907,
+    height: 1287,
+};
