@@ -39,19 +39,6 @@ export const projects: Project[] = [
         deck: { prefix: "mochicall", count: 4 },
     },
     {
-        name: "DocFusionX",
-        placement: "additional",
-        period: "January to February 2026, Ulm, Germany",
-        title: "GraphRAG for long documents",
-        contribution:
-            "Used document relationships for retrieval and reasoning during a visiting student program " +
-            "at Technische Hochschule Ulm.",
-        outcome: "",
-        href: "https://github.com/DocFusionX/server",
-        visual: "graph",
-        deck: { prefix: "docfusionx", count: 3 },
-    },
-    {
         name: "WONNIT",
         period: "July to September 2025",
         title: "On-device verification for shared spaces",
@@ -72,6 +59,19 @@ export const projects: Project[] = [
         href: "https://github.com/DriverNet-Project/DriverNet",
         visual: "driving",
         deck: { prefix: "drivernet", count: 5 },
+    },
+    {
+        name: "DocFusionX",
+        placement: "additional",
+        period: "January to February 2026, Ulm, Germany",
+        title: "GraphRAG for long documents",
+        contribution:
+            "Used document relationships for retrieval and reasoning during a visiting student program " +
+            "at Technische Hochschule Ulm.",
+        outcome: "",
+        href: "https://github.com/DocFusionX/server",
+        visual: "graph",
+        deck: { prefix: "docfusionx", count: 3 },
     },
 ];
 
