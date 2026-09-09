@@ -8,6 +8,7 @@ import {
 import { answerQuestion, parseAnswer } from "./answer";
 import { generatedAnswerSchema, profileChatAnswerSchema } from "./answer-content";
 import { maximumAnswerCharacters } from "./limits";
+import { responseLanguageInstruction } from "./language";
 import { profileDocuments, type ProfileDocument } from "./documents";
 import { clientLimit, consumeLocalBudget, dailyLimit } from "./rate-limit";
 import { excerptDocument, retrieveDocuments } from "./retrieval";
@@ -357,6 +358,15 @@ test("waits until every exhausted budget can be used again", () => {
     assert.equal(dailyLimit, 1_000);
 });
 
+test("scopes Korean naming to Korean questions and respects explicit language requests", () => {
+    assert.doesNotMatch(responseLanguageInstruction("Who is Dohyeop Lim?"), /도협 님/);
+    assert.doesNotMatch(responseLanguageInstruction("What does 도협 님 research?"), /도협 님/);
+    assert.match(responseLanguageInstruction("도협 님은 누구인가요?"), /'도협 님'/);
+    assert.match(responseLanguageInstruction("도협 님을 소개해줘. Answer in English."), /in English/);
+    assert.match(responseLanguageInstruction("Who is Dohyeop Lim? 한국어로 답해주세요."), /in Korean/);
+    assert.doesNotMatch(responseLanguageInstruction("Qui est Dohyeop Lim ?"), /in English|in Korean/);
+});
+
 test("sends a bounded structured Responses request without storing the conversation", async (context) => {
     const logs: string[] = [];
     context.mock.method(console, "info", (message: unknown) => logs.push(String(message)));
@@ -370,6 +380,10 @@ test("sends a bounded structured Responses request without storing the conversat
         assert.equal(body.text.format.strict, true);
         assert.equal(body.input.at(-1).content, "What is E-ACT?");
         assert.ok(body.instructions.length < 3_600);
+        assert.match(body.instructions, /language explicitly requested in the latest question/);
+        assert.match(body.instructions, /Use Dohyeop Lim or third-person pronouns/);
+        assert.doesNotMatch(body.instructions, /도협 님/);
+        assert.doesNotMatch(body.instructions, /Use this name consistently/);
         assert.ok(body.input.every(({ role }: { role: string }) => role === "user"));
         const evidence = JSON.parse(body.input[0]?.content);
         assert.ok(evidence.publicDocuments.every((document: Record<string, unknown>) => !("keywords" in document)));
