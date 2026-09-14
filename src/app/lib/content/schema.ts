@@ -155,7 +155,7 @@ export const INTRO_DEFAULT: IntroDoc = {
         },
     ],
     image: {
-        url: "/profile.png",
+        url: "/profile.jpg",
         alt: "Dohyeop Lim's profile image",
         captionTopLeft: "Portrait",
         captionTopRight: "2026",

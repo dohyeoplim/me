@@ -5,7 +5,7 @@ export const hero = {
         "At SeoulTech's Visual Intelligence Lab, advised by Prof. Jongyoul Park. " +
         "I work on computer vision and multimodal models. My current research covers document understanding " +
         "and structured identifier recognition.",
-    image: { src: "/profile.png", alt: "Dohyeop Lim" },
+    image: { src: "/profile.jpg", alt: "Dohyeop Lim", width: 1153, height: 1537 },
 };
 
 export const portfolioIntro = {

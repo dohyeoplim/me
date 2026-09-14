@@ -47,7 +47,6 @@
 .portfolio-portrait {
     position: relative;
     width: var(--size-profile-portrait);
-    aspect-ratio: 4 / 5;
     overflow: hidden;
     border-radius: var(--radius-panel);
     corner-shape: squircle;

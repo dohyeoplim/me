@@ -8,7 +8,8 @@ export default function PortfolioIntro() {
     return (
         <header className="dds-grid-backdrop">
             <div className="dds-container portfolio-page-heading">
-                <div className="portfolio-portrait">
+                <div className="portfolio-portrait"
+                    style={{ aspectRatio: `${hero.image.width} / ${hero.image.height}` }}>
                     <Image
                         src={hero.image.src}
                         alt={hero.image.alt}
