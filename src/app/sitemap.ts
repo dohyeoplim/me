@@ -7,7 +7,10 @@ export const revalidate = 300;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const posts = await loadPosts();
     return [
-        ...["", "/portfolio", "/blog", "/design-system"].map((path) => ({ url: `${site.url}${path}` })),
+        ...[
+            "", "/portfolio", "/blog", "/design-system",
+            "/services/agents", "/services/agents/privacy", "/services/agents/terms",
+        ].map((path) => ({ url: `${site.url}${path}` })),
         ...posts.map(({ slug, updatedAt }) => ({
             url: `${site.url}/blog/${encodeURIComponent(slug)}`,
             lastModified: updatedAt,

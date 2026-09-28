@@ -1,0 +1,24 @@
+.agents-service-page {
+    padding-block: var(--spacing-dds-page-top) var(--spacing-dds-5xl);
+}
+
+.agents-service-document {
+    display: grid;
+    max-width: var(--layout-reading-width);
+    gap: var(--spacing-dds-2xl);
+    overflow-wrap: anywhere;
+}
+
+.agents-service-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-dds-lg);
+    color: var(--text-tertiary);
+}
+
+.agents-service-navigation a:hover,
+.agents-service-navigation a[aria-current="page"] {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: var(--spacing-dds-xs);
+}
