@@ -65,6 +65,6 @@
     font-variant-numeric: tabular-nums;
 }
 
-.deadlines-date[data-state="passed"] > :is(dt, dd) {
-    color: var(--text-secondary);
+.deadlines-date[data-state="passed"] > dd {
+    color: var(--color-faint);
 }

@@ -73,8 +73,8 @@ function ConferenceItem({ conference, next, now, nested = false }: ItemProps) {
                         {submissions.map(({ label, at }) => (
                             <div key={`${label}-${at}`} className="deadlines-date"
                                 data-state={Date.parse(at) <= now ? "passed" : undefined}>
-                                <dt className="text-muted">{label}</dt>
-                                <dd className="text-ink">
+                                <dt className="text-faint">{label}</dt>
+                                <dd className="text-muted">
                                     <time dateTime={at} title={formatDeadline(at)}>{remainingLabel(at, now)}</time>
                                 </dd>
                             </div>
