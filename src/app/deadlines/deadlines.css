@@ -32,15 +32,14 @@
     gap: var(--spacing-dds-xs) var(--spacing-dds-lg);
 }
 
-.deadlines-countdown,
-.deadlines-next {
+.deadlines-countdown {
+    display: grid;
     grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    justify-items: end;
     text-align: right;
     white-space: nowrap;
-}
-
-.deadlines-countdown {
-    grid-row: 1;
     font-variant-numeric: tabular-nums;
 }
 

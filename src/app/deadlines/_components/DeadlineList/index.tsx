@@ -53,10 +53,13 @@ function ConferenceItem({ conference, next, now, nested = false }: ItemProps) {
                         {conference.name} {conference.year}
                     </Heading>
                     {next && (
-                        <time dateTime={next.at} title={formatDeadline(next.at)}
-                            className="deadlines-countdown font-head01-medium text-ink">
-                            {remainingLabel(next.at, now)}
-                        </time>
+                        <span className="deadlines-countdown">
+                            <time dateTime={next.at} title={formatDeadline(next.at)}
+                                className="font-head01-medium text-ink">
+                                {remainingLabel(next.at, now)}
+                            </time>
+                            <span className="font-support text-muted">{next.label}</span>
+                        </span>
                     )}
                     {conference.location && (
                         <span className="deadlines-details font-support text-muted">
@@ -64,7 +67,6 @@ function ConferenceItem({ conference, next, now, nested = false }: ItemProps) {
                             {conference.location}
                         </span>
                     )}
-                    {next && <span className="deadlines-next font-support text-muted">{next.label}</span>}
                 </span>
                 {next && submissions.length > 0 && (
                     <dl className="deadlines-dates font-support">
