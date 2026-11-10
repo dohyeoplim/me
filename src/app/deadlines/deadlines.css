@@ -9,6 +9,11 @@
     gap: var(--spacing-dds-sm);
 }
 
+.deadlines-board {
+    display: grid;
+    gap: var(--spacing-dds-3xl);
+}
+
 .deadlines-list > li + li {
     border-top: 1px solid var(--border-subtle);
 }
@@ -40,6 +45,7 @@
 }
 
 .deadlines-details {
+    grid-column: 1;
     min-width: 0;
 }
 

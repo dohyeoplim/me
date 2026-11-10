@@ -1,7 +1,7 @@
 export const deadlinesPage = {
     title: "Deadlines",
     description: "My ambitious dreams...",
-    status: {
+    sections: {
         unannounced: "Not announced",
         closed: "Closed",
     },
