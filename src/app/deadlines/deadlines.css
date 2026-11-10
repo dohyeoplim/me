@@ -80,17 +80,11 @@
 }
 
 .deadlines-date > dd {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--spacing-dds-md);
+    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
 }
 
-.deadlines-date > dd > :first-child {
-    min-width: var(--spacing-dds-4xl);
-}
-
-.deadlines-date[data-state="passed"] :is(dt, dd > span) {
+.deadlines-date[data-state="passed"] :is(dt, dd) {
     color: var(--text-secondary);
 }
 

@@ -1,6 +1,6 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import { CONFERENCE_AREAS, type Conference, type Deadline } from "@/app/lib/deadlines/schema";
-import { formatDeadline, formatSeoulTime, remainingLabel, type DeadlineBoard } from "@/app/lib/deadlines/timeline";
+import { formatDeadline, remainingLabel, type DeadlineBoard } from "@/app/lib/deadlines/timeline";
 import { deadlinesPage } from "../../_data/content";
 
 type Props = { board: DeadlineBoard; now: number };
@@ -66,9 +66,8 @@ function UpcomingItem({ conference, next, now }: { conference: Conference; next:
                     >
                         <dt className="text-muted">{deadline.label}</dt>
                         <dd>
-                            <span className="text-ink">{remainingLabel(deadline.at, now)}</span>
-                            <time dateTime={deadline.at} title={formatDeadline(deadline.at)} className="text-muted">
-                                {formatSeoulTime(deadline.at)}
+                            <time dateTime={deadline.at} title={formatDeadline(deadline.at)}>
+                                {remainingLabel(deadline.at, now)}
                             </time>
                         </dd>
                     </div>

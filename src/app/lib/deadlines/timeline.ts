@@ -63,9 +63,3 @@ export function formatDeadline(at: string) {
     const [, year, month, day, clock, offset = "Z"] = match;
     return `${MONTHS[Number(month) - 1]} ${Number(day)}, ${year}, ${clock} ${zoneLabel(offset)}`;
 }
-
-export function formatSeoulTime(at: string) {
-    return new Date(at).toLocaleString("en-US", {
-        timeZone: "Asia/Seoul", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-    }) + " KST";
-}
