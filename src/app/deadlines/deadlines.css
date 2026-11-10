@@ -1,17 +1,23 @@
 .deadlines-page {
     display: grid;
-    gap: var(--spacing-dds-2xl);
+    gap: var(--spacing-dds-3xl);
     padding-block: var(--spacing-dds-page-top) var(--spacing-dds-5xl);
+}
+
+.deadlines-heading {
+    display: grid;
+    gap: var(--spacing-dds-sm);
 }
 
 .deadlines-board {
     display: grid;
     gap: var(--spacing-dds-3xl);
+    min-width: 0;
 }
 
-.deadlines-section {
+.deadlines-list {
     display: grid;
-    gap: var(--spacing-dds-md);
+    min-width: 0;
 }
 
 .deadlines-list > li + li {
@@ -20,53 +26,76 @@
 
 .deadlines-item {
     display: grid;
-    gap: var(--spacing-dds-xs);
+    gap: var(--spacing-dds-md);
     padding-block: var(--spacing-dds-lg);
 }
 
+.deadlines-list > li:first-child {
+    padding-top: 0;
+}
+
 .deadlines-item-heading {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
     align-items: baseline;
-    justify-content: space-between;
-    gap: var(--spacing-dds-2xs) var(--spacing-dds-md);
+}
+
+.deadlines-countdown,
+.deadlines-next {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.deadlines-countdown {
+    font-variant-numeric: tabular-nums;
+}
+
+.deadlines-title-link {
+    color: inherit;
+    transition: color var(--duration-feedback) var(--ease-feedback);
+}
+
+.deadlines-title-link:is(:hover, :focus-visible) {
+    color: var(--text-secondary);
 }
 
 .deadlines-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-dds-2xs) var(--spacing-dds-md);
+    gap: 0 var(--spacing-dds-md);
+    min-width: 0;
 }
 
 .deadlines-dates {
     display: grid;
-    gap: var(--spacing-dds-2xs);
-    margin-top: var(--spacing-dds-xs);
+    grid-template-columns: minmax(var(--spacing-dds-5xl), max-content) minmax(0, 1fr);
+    gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
 }
 
 .deadlines-date {
     display: grid;
-    grid-template-columns: minmax(0, var(--spacing-dds-5xl)) minmax(0, 1fr);
-    gap: var(--spacing-dds-md);
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
 }
 
 .deadlines-date > dd {
     display: flex;
     flex-wrap: wrap;
     gap: 0 var(--spacing-dds-md);
+    font-variant-numeric: tabular-nums;
 }
 
-.deadlines-date[data-state="passed"],
-.deadlines-list[data-state="past"] .deadlines-item {
+.deadlines-date[data-state="passed"] :is(dt, dd, time, span) {
     color: var(--text-secondary);
-}
-
-.deadlines-date[data-state="passed"] > dd {
-    color: inherit;
     text-decoration: line-through;
 }
 
-.deadlines-heading {
-    display: grid;
-    gap: var(--spacing-dds-sm);
+.deadlines-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
+    padding-block: var(--spacing-dds-sm);
 }

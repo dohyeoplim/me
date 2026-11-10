@@ -40,8 +40,8 @@ export function buildDeadlineBoard(conferences: Conference[], now: number): Dead
 
 export function remainingLabel(at: string, now: number) {
     const days = Math.floor((Date.parse(at) - now) / DAY);
-    if (days < 1) return "Less than a day left";
-    return days === 1 ? "1 day left" : `${days} days left`;
+    if (days < 1) return "Today";
+    return days === 1 ? "1 day" : `${days} days`;
 }
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
