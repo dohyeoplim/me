@@ -4,7 +4,7 @@ export const deadlinesPage = {
     sections: {
         upcoming: "Upcoming",
         unannounced: "Not announced",
-        past: "Passed",
+        past: "Closed",
     },
-    empty: "No upcoming deadlines.",
+    empty: "No open calls right now.",
 } as const;

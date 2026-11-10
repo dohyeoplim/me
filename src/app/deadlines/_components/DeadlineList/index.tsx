@@ -1,7 +1,6 @@
 import SectionHeading from "@/app/components/DDS/SectionHeading";
 import { CONFERENCE_AREAS, type Conference, type Deadline } from "@/app/lib/deadlines/schema";
 import {
-    formatConferenceDates,
     formatDeadline,
     formatSeoulTime,
     remainingLabel,
@@ -54,7 +53,6 @@ export default function DeadlineList({ board, now }: Props) {
 type ItemProps = { conference: Conference; next?: Deadline; now: number };
 
 function ConferenceItem({ conference, next, now }: ItemProps) {
-    const dates = formatConferenceDates(conference.startsOn, conference.endsOn);
     return (
         <li className="deadlines-item">
             <div className="deadlines-item-heading">
@@ -63,11 +61,13 @@ function ConferenceItem({ conference, next, now }: ItemProps) {
                         {conference.name} {conference.year}
                     </a>
                 </h3>
-                {next && <p className="font-body text-ink">{remainingLabel(next.at, now)}</p>}
+                {next && (
+                    <p className="font-body text-ink">{next.label}, {remainingLabel(next.at, now).toLowerCase()}</p>
+                )}
             </div>
             <p className="deadlines-meta font-support text-muted">
                 <span>{CONFERENCE_AREAS[conference.area]}</span>
-                {dates && <span>{dates}</span>}
+                {conference.dates && <span>{conference.dates}</span>}
                 {conference.location && <span>{conference.location}</span>}
             </p>
             {conference.deadlines.length > 0 && (

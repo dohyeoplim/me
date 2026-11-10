@@ -12,8 +12,8 @@ export type DeadlineBoard = {
 
 const time = (deadline: Deadline) => Date.parse(deadline.at);
 
-export function nextDeadline(conference: Conference, now: number) {
-    return conference.deadlines.filter((deadline) => time(deadline) > now)
+export function nextSubmission(conference: Conference, now: number) {
+    return conference.deadlines.filter((deadline) => deadline.kind === "submission" && time(deadline) > now)
         .sort((a, b) => time(a) - time(b))[0] ?? null;
 }
 
@@ -26,7 +26,7 @@ export function buildDeadlineBoard(conferences: Conference[], now: number): Dead
     const unannounced: Conference[] = [];
     const past: Conference[] = [];
     for (const conference of conferences) {
-        const next = nextDeadline(conference, now);
+        const next = nextSubmission(conference, now);
         if (next) upcoming.push({ conference, next });
         else if (conference.deadlines.length === 0) unannounced.push(conference);
         else past.push(conference);
@@ -64,18 +64,4 @@ export function formatSeoulTime(at: string) {
     return new Date(at).toLocaleString("en-US", {
         timeZone: "Asia/Seoul", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
     }) + " KST";
-}
-
-export function formatConferenceDates(startsOn: string | null, endsOn: string | null) {
-    const format = (value: string) => {
-        const [year = 0, month = 1, day = 1] = value.split("-").map(Number);
-        return { label: `${MONTHS[month - 1]} ${day}`, year };
-    };
-    if (!startsOn) return "";
-    const start = format(startsOn);
-    if (!endsOn || endsOn === startsOn) return `${start.label}, ${start.year}`;
-    const end = format(endsOn);
-    return start.year === end.year
-        ? `${start.label} to ${end.label}, ${end.year}`
-        : `${start.label}, ${start.year} to ${end.label}, ${end.year}`;
 }
