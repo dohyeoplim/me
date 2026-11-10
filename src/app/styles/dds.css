@@ -416,6 +416,13 @@ body:has(.dds-chat[data-started="true"]) .site-footer[data-home="true"] {
     color: var(--success);
 }
 
+.ds-badge[data-variant="tag"] {
+    @apply font-body05-light;
+    padding: calc(var(--spacing-dds-2xs) / 2) calc(var(--spacing-dds-xs) + var(--spacing-dds-2xs) / 2);
+    border-radius: var(--radius-dds-pill);
+    background: var(--surface-muted);
+}
+
 .scroll-reveal[data-visible="true"] {
     animation: reveal-content var(--duration-reveal) var(--ease-reveal) both;
 }
