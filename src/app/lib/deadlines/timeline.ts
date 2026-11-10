@@ -1,6 +1,7 @@
 import type { Conference, Deadline } from "./schema";
 
-const DAY = 86_400_000;
+const HOUR = 3_600_000;
+const DAY = 24 * HOUR;
 
 export type UpcomingConference = { conference: Conference; next: Deadline };
 
@@ -38,10 +39,13 @@ export function buildDeadlineBoard(conferences: Conference[], now: number): Dead
     };
 }
 
+const plural = (count: number, unit: string) => `${count} ${unit}${count === 1 ? "" : "s"}`;
+
 export function remainingLabel(at: string, now: number) {
-    const days = Math.floor((Date.parse(at) - now) / DAY);
-    if (days < 1) return "Today";
-    return days === 1 ? "1 day" : `${days} days`;
+    const left = Date.parse(at) - now;
+    if (left <= 0) return "Passed";
+    if (left >= DAY) return plural(Math.floor(left / DAY), "day");
+    return left >= HOUR ? plural(Math.floor(left / HOUR), "hour") : "Under an hour";
 }
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

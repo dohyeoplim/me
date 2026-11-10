@@ -66,8 +66,10 @@ function UpcomingItem({ conference, next, now }: { conference: Conference; next:
                     >
                         <dt className="text-muted">{deadline.label}</dt>
                         <dd>
-                            <time dateTime={deadline.at} className="text-ink">{formatDeadline(deadline.at)}</time>
-                            <span className="text-muted">{formatSeoulTime(deadline.at)}</span>
+                            <span className="text-ink">{remainingLabel(deadline.at, now)}</span>
+                            <time dateTime={deadline.at} title={formatDeadline(deadline.at)} className="text-muted">
+                                {formatSeoulTime(deadline.at)}
+                            </time>
                         </dd>
                     </div>
                 ))}
