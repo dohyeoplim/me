@@ -1,5 +1,10 @@
+import SlideTransition from "@/app/components/SlideTransition";
 import DeadlinesSkeleton from "./_components/DeadlinesSkeleton";
 
 export default function DeadlinesLoading() {
-    return <DeadlinesSkeleton />;
+    return (
+        <SlideTransition>
+            <DeadlinesSkeleton />
+        </SlideTransition>
+    );
 }
