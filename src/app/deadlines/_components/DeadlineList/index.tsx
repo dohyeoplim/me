@@ -1,4 +1,5 @@
 import { CONFERENCE_AREAS, type Conference, type Deadline } from "@/app/lib/deadlines/schema";
+import { locationFlags } from "@/app/lib/deadlines/location";
 import { formatDeadline, remainingLabel, type DeadlineBoard } from "@/app/lib/deadlines/timeline";
 import { deadlinesPage } from "../../_data/content";
 
@@ -22,7 +23,7 @@ export default function DeadlineList({ board, now }: Props) {
         <ul className="deadlines-list">
             {items.map(({ conference, next, status }) => {
                 const submissions = conference.deadlines.filter(({ kind }) => kind === "submission");
-                const details = [conference.location, conference.dates].filter(Boolean);
+                const flags = locationFlags(conference.location);
                 return (
                     <li key={conference.id}>
                         <a href={conference.url} target="_blank" rel="noreferrer" className="deadlines-item group">
@@ -41,9 +42,15 @@ export default function DeadlineList({ board, now }: Props) {
                                 ) : (
                                     <span className="deadlines-countdown font-support text-faint">{status}</span>
                                 )}
-                                {details.length > 0 && (
+                                {(conference.dates || conference.location) && (
                                     <span className="deadlines-details font-support text-muted">
-                                        {details.map((detail) => <span key={detail}>{detail}</span>)}
+                                        {conference.dates && <span>{conference.dates}</span>}
+                                        {conference.location && (
+                                            <span>
+                                                {flags && <span aria-hidden="true">{flags} </span>}
+                                                {conference.location}
+                                            </span>
+                                        )}
                                     </span>
                                 )}
                                 {next && <span className="deadlines-next font-support text-muted">{status}</span>}
