@@ -164,3 +164,12 @@
     .knowledge-filters:has(.knowledge-owner-filter) > label:first-child { grid-column: 1 / -1; }
 
 }
+.deadline-editor-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--spacing-dds-sm);
+}
+@media (max-width: 640px) {
+    .deadline-editor-row { grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+}

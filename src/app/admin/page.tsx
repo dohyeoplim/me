@@ -26,6 +26,8 @@ export default async function AdminDashboard() {
 
             <Link href="/admin/components" className="dds-link">Reserved components</Link>
 
+            <Link href="/admin/deadlines" className="dds-link">Conference deadlines</Link>
+
             <h2 className="mt-4 font-head01-medium text-grey-900">Writing</h2>
 
             {posts.length === 0 ? (
