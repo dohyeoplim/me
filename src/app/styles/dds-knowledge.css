@@ -164,3 +164,21 @@
     .knowledge-filters:has(.knowledge-owner-filter) > label:first-child { grid-column: 1 / -1; }
 
 }
+
+.deadline-admin-list > li + li { border-top: 1px solid var(--border-subtle); }
+.deadline-admin-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-dds-md);
+    padding-block: var(--spacing-dds-sm);
+}
+.deadline-admin-title { display: grid; gap: var(--spacing-dds-2xs); min-width: 0; }
+.deadline-admin-title > a {
+    color: var(--text-primary);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    transition: color var(--duration-feedback) var(--ease-feedback);
+}
+.deadline-admin-title > a:is(:hover, :focus-visible) { color: var(--text-secondary); }
+.deadline-admin-row[data-hidden] .deadline-admin-title > a { color: var(--text-secondary); }
