@@ -40,9 +40,6 @@
 }
 
 .deadlines-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--spacing-dds-md);
     min-width: 0;
 }
 

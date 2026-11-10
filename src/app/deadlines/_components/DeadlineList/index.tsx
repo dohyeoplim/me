@@ -42,15 +42,10 @@ export default function DeadlineList({ board, now }: Props) {
                                 ) : (
                                     <span className="deadlines-countdown font-support text-faint">{status}</span>
                                 )}
-                                {(conference.dates || conference.location) && (
+                                {conference.location && (
                                     <span className="deadlines-details font-support text-muted">
-                                        {conference.dates && <span>{conference.dates}</span>}
-                                        {conference.location && (
-                                            <span>
-                                                {flags && <span aria-hidden="true">{flags} </span>}
-                                                {conference.location}
-                                            </span>
-                                        )}
+                                        {flags && <span aria-hidden="true">{flags} </span>}
+                                        {conference.location}
                                     </span>
                                 )}
                                 {next && <span className="deadlines-next font-support text-muted">{status}</span>}
