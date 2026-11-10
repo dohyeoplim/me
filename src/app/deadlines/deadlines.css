@@ -29,7 +29,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
-    gap: var(--spacing-dds-xs) var(--spacing-dds-lg);
+    gap: 0 var(--spacing-dds-lg);
 }
 
 .deadlines-countdown {
