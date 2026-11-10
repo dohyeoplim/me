@@ -1,0 +1,72 @@
+.deadlines-page {
+    display: grid;
+    gap: var(--spacing-dds-2xl);
+    padding-block: var(--spacing-dds-page-top) var(--spacing-dds-5xl);
+}
+
+.deadlines-board {
+    display: grid;
+    gap: var(--spacing-dds-3xl);
+}
+
+.deadlines-section {
+    display: grid;
+    gap: var(--spacing-dds-md);
+}
+
+.deadlines-list > li + li {
+    border-top: 1px solid var(--border-subtle);
+}
+
+.deadlines-item {
+    display: grid;
+    gap: var(--spacing-dds-xs);
+    padding-block: var(--spacing-dds-lg);
+}
+
+.deadlines-item-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--spacing-dds-2xs) var(--spacing-dds-md);
+}
+
+.deadlines-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-dds-2xs) var(--spacing-dds-md);
+}
+
+.deadlines-dates {
+    display: grid;
+    gap: var(--spacing-dds-2xs);
+    margin-top: var(--spacing-dds-xs);
+}
+
+.deadlines-date {
+    display: grid;
+    grid-template-columns: minmax(0, var(--spacing-dds-5xl)) minmax(0, 1fr);
+    gap: var(--spacing-dds-md);
+}
+
+.deadlines-date > dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--spacing-dds-md);
+}
+
+.deadlines-date[data-state="passed"],
+.deadlines-list[data-state="past"] .deadlines-item {
+    color: var(--text-secondary);
+}
+
+.deadlines-date[data-state="passed"] > dd {
+    color: inherit;
+    text-decoration: line-through;
+}
+
+.deadlines-heading {
+    display: grid;
+    gap: var(--spacing-dds-sm);
+}
