@@ -1,6 +1,6 @@
 .deadlines-page {
     display: grid;
-    gap: var(--spacing-dds-3xl);
+    gap: var(--spacing-dds-2xl);
     padding-block: var(--spacing-dds-page-top) var(--spacing-dds-5xl);
 }
 
@@ -9,61 +9,41 @@
     gap: var(--spacing-dds-sm);
 }
 
-.deadlines-board {
-    display: grid;
-    gap: var(--spacing-dds-3xl);
-    min-width: 0;
-}
-
-.deadlines-list {
-    display: grid;
-    min-width: 0;
-}
-
 .deadlines-list > li + li {
     border-top: 1px solid var(--border-subtle);
 }
 
 .deadlines-item {
-    display: grid;
-    gap: var(--spacing-dds-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-dds-xs);
     padding-block: var(--spacing-dds-lg);
-}
-
-.deadlines-list > li:first-child {
-    padding-top: 0;
 }
 
 .deadlines-item-heading {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
     align-items: baseline;
+    gap: var(--spacing-dds-xs) var(--spacing-dds-lg);
 }
 
 .deadlines-countdown,
 .deadlines-next {
+    grid-column: 2;
     text-align: right;
     white-space: nowrap;
 }
 
 .deadlines-countdown {
+    grid-row: 1;
     font-variant-numeric: tabular-nums;
 }
 
-.deadlines-title-link {
-    color: inherit;
-    transition: color var(--duration-feedback) var(--ease-feedback);
-}
-
-.deadlines-title-link:is(:hover, :focus-visible) {
-    color: var(--text-secondary);
-}
-
-.deadlines-meta {
+.deadlines-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 var(--spacing-dds-md);
+    align-items: center;
+    gap: var(--spacing-dds-xs);
     min-width: 0;
 }
 
@@ -71,6 +51,7 @@
     display: grid;
     grid-template-columns: minmax(var(--spacing-dds-5xl), max-content) minmax(0, 1fr);
     gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
+    padding-top: var(--spacing-dds-xs);
 }
 
 .deadlines-date {
@@ -80,19 +61,9 @@
 }
 
 .deadlines-date > dd {
-    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
 }
 
-.deadlines-date[data-state="passed"] :is(dt, dd) {
+.deadlines-date[data-state="passed"] > :is(dt, dd) {
     color: var(--text-secondary);
-}
-
-.deadlines-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--spacing-dds-2xs) var(--spacing-dds-lg);
-    padding-block: var(--spacing-dds-sm);
 }

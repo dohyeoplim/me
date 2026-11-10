@@ -1,10 +1,9 @@
 export const deadlinesPage = {
     title: "Deadlines",
     description: "My ambitious dreams...",
-    sections: {
-        upcoming: "Upcoming",
+    status: {
         unannounced: "Not announced",
-        past: "Closed",
+        closed: "Closed",
     },
-    empty: "No open calls right now.",
+    empty: "No conferences yet.",
 } as const;
