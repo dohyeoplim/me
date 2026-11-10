@@ -20,7 +20,9 @@ export async function saveConferenceAction(input: unknown, create = false): Prom
     try {
         const existing = await getConference(conference.id);
         if (create && existing) return { ok: false, error: "This conference and year already exist." };
-        if (!create && !existing) return { ok: false, error: "This conference could not be found. Refresh and try again." };
+        if (!create && !existing) {
+            return { ok: false, error: "This conference could not be found. Refresh and try again." };
+        }
         const saved = await saveConference(conference);
         refreshDeadlines();
         return { ok: true, value: saved };
