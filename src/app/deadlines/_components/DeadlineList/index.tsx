@@ -23,7 +23,7 @@ export default function DeadlineList({ board, now }: Props) {
         <ul className="deadlines-list">
             {items.map(({ conference, next, status }) => {
                 const submissions = conference.deadlines.filter(({ kind }) => kind === "submission");
-                const tags = [conference.location, conference.dates].filter(Boolean);
+                const tags = [conference.location].filter(Boolean);
                 return (
                     <li key={conference.id}>
                         <a href={conference.url} target="_blank" rel="noreferrer" className="deadlines-item group">
@@ -49,7 +49,7 @@ export default function DeadlineList({ board, now }: Props) {
                                 )}
                                 {next && <span className="deadlines-next font-support text-muted">{status}</span>}
                             </span>
-                            {submissions.length > 0 && (
+                            {(submissions.length > 0 || conference.dates) && (
                                 <dl className="deadlines-dates font-support">
                                     {submissions.map(({ label, at }) => (
                                         <div key={`${label}-${at}`} className="deadlines-date"
@@ -62,6 +62,12 @@ export default function DeadlineList({ board, now }: Props) {
                                             </dd>
                                         </div>
                                     ))}
+                                    {conference.dates && (
+                                        <div className="deadlines-date">
+                                            <dt className="text-muted">{deadlinesPage.conferenceDates}</dt>
+                                            <dd className="text-ink">{conference.dates}</dd>
+                                        </div>
+                                    )}
                                 </dl>
                             )}
                         </a>

@@ -5,5 +5,6 @@ export const deadlinesPage = {
         unannounced: "Not announced",
         closed: "Closed",
     },
+    conferenceDates: "Conference",
     empty: "No conferences yet.",
 } as const;
