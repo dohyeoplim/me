@@ -39,11 +39,10 @@
     font-variant-numeric: tabular-nums;
 }
 
-.deadlines-tags {
+.deadlines-details {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--spacing-dds-xs);
+    gap: 0 var(--spacing-dds-md);
     min-width: 0;
 }
 

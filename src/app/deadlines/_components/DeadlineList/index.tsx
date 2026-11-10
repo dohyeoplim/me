@@ -1,4 +1,3 @@
-import Badge from "@/app/components/DDS/Badge";
 import { CONFERENCE_AREAS, type Conference, type Deadline } from "@/app/lib/deadlines/schema";
 import { formatDeadline, remainingLabel, type DeadlineBoard } from "@/app/lib/deadlines/timeline";
 import { deadlinesPage } from "../../_data/content";
@@ -23,7 +22,7 @@ export default function DeadlineList({ board, now }: Props) {
         <ul className="deadlines-list">
             {items.map(({ conference, next, status }) => {
                 const submissions = conference.deadlines.filter(({ kind }) => kind === "submission");
-                const tags = [conference.location].filter(Boolean);
+                const details = [conference.location, conference.dates].filter(Boolean);
                 return (
                     <li key={conference.id}>
                         <a href={conference.url} target="_blank" rel="noreferrer" className="deadlines-item group">
@@ -42,14 +41,14 @@ export default function DeadlineList({ board, now }: Props) {
                                 ) : (
                                     <span className="deadlines-countdown font-support text-faint">{status}</span>
                                 )}
-                                {tags.length > 0 && (
-                                    <span className="deadlines-tags">
-                                        {tags.map((tag) => <Badge key={tag} variant="tag">{tag}</Badge>)}
+                                {details.length > 0 && (
+                                    <span className="deadlines-details font-support text-muted">
+                                        {details.map((detail) => <span key={detail}>{detail}</span>)}
                                     </span>
                                 )}
                                 {next && <span className="deadlines-next font-support text-muted">{status}</span>}
                             </span>
-                            {(submissions.length > 0 || conference.dates) && (
+                            {submissions.length > 0 && (
                                 <dl className="deadlines-dates font-support">
                                     {submissions.map(({ label, at }) => (
                                         <div key={`${label}-${at}`} className="deadlines-date"
@@ -62,12 +61,6 @@ export default function DeadlineList({ board, now }: Props) {
                                             </dd>
                                         </div>
                                     ))}
-                                    {conference.dates && (
-                                        <div className="deadlines-date">
-                                            <dt className="text-muted">{deadlinesPage.conferenceDates}</dt>
-                                            <dd className="text-ink">{conference.dates}</dd>
-                                        </div>
-                                    )}
                                 </dl>
                             )}
                         </a>
