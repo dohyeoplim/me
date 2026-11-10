@@ -49,9 +49,17 @@ function ConferenceItem({ conference, next, now, nested = false }: ItemProps) {
             <a href={conference.url} target="_blank" rel="noreferrer" className="deadlines-item group">
                 <span className="font-caption01-light text-faint">{CONFERENCE_AREAS[conference.area]}</span>
                 <span className="deadlines-item-heading">
-                    <Heading className="font-head01-medium text-ink transition-colors group-hover:text-muted">
-                        {conference.name} {conference.year}
-                    </Heading>
+                    <span className="deadlines-title">
+                        <Heading className="font-head01-medium text-ink transition-colors group-hover:text-muted">
+                            {conference.name} {conference.year}
+                        </Heading>
+                        {conference.location && (
+                            <span className="font-support text-muted">
+                                {flags && <span aria-hidden="true">{flags} </span>}
+                                {conference.location}
+                            </span>
+                        )}
+                    </span>
                     {next && (
                         <span className="deadlines-countdown">
                             <time dateTime={next.at} title={formatDeadline(next.at)}
@@ -59,12 +67,6 @@ function ConferenceItem({ conference, next, now, nested = false }: ItemProps) {
                                 {remainingLabel(next.at, now)}
                             </time>
                             <span className="font-support text-muted">{next.label}</span>
-                        </span>
-                    )}
-                    {conference.location && (
-                        <span className="deadlines-details font-support text-muted">
-                            {flags && <span aria-hidden="true">{flags} </span>}
-                            {conference.location}
                         </span>
                     )}
                 </span>

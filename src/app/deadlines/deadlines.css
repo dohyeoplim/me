@@ -26,26 +26,28 @@
 }
 
 .deadlines-item-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline;
-    gap: 0 var(--spacing-dds-lg);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-dds-lg);
+}
+
+.deadlines-title,
+.deadlines-countdown {
+    display: flex;
+    flex-direction: column;
+}
+
+.deadlines-title {
+    min-width: 0;
 }
 
 .deadlines-countdown {
-    display: grid;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: start;
-    justify-items: end;
+    flex-shrink: 0;
+    align-items: flex-end;
     text-align: right;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
-}
-
-.deadlines-details {
-    grid-column: 1;
-    min-width: 0;
 }
 
 .deadlines-dates {
